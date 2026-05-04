@@ -180,30 +180,51 @@ if (reviewForm) {
 const cursorDot = document.querySelector('.cursor-dot');
 const cursorOutline = document.querySelector('.cursor-outline');
 
-window.addEventListener('mousemove', (e) => {
-  const posX = e.clientX;
-  const posY = e.clientY;
+let mouseX = 0, mouseY = 0;
+let outlineX = 0, outlineY = 0;
+let isFirstMove = true;
 
-  if (cursorDot.style.opacity !== '1') {
+window.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+
+  if (isFirstMove) {
+    isFirstMove = false;
     cursorDot.style.opacity = '1';
     cursorOutline.style.opacity = '1';
+    outlineX = mouseX;
+    outlineY = mouseY;
   }
 
-  cursorDot.style.left = `${posX}px`;
-  cursorDot.style.top = `${posY}px`;
-
-  cursorOutline.animate({
-    left: `${posX}px`,
-    top: `${posY}px`
-  }, { duration: 500, fill: "forwards" });
+  cursorDot.style.left = `${mouseX}px`;
+  cursorDot.style.top = `${mouseY}px`;
 });
 
+function animateCursor() {
+  // Linear interpolation for smooth following
+  const lerpFactor = 0.15;
+  outlineX += (mouseX - outlineX) * lerpFactor;
+  outlineY += (mouseY - outlineY) * lerpFactor;
+
+  cursorOutline.style.left = `${outlineX}px`;
+  cursorOutline.style.top = `${outlineY}px`;
+
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
 // Cursor Hover Effects (Delegation)
+let isHovering = false;
 document.addEventListener('mouseover', (e) => {
-  if (e.target.closest('a, button, .feature-card, .team-card, .review-card, .form-star')) {
-    document.body.classList.add('cursor-hover');
-  } else {
-    document.body.classList.remove('cursor-hover');
+  const shouldHover = !!e.target.closest('a, button, .feature-card, .team-card, .review-card, .form-star');
+  
+  if (shouldHover !== isHovering) {
+    isHovering = shouldHover;
+    if (isHovering) {
+      document.body.classList.add('cursor-hover');
+    } else {
+      document.body.classList.remove('cursor-hover');
+    }
   }
 });
 
