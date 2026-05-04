@@ -141,31 +141,9 @@ if (reviewForm) {
       });
 
       if (response.ok) {
-        // Local update
-        const card = document.createElement('div');
-        card.className = 'review-card fade-up visible';
-        card.innerHTML = `
-          <div class="review-quote-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2H5c-1.25 0-2 .75-2 2v3c0 1.25.75 2 2 2h3c0 4-4 6-4 6zm10 0c3 0 7-1 7-8V5c0-1.25-.75-2-2-2h-3c-1.25 0-2 .75-2 2v3c0 1.25.75 2 2 2h3c0 4-4 6-4 6z" />
-            </svg>
-          </div>
-          <p class="review-text">"${text}"</p>
-          <div class="review-footer">
-            <div class="review-info">
-              <div class="review-author">${name}</div>
-              <div class="review-role">${role || ''}</div>
-            </div>
-            <div class="review-stars">
-              ${'<span class="star">★</span>'.repeat(selectedRating)}${'<span class="star" style="color:var(--text-muted)">★</span>'.repeat(5 - selectedRating)}
-            </div>
-          </div>
-        `;
-        document.querySelector('.reviews-list').prepend(card);
-        
         // Success feedback
         if (formStatus) {
-          formStatus.textContent = "Thanks! Your review has been submitted.";
+          formStatus.textContent = "Thanks! Your review has been sent successfully.";
           formStatus.className = "form-status success";
         }
         
