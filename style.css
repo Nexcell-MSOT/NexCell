@@ -31,6 +31,12 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
+  cursor: none;
+}
+
+/* Ensure links and buttons also hide the cursor */
+a, button, [role="button"], input, textarea, select {
+  cursor: none !important;
 }
 
 /* ── NAV ── */
