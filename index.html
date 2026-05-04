@@ -28,25 +28,56 @@
   </button>
 </nav>
 
-<!-- ═══ HERO ═══ -->
+<!-- ═══ HERO ═══ --> 
 <section class="hero" id="hero">
   <div class="hero-content">
     <div class="hero-text fade-up">
       <span class="hero-label">🚀 Entrepreneurship Club</span>
-      <h1 class="hero-title">Where ideas become <span class="italic">startups.</span></h1>
-      <p class="hero-desc">NexCell is the premier Entrepreneurship Club of Rathinam Institute of Technology, Bangalore — fostering innovation, leadership, and the startup spirit among students.</p>
+      <h1 class="hero-title">Where students become <span class="italic">entrepreneurs</span></h1>
+      <p class="hero-desc"><span class="text-white">NexCell</span> is the entrepreneurship engine of Mirai School of Technology, Bangalore — a launchpad for <span class="highlight-cyan">ideation</span>, <span class="highlight-blue">prototyping</span>, and <span class="highlight-gold">founder-grade pitching</span>. We build the muscle to turn campus ideas into real ventures.</p>
       <div class="hero-buttons">
         <a href="#about" class="btn-primary">Learn More</a>
         <a href="#events" class="btn-secondary">Our Events</a>
       </div>
     </div>
     <div class="hero-images fade-up">
-      <div class="hero-img"><img src="images/hero_1.png" alt="NexCell Event"></div>
-      <div class="hero-img"><img src="images/hero_2.png" alt="Hackathon"></div>
-      <div class="hero-img"><img src="images/event_winner.png" alt="Winners"></div>
+      <div class="hero-img stack-back"><img src="images/hero_2.png" alt="NexCell Event"></div>
+      <div class="hero-img stack-front"><img src="images/hero_1.png" alt="Mirai 0-1 Ideathon"></div>
+      <div class="event-badge">
+        <div class="badge-dot"></div>
+        <div class="badge-text">
+          <span class="badge-label">LATEST</span>
+          <span class="badge-title">Mirai 0-1 Ideathon · 2025</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
+<!-- ═══ TICKER ═══ -->
+<div class="ticker-section">
+  <div class="ticker-wrapper">
+    <div class="ticker-content">
+      <span>PROTOTYPE <i class="dot"></i></span>
+      <span>PITCH <i class="dot"></i></span>
+      <span>BUILD <i class="dot"></i></span>
+      <span>SHIP <i class="dot"></i></span>
+      <span>REPEAT <i class="dot"></i></span>
+      <span>INNOVATE <i class="dot"></i></span>
+      <span>LEAD <i class="dot"></i></span>
+      <span>IDEATE <i class="dot"></i></span>
+      <!-- Duplicate for seamless scroll -->
+      <span>PROTOTYPE <i class="dot"></i></span>
+      <span>PITCH <i class="dot"></i></span>
+      <span>BUILD <i class="dot"></i></span>
+      <span>SHIP <i class="dot"></i></span>
+      <span>REPEAT <i class="dot"></i></span>
+      <span>INNOVATE <i class="dot"></i></span>
+      <span>LEAD <i class="dot"></i></span>
+      <span>IDEATE <i class="dot"></i></span>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ ABOUT ═══ -->
 <section class="section" id="about">
@@ -149,18 +180,38 @@
 
     <!-- Lookback -->
     <div class="fade-up">
-      <h3 class="lookback-title">👥 Event lookback</h3>
-      <div class="lookback-hint">Hover to pause</div>
+      <div class="lookback-header">
+        <h3 class="lookback-title">👥 Event lookback</h3>
+        <div class="lookback-hint">Hover to pause</div>
+      </div>
+      
+      <!-- Row 1: Moving Left -->
       <div class="lookback-track">
-        <div class="lookback-slider" id="lookbackSlider">
+        <div class="lookback-slider left">
           <div class="lookback-img"><img src="images/event_winner.png" alt="Event"></div>
           <div class="lookback-img"><img src="images/hero_1.png" alt="Event"></div>
           <div class="lookback-img"><img src="images/hero_2.png" alt="Event"></div>
           <div class="lookback-img"><img src="images/event_lookback.png" alt="Event"></div>
+          <!-- Duplicates -->
           <div class="lookback-img"><img src="images/event_winner.png" alt="Event"></div>
           <div class="lookback-img"><img src="images/hero_1.png" alt="Event"></div>
           <div class="lookback-img"><img src="images/hero_2.png" alt="Event"></div>
           <div class="lookback-img"><img src="images/event_lookback.png" alt="Event"></div>
+        </div>
+      </div>
+
+      <!-- Row 2: Moving Right -->
+      <div class="lookback-track">
+        <div class="lookback-slider right">
+          <div class="lookback-img"><img src="images/event_lookback.png" alt="Event"></div>
+          <div class="lookback-img"><img src="images/hero_2.png" alt="Event"></div>
+          <div class="lookback-img"><img src="images/hero_1.png" alt="Event"></div>
+          <div class="lookback-img"><img src="images/event_winner.png" alt="Event"></div>
+          <!-- Duplicates -->
+          <div class="lookback-img"><img src="images/event_lookback.png" alt="Event"></div>
+          <div class="lookback-img"><img src="images/hero_2.png" alt="Event"></div>
+          <div class="lookback-img"><img src="images/hero_1.png" alt="Event"></div>
+          <div class="lookback-img"><img src="images/event_winner.png" alt="Event"></div>
         </div>
       </div>
     </div>
@@ -290,26 +341,50 @@
     </div>
     <div class="reviews-layout fade-up">
       <div class="reviews-list" id="reviewsList">
+        <!-- Card 1 -->
         <div class="review-card">
-          <div class="review-quote">❝</div>
-          <p class="review-text">"Excellent club, very engaging community for builders!"</p>
+          <div class="review-quote-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2H5c-1.25 0-2 .75-2 2v3c0 1.25.75 2 2 2h3c0 4-4 6-4 6zm10 0c3 0 7-1 7-8V5c0-1.25-.75-2-2-2h-3c-1.25 0-2 .75-2 2v3c0 1.25.75 2 2 2h3c0 4-4 6-4 6z"/></svg>
+          </div>
+          <p class="review-text">"This is a test review from the subagent. The site is working perfectly!"</p>
           <div class="review-footer">
-            <div>
-              <div class="review-author">Arjun M.</div>
-              <div class="review-role">CSE 3rd Year</div>
+            <div class="review-info">
+              <div class="review-author">Browser Subagent</div>
+              <div class="review-role">Automated Tester</div>
             </div>
             <div class="review-stars">
               <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
             </div>
           </div>
         </div>
+
+        <!-- Card 2 -->
         <div class="review-card">
-          <div class="review-quote">❝</div>
-          <p class="review-text">"The Mirai 0→1 ideathon was a transformative experience. Great mentorship and real-world problem solving."</p>
+          <div class="review-quote-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2H5c-1.25 0-2 .75-2 2v3c0 1.25.75 2 2 2h3c0 4-4 6-4 6zm10 0c3 0 7-1 7-8V5c0-1.25-.75-2-2-2h-3c-1.25 0-2 .75-2 2v3c0 1.25.75 2 2 2h3c0 4-4 6-4 6z"/></svg>
+          </div>
+          <p class="review-text">"This is an automated test review. The site looks great!"</p>
           <div class="review-footer">
-            <div>
-              <div class="review-author">Sneha R.</div>
-              <div class="review-role">Mirai 0→1 Finalist</div>
+            <div class="review-info">
+              <div class="review-author">E2E Tester</div>
+              <div class="review-role">QA Engineer</div>
+            </div>
+            <div class="review-stars">
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="review-card">
+          <div class="review-quote-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2H5c-1.25 0-2 .75-2 2v3c0 1.25.75 2 2 2h3c0 4-4 6-4 6zm10 0c3 0 7-1 7-8V5c0-1.25-.75-2-2-2h-3c-1.25 0-2 .75-2 2v3c0 1.25.75 2 2 2h3c0 4-4 6-4 6z"/></svg>
+          </div>
+          <p class="review-text">"Excellent club, very engaging community for builders!"</p>
+          <div class="review-footer">
+            <div class="review-info">
+              <div class="review-author">TEST_E2E_User</div>
+              <div class="review-role">QA</div>
             </div>
             <div class="review-stars">
               <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
@@ -329,7 +404,7 @@
           </div>
           <div class="form-group">
             <label class="form-label" for="reviewRole">Role / Affiliation (Optional)</label>
-            <input class="form-input" type="text" id="reviewRole" placeholder="e.g. CSE 3rd Year, Mirai 0→1 Finalist">
+            <input class="form-input" type="text" id="reviewRole" placeholder="e.g. CSE 3rd Year, Mirai 0–1 Finalist">
           </div>
           <div class="form-group">
             <label class="form-label">Rating</label>
@@ -345,7 +420,10 @@
             <label class="form-label" for="reviewText">Review</label>
             <textarea class="form-textarea" id="reviewText" placeholder="Tell us about your experience with NexCell..." required></textarea>
           </div>
-          <button type="submit" class="btn-submit">Submit review ✈</button>
+          <button type="submit" class="btn-submit">
+            Submit review 
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          </button>
         </form>
       </div>
     </div>
