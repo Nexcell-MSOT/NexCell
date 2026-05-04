@@ -216,7 +216,11 @@ animateCursor();
 // Cursor Hover Effects (Delegation)
 let isHovering = false;
 document.addEventListener('mouseover', (e) => {
+<<<<<<< HEAD
   const shouldHover = !!e.target.closest('a, button, .feature-card, .team-card, .review-card, .form-star');
+=======
+  const shouldHover = !!e.target.closest('a, button, img, .feature-card, .team-card, .review-card, .form-star');
+>>>>>>> 4b3fca5 (feat: enhance NexCell UI with premium custom cursor, updated brand logo, and styling refinements)
   
   if (shouldHover !== isHovering) {
     isHovering = shouldHover;
