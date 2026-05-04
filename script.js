@@ -216,7 +216,7 @@ animateCursor();
 // Cursor Hover Effects (Delegation)
 let isHovering = false;
 document.addEventListener('mouseover', (e) => {
-  const shouldHover = !!e.target.closest('a, button, .feature-card, .team-card, .review-card, .form-star');
+  const shouldHover = !!e.target.closest('a, button, img, .feature-card, .team-card, .review-card, .form-star');
   
   if (shouldHover !== isHovering) {
     isHovering = shouldHover;
