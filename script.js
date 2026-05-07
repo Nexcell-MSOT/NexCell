@@ -1,7 +1,30 @@
-// ── Navbar scroll effect ──
+// ── Throttled Scroll Handler ──
+let scrollTicking = false;
 const navbar = document.querySelector('.navbar');
-window.addEventListener('scroll', () => {
+const sections = document.querySelectorAll('.section[id]');
+const navItems = document.querySelectorAll('.nav-links a');
+
+function handleScroll() {
+  // Navbar scroll effect
   navbar.classList.toggle('scrolled', window.scrollY > 40);
+
+  // Active nav link on scroll
+  let current = '';
+  sections.forEach(sec => {
+    if (window.scrollY >= sec.offsetTop - 120) current = sec.getAttribute('id');
+  });
+  navItems.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+
+  scrollTicking = false;
+}
+
+window.addEventListener('scroll', () => {
+  if (!scrollTicking) {
+    window.requestAnimationFrame(handleScroll);
+    scrollTicking = true;
+  }
 });
 
 // ── Mobile hamburger ──
@@ -36,19 +59,6 @@ navLinks.querySelectorAll('a').forEach(a => {
     }
     navLinks.classList.remove('open');
     hamburger.querySelectorAll('span').forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
-  });
-});
-
-// ── Active nav link on scroll ──
-const sections = document.querySelectorAll('.section[id]');
-const navItems = document.querySelectorAll('.nav-links a');
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(sec => {
-    if (window.scrollY >= sec.offsetTop - 120) current = sec.getAttribute('id');
-  });
-  navItems.forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
   });
 });
 

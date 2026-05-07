@@ -1102,9 +1102,22 @@ body {
   display: flex; align-items: flex-start; gap: 1rem; margin-top: 2rem;
   padding: 1.2rem 1.4rem; border-radius: 12px;
   background: var(--bg-card); border: 1px solid var(--border-card);
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
 }
-.location-pin { font-size: 1.4rem; color: var(--accent-blue); flex-shrink: 0; margin-top: 2px; }
-.location-address-text { font-size: .95rem; font-weight: 500; }
+
+.location-address:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-blue);
+  background: var(--bg-card-hover);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(74, 124, 255, 0.1);
+}
+
+.location-pin { font-size: 1.4rem; color: var(--accent-blue); flex-shrink: 0; margin-top: 2px; transition: transform 0.4s ease; }
+.location-address:hover .location-pin { transform: scale(1.2) rotate(-10deg); }
+.location-address-text { font-size: .95rem; font-weight: 500; transition: color 0.3s; }
+.location-address:hover .location-address-text { color: #fff; }
 
 /* ── FOOTER ── */
 .footer {
@@ -1236,11 +1249,14 @@ body {
 .footer-contact-list a {
   color: var(--text-secondary);
   text-decoration: none;
-  transition: color 0.3s;
+  transition: all 0.3s ease;
+  display: inline-block;
 }
 
 .footer-contact-list a:hover {
   color: var(--accent-blue);
+  transform: translateX(5px);
+  text-shadow: 0 0 15px rgba(74, 124, 255, 0.4);
 }
 
 .footer-bottom {
