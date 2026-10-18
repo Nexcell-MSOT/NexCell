@@ -27,40 +27,84 @@ window.addEventListener('scroll', () => {
   }
 });
 
-// ── Mobile hamburger ──
+// ── Mobile hamburger & navigation ──
 const hamburger = document.querySelector('.hamburger');
 const navLinks = document.querySelector('.nav-links');
-hamburger.addEventListener('click', () => {
-  navLinks.classList.toggle('open');
-  const spans = hamburger.querySelectorAll('span');
-  if (navLinks.classList.contains('open')) {
-    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-    spans[1].style.opacity = '0';
-    spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
-  } else {
-    spans[0].style.transform = '';
-    spans[1].style.opacity = '';
-    spans[2].style.transform = '';
-  }
-});
 
-// Close menu on link click (excluding dropdown triggers)
-navLinks.querySelectorAll('a').forEach(a => {
-  a.addEventListener('click', (e) => {
-    if (a.classList.contains('dropdown-trigger')) {
-      if (window.innerWidth <= 768) {
-        e.preventDefault();
-        const parent = a.parentElement;
-        const menu = parent.querySelector('.dropdown-menu');
-        parent.classList.toggle('active');
-        menu.classList.toggle('open');
-      }
-      return;
+function closeMobileMenu() {
+  if (!navLinks) return;
+  navLinks.classList.remove('open');
+  document.body.classList.remove('nav-open');
+  if (hamburger) {
+    hamburger.setAttribute('aria-expanded', 'false');
+    const spans = hamburger.querySelectorAll('span');
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+
+function openMobileMenu() {
+  if (!navLinks) return;
+  navLinks.classList.add('open');
+  document.body.classList.add('nav-open');
+  if (hamburger) {
+    hamburger.setAttribute('aria-expanded', 'true');
+    const spans = hamburger.querySelectorAll('span');
+    if (spans.length >= 3) {
+      spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+      spans[1].style.opacity = '0';
+      spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
     }
-    navLinks.classList.remove('open');
-    hamburger.querySelectorAll('span').forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+
+if (hamburger && navLinks) {
+  hamburger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (navLinks.classList.contains('open')) {
+      closeMobileMenu();
+    } else {
+      openMobileMenu();
+    }
   });
-});
+
+  // Close menu on link click (excluding dropdown triggers)
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', (e) => {
+      if (a.classList.contains('dropdown-trigger')) {
+        if (window.innerWidth <= 1024) {
+          e.preventDefault();
+          const parent = a.parentElement;
+          const menu = parent ? parent.querySelector('.dropdown-menu') : null;
+          if (parent) parent.classList.toggle('active');
+          if (menu) menu.classList.toggle('open');
+        }
+        return;
+      }
+      closeMobileMenu();
+    });
+  });
+
+  // Close menu when tapping outside
+  document.addEventListener('click', (e) => {
+    if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && !hamburger.contains(e.target)) {
+      closeMobileMenu();
+    }
+  });
+
+  // Close menu on ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+      closeMobileMenu();
+    }
+  });
+
+  // Close menu on window resize > 1024px
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1024 && navLinks.classList.contains('open')) {
+      closeMobileMenu();
+    }
+  });
+}
 
 // ── Scroll reveal ──
 document.addEventListener('DOMContentLoaded', () => {
@@ -273,34 +317,36 @@ if (showMoreBtn) {
   });
 }
 
-// ── Feature Cards Mouse Effect ──
-const featureCards = document.querySelectorAll('.feature-card');
-featureCards.forEach(card => {
-  card.addEventListener('mousemove', (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+// ── Feature Cards Mouse Effect (desktop with hover only) ──
+if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  const featureCards = document.querySelectorAll('.feature-card');
+  featureCards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      // Update mouse position variables for CSS spotlight
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+      
+      // 3D Tilt & Follow Effect
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      // Rotation values
+      const rotateX = (centerY - y) / 12;
+      const rotateY = (x - centerX) / 12;
+      
+      // Translation (follow) values
+      const moveX = (x - centerX) / 15;
+      const moveY = (y - centerY) / 15;
+      
+      card.style.transform = `translate(${moveX}px, ${moveY - 10}px) scale(1.04) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
     
-    // Update mouse position variables for CSS spotlight
-    card.style.setProperty('--mouse-x', `${x}px`);
-    card.style.setProperty('--mouse-y', `${y}px`);
-    
-    // 3D Tilt & Follow Effect
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    // Rotation values
-    const rotateX = (centerY - y) / 12;
-    const rotateY = (x - centerX) / 12;
-    
-    // Translation (follow) values
-    const moveX = (x - centerX) / 15;
-    const moveY = (y - centerY) / 15;
-    
-    card.style.transform = `translate(${moveX}px, ${moveY - 10}px) scale(1.04) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
   });
-  
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = '';
-  });
-});
+}
