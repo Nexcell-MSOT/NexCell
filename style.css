@@ -1252,9 +1252,25 @@ body.nav-open {
 .lookback-track { 
   overflow: hidden; 
   position: relative; 
-  margin-bottom: 1rem; 
-  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  margin-bottom: 1rem;
+}
+.lookback-track::before,
+.lookback-track::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 90px;
+  z-index: 2;
+  pointer-events: none;
+}
+.lookback-track::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-primary), transparent);
+}
+.lookback-track::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-primary), transparent);
 }
 .lookback-slider { 
   display: flex; 
@@ -1262,6 +1278,7 @@ body.nav-open {
   width: max-content;
   padding-right: 1.5rem; /* Match the gap for seamless looping */
   will-change: transform;
+  transform: translateZ(0);
 }
 
 .lookback-slider.left { animation: scrollLookbackLeft 40s linear infinite; }
@@ -1274,8 +1291,9 @@ body.nav-open {
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  transition: all 0.4s ease;
+  transition: transform 0.4s ease, border-color 0.4s ease;
   position: relative;
+  contain: content;
 }
 
 .lookback-img::after {
@@ -1321,14 +1339,16 @@ body.nav-open {
 .team-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.4rem; margin-top: 2rem; }
 .team-card {
   border-radius: 16px; overflow: hidden; background: var(--bg-card);
-  border: 1px solid var(--border-card); transition: all .35s; position: relative;
+  border: 1px solid var(--border-card); transition: transform .35s, border-color .35s; position: relative;
   display: flex; flex-direction: column;
+  contain: content;
 }
 .team-card:hover { border-color: var(--border-card-hover); transform: translateY(-5px); }
 .team-badge {
   position: absolute; top: 12px; left: 12px; z-index: 2;
   padding: .3rem .8rem; border-radius: 6px;
-  background: var(--label-bg); backdrop-filter: blur(8px);
+  background: rgba(15, 20, 40, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   font-size: .65rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
   color: var(--text-secondary);
 }

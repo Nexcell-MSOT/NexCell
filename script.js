@@ -1,31 +1,33 @@
-// ── Throttled Scroll Handler ──
-let scrollTicking = false;
+// ── High-Performance Scroll & Navigation Handler ──
 const navbar = document.querySelector('.navbar');
-const sections = document.querySelectorAll('.section[id]');
 const navItems = document.querySelectorAll('.nav-links a');
+const sections = document.querySelectorAll('.section[id]');
 
-function handleScroll() {
-  // Navbar scroll effect
-  navbar.classList.toggle('scrolled', window.scrollY > 40);
-
-  // Active nav link on scroll
-  let current = '';
-  sections.forEach(sec => {
-    if (window.scrollY >= sec.offsetTop - 120) current = sec.getAttribute('id');
-  });
-  navItems.forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-  });
-
-  scrollTicking = false;
-}
-
+// Navbar background toggle with passive listener (zero layout thrashing)
+let scrollScheduled = false;
 window.addEventListener('scroll', () => {
-  if (!scrollTicking) {
-    window.requestAnimationFrame(handleScroll);
-    scrollTicking = true;
+  if (!scrollScheduled) {
+    scrollScheduled = true;
+    requestAnimationFrame(() => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+      scrollScheduled = false;
+    });
   }
-});
+}, { passive: true });
+
+// Active nav link highlight using IntersectionObserver instead of synchronous offsetTop loops
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.getAttribute('id');
+      navItems.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+
+sections.forEach(sec => navObserver.observe(sec));
 
 // ── Mobile hamburger & navigation ──
 const hamburger = document.querySelector('.hamburger');
@@ -243,7 +245,7 @@ if (reviewForm) {
   });
 }
 
-// ── Custom Cursor (desktop only) ──
+// ── Custom Cursor (desktop only, with idle sleeping) ──
 if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
   const cursorDot = document.querySelector('.cursor-dot');
   const cursorOutline = document.querySelector('.cursor-outline');
@@ -251,6 +253,28 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
   let mouseX = 0, mouseY = 0;
   let outlineX = 0, outlineY = 0;
   let isFirstMove = true;
+  let cursorActive = false;
+
+  function runCursorLoop() {
+    if (cursorActive) return;
+    cursorActive = true;
+    requestAnimationFrame(function update() {
+      const lerp = 0.2;
+      const dx = mouseX - outlineX;
+      const dy = mouseY - outlineY;
+      outlineX += dx * lerp;
+      outlineY += dy * lerp;
+
+      cursorOutline.style.left = `${outlineX}px`;
+      cursorOutline.style.top = `${outlineY}px`;
+
+      if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
+        requestAnimationFrame(update);
+      } else {
+        cursorActive = false;
+      }
+    });
+  }
 
   window.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
@@ -266,19 +290,8 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
 
     cursorDot.style.left = `${mouseX}px`;
     cursorDot.style.top = `${mouseY}px`;
-  });
-
-  function animateCursor() {
-    const lerpFactor = 0.15;
-    outlineX += (mouseX - outlineX) * lerpFactor;
-    outlineY += (mouseY - outlineY) * lerpFactor;
-
-    cursorOutline.style.left = `${outlineX}px`;
-    cursorOutline.style.top = `${outlineY}px`;
-
-    requestAnimationFrame(animateCursor);
-  }
-  animateCursor();
+    runCursorLoop();
+  }, { passive: true });
 
   // Cursor Hover Effects (Delegation)
   let isHovering = false;
@@ -317,35 +330,49 @@ if (showMoreBtn) {
   });
 }
 
-// ── Feature Cards Mouse Effect (desktop with hover only) ──
+// ── Feature Cards Mouse Effect (desktop with hover only, cached rect) ──
 if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
   const featureCards = document.querySelectorAll('.feature-card');
   featureCards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      // Update mouse position variables for CSS spotlight
-      card.style.setProperty('--mouse-x', `${x}px`);
-      card.style.setProperty('--mouse-y', `${y}px`);
-      
-      // 3D Tilt & Follow Effect
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      
-      // Rotation values
-      const rotateX = (centerY - y) / 12;
-      const rotateY = (x - centerX) / 12;
-      
-      // Translation (follow) values
-      const moveX = (x - centerX) / 15;
-      const moveY = (y - centerY) / 15;
-      
-      card.style.transform = `translate(${moveX}px, ${moveY - 10}px) scale(1.04) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    let rect = null;
+    let frameId = null;
+
+    card.addEventListener('mouseenter', () => {
+      rect = card.getBoundingClientRect();
     });
+
+    card.addEventListener('mousemove', (e) => {
+      if (!rect) rect = card.getBoundingClientRect();
+      const clientX = e.clientX;
+      const clientY = e.clientY;
+
+      if (!frameId) {
+        frameId = requestAnimationFrame(() => {
+          const x = clientX - rect.left;
+          const y = clientY - rect.top;
+          
+          card.style.setProperty('--mouse-x', `${x}px`);
+          card.style.setProperty('--mouse-y', `${y}px`);
+          
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = (centerY - y) / 14;
+          const rotateY = (x - centerX) / 14;
+          const moveX = (x - centerX) / 16;
+          const moveY = (y - centerY) / 16;
+          
+          card.style.transform = `translate(${moveX}px, ${moveY - 8}px) scale(1.03) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+          frameId = null;
+        });
+      }
+    }, { passive: true });
     
     card.addEventListener('mouseleave', () => {
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+        frameId = null;
+      }
+      rect = null;
       card.style.transform = '';
     });
   });
