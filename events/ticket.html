@@ -4,8 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event Pass & Admission Ticket — NexCell</title>
-  <meta name="description" content="Official verified digital admission pass for NexCell club events, hackathons, and founder summits.">
+  <title>Event Pass & Admission Ticket Verification — NexCell</title>
+  <meta name="description"
+    content="Official verified digital admission pass for NexCell club events, ideathons, and startup summits. Look up your scannable QR gate pass.">
   <link rel="icon" type="image/png" href="https://i.ibb.co/LXTydtj1/Nex.png">
 
   <!-- Google Fonts -->
@@ -30,15 +31,18 @@
       --ticket-gold-dark: #b87308;
       --ticket-gold-glow: rgba(243, 156, 18, 0.3);
       --ticket-bg: #0a0e1a;
-      --card-bg: rgba(14, 19, 39, 0.95);
-      --ticket-border: rgba(243, 156, 18, 0.35);
+      --card-bg: rgba(13, 18, 37, 0.88);
+      --ticket-border: rgba(55, 75, 140, 0.35);
+      --ticket-border-hover: rgba(74, 124, 255, 0.6);
     }
 
     body {
       background-color: var(--ticket-bg);
-      background-image: 
-        radial-gradient(circle at 20% 25%, rgba(74, 124, 255, 0.08) 0%, transparent 45%),
-        radial-gradient(circle at 80% 75%, rgba(243, 156, 18, 0.08) 0%, transparent 45%);
+      background-image:
+        radial-gradient(circle at 15% 20%, rgba(74, 124, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 65%, rgba(243, 156, 18, 0.07) 0%, transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(56, 189, 248, 0.05) 0%, transparent 50%);
+      background-attachment: fixed;
       min-height: 100vh;
       color: #e8ecf4;
       font-family: 'Inter', system-ui, sans-serif;
@@ -49,50 +53,71 @@
       body, a, button, input {
         cursor: auto !important;
       }
-      a, button, #btnPrintPass, #btnShareTicket, #btnManualSearch {
+      a, button, .btn-primary, .btn-secondary, .sample-code-tag, .hamburger {
         cursor: pointer !important;
       }
       input {
         cursor: text !important;
       }
+      .cursor-dot, .cursor-outline {
+        pointer-events: none !important;
+      }
     }
 
-    .ticket-page-container {
-      max-width: 900px;
+    /* ═══ PORTAL PAGE CONTAINER & HERO ═══ */
+    .portal-container {
+      max-width: 1200px;
       margin: 0 auto;
-      padding: calc(var(--nav-height) + 2.5rem) 1.5rem 3rem;
+      padding: calc(var(--nav-height) + 2.5rem) 1.5rem 5rem;
     }
 
-    .ticket-header {
+    .portal-hero {
       text-align: center;
-      margin-bottom: 2.5rem;
+      max-width: 840px;
+      margin: 0 auto 3rem;
     }
 
-    .ticket-tag {
+    .badge-pill {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: rgba(243, 156, 18, 0.12);
-      border: 1px solid var(--ticket-border);
-      color: var(--ticket-gold);
-      padding: 0.35rem 1rem;
-      border-radius: 99px;
+      padding: 0.45rem 1.1rem;
+      border-radius: 999px;
       font-size: 0.78rem;
       font-weight: 700;
-      letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 1rem;
+      letter-spacing: 1.5px;
+      background: rgba(30, 42, 80, 0.7);
+      border: 1px solid rgba(74, 124, 255, 0.3);
+      color: var(--accent-light-blue);
+      margin-bottom: 1.25rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
-    .ticket-title {
-      font-size: clamp(2rem, 4vw, 2.8rem);
+    .badge-pill .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulseGreen 2s infinite;
+    }
+
+    @keyframes pulseGreen {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .portal-title {
+      font-size: clamp(2.2rem, 4.5vw, 3.4rem);
       font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
       color: #ffffff;
-      letter-spacing: -0.5px;
-      margin-bottom: 0.5rem;
     }
 
-    .ticket-title .gold-accent {
+    .portal-title .gold-accent {
       font-family: 'Playfair Display', serif;
       font-style: italic;
       color: var(--ticket-gold);
@@ -101,9 +126,371 @@
       -webkit-text-fill-color: transparent;
     }
 
-    .ticket-subtitle {
+    .portal-desc {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ═══ GRID LAYOUT ═══ */
+    .portal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.65fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 960px) {
+      .portal-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ═══ SIDEBAR GUIDELINES ═══ */
+    .portal-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .portal-side-card {
+      background: var(--card-bg);
+      border: 1px solid var(--ticket-border);
+      border-radius: 20px;
+      padding: 1.75rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .side-card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .side-card-title svg {
+      color: var(--accent-cyan);
+    }
+
+    .perk-checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      padding: 0;
+      margin: 0;
+    }
+
+    .perk-checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .perk-checklist .check-icon {
+      color: #10b981;
+      font-size: 1rem;
+      line-height: 1.2;
+      flex-shrink: 0;
+    }
+
+    .timeline-steps {
+      list-style: none;
+      position: relative;
+      padding-left: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin: 0;
+    }
+
+    .timeline-steps::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: rgba(74, 124, 255, 0.25);
+    }
+
+    .timeline-step {
+      position: relative;
+    }
+
+    .timeline-step::before {
+      content: '';
+      position: absolute;
+      left: -1.5rem;
+      top: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #0a0e1a;
+      border: 2px solid var(--accent-blue);
+    }
+
+    .timeline-step h5 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-step p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* ═══ MAIN CARD / LOOKUP PANEL ═══ */
+    .portal-main-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .lookup-card {
+      background: var(--card-bg);
+      border: 1px solid var(--ticket-border);
+      border-radius: 24px;
+      padding: clamp(1.75rem, 4vw, 2.75rem);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(74, 124, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lookup-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(243, 156, 18, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .lookup-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+    }
+
+    .lookup-desc {
       font-size: 0.95rem;
       color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.75rem;
+    }
+
+    .search-input-group {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .search-input-group {
+        flex-direction: column;
+      }
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      flex: 1;
+    }
+
+    .search-input-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .portal-search-input {
+      width: 100%;
+      padding: 0.95rem 1rem 0.95rem 2.85rem;
+      background: rgba(10, 14, 28, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      color: #ffffff;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.25s ease;
+      box-sizing: border-box;
+    }
+
+    .portal-search-input:focus {
+      outline: none;
+      border-color: var(--ticket-gold);
+      box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.18);
+      background: rgba(10, 14, 28, 0.95);
+    }
+
+    .portal-search-input::placeholder {
+      color: #64748b;
+      font-size: 0.92rem;
+    }
+
+    .btn-verify-action {
+      background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+      color: #000;
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 0.95rem 1.75rem;
+      border: none;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 15px rgba(243, 156, 18, 0.35);
+    }
+
+    .btn-verify-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(243, 156, 18, 0.5);
+      filter: brightness(1.08);
+    }
+
+    .btn-verify-action:active {
+      transform: translateY(0);
+    }
+
+    /* Sample / Demo helper tags */
+    .sample-tags-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 0.85rem;
+    }
+
+    .sample-code-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(243, 156, 18, 0.1);
+      border: 1px dashed rgba(243, 156, 18, 0.35);
+      color: var(--ticket-gold);
+      padding: 0.25rem 0.65rem;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.82rem;
+      transition: all 0.2s ease;
+    }
+
+    .sample-code-tag:hover {
+      background: rgba(243, 156, 18, 0.2);
+      border-color: var(--ticket-gold);
+      color: #ffffff;
+    }
+
+    /* Alert / Status Banner */
+    .search-alert-box {
+      border-radius: 14px;
+      padding: 1.1rem 1.35rem;
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .search-alert-box.info {
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #93c5fd;
+    }
+
+    .search-alert-box.error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+    }
+
+    .search-alert-box.warning {
+      background: rgba(243, 156, 18, 0.1);
+      border: 1px solid rgba(243, 156, 18, 0.35);
+      color: #fce07a;
+    }
+
+    /* ═══ LOADING STATE CARD ═══ */
+    .loading-card {
+      background: var(--card-bg);
+      border: 1px solid var(--ticket-border);
+      border-radius: 24px;
+      padding: 4rem 2rem;
+      text-align: center;
+      backdrop-filter: blur(20px);
+    }
+
+    .spinner-gold {
+      width: 48px;
+      height: 48px;
+      border: 3px solid rgba(243, 156, 18, 0.2);
+      border-top-color: var(--ticket-gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ═══ VERIFIED PASS PRESENTATION CARD ═══ */
+    .ticket-result-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .ticket-top-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .btn-back-search {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--accent-light-blue);
+      background: rgba(74, 124, 255, 0.1);
+      border: 1px solid rgba(74, 124, 255, 0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-back-search:hover {
+      background: rgba(74, 124, 255, 0.2);
+      color: #ffffff;
+      transform: translateX(-2px);
     }
 
     /* Ticket Card Component */
@@ -116,11 +503,11 @@
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px var(--ticket-gold-glow);
       backdrop-filter: blur(20px);
       display: grid;
-      grid-template-columns: 1fr 300px;
+      grid-template-columns: 1fr 290px;
       transition: transform 0.3s ease;
     }
 
-    @media (max-width: 820px) {
+    @media (max-width: 860px) {
       .ticket-card {
         grid-template-columns: 1fr;
       }
@@ -145,9 +532,35 @@
       100% { background-position: 200% 0%; }
     }
 
+    /* Perforated cutout circles */
+    @media (min-width: 861px) {
+      .cutout-top {
+        position: absolute;
+        top: -16px;
+        right: 274px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--ticket-bg);
+        border-bottom: 1px solid var(--ticket-border);
+        z-index: 5;
+      }
+      .cutout-bottom {
+        position: absolute;
+        bottom: -16px;
+        right: 274px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--ticket-bg);
+        border-top: 1px solid var(--ticket-border);
+        z-index: 5;
+      }
+    }
+
     /* Left Main Section */
     .ticket-main {
-      padding: 2.5rem;
+      padding: clamp(1.75rem, 3.5vw, 2.5rem);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -158,7 +571,7 @@
       display: flex;
       align-items: center;
       gap: 0.85rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.75rem;
     }
 
     .ticket-logo {
@@ -171,6 +584,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
 
     .ticket-logo img {
@@ -196,7 +610,7 @@
     }
 
     .event-heading {
-      margin-bottom: 2rem;
+      margin-bottom: 1.75rem;
     }
 
     .event-type-badge {
@@ -214,17 +628,17 @@
     }
 
     .event-name {
-      font-size: 1.7rem;
+      font-size: clamp(1.4rem, 2.8vw, 1.85rem);
       font-weight: 800;
       color: #ffffff;
       line-height: 1.25;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.65rem;
     }
 
     .event-venue-date {
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.45rem;
       font-size: 0.9rem;
       color: var(--text-secondary);
     }
@@ -243,6 +657,12 @@
       border-top: 1px dashed rgba(255, 255, 255, 0.12);
     }
 
+    @media (max-width: 500px) {
+      .attendee-details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .attendee-item label {
       display: block;
       font-size: 0.7rem;
@@ -254,54 +674,16 @@
     }
 
     .attendee-item .val {
-      font-size: 1rem;
+      font-size: 0.98rem;
       font-weight: 700;
       color: #ffffff;
-    }
-
-    /* Perforated Stub Divider */
-    .stub-divider {
-      position: relative;
-      background: transparent;
-    }
-
-    @media (min-width: 821px) {
-      .stub-divider {
-        border-left: 2px dashed rgba(243, 156, 18, 0.35);
-      }
-      /* Perforated cutout circles */
-      .ticket-card::after,
-      .ticket-card::before {
-        /* Pseudo elements handled cleanly */
-      }
-      .cutout-top {
-        position: absolute;
-        top: -16px;
-        right: 292px;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: var(--ticket-bg);
-        border-bottom: 1px solid var(--ticket-border);
-        z-index: 5;
-      }
-      .cutout-bottom {
-        position: absolute;
-        bottom: -16px;
-        right: 292px;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: var(--ticket-bg);
-        border-top: 1px solid var(--ticket-border);
-        z-index: 5;
-      }
+      word-break: break-word;
     }
 
     /* Right Stub Section */
     .ticket-stub {
       background: rgba(10, 14, 28, 0.8);
-      padding: 2.5rem 1.75rem;
+      padding: 2.25rem 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -310,13 +692,10 @@
       border-left: 1px dashed rgba(243, 156, 18, 0.3);
     }
 
-    @media (max-width: 820px) {
+    @media (max-width: 860px) {
       .ticket-stub {
         border-left: none;
         border-top: 2px dashed rgba(243, 156, 18, 0.3);
-      }
-      .cutout-top, .cutout-bottom {
-        display: none;
       }
     }
 
@@ -325,7 +704,7 @@
       padding: 12px;
       border-radius: 16px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.15rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -347,7 +726,7 @@
       border: 1px solid rgba(243, 156, 18, 0.3);
       padding: 0.35rem 0.8rem;
       border-radius: 8px;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.65rem;
       user-select: all;
     }
 
@@ -364,38 +743,46 @@
       border: 1px solid rgba(16, 185, 129, 0.3);
       padding: 0.3rem 0.8rem;
       border-radius: 99px;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
     }
 
     .scan-note {
       font-size: 0.72rem;
       color: var(--text-muted);
       margin: 0;
+      line-height: 1.4;
     }
 
     /* Actions Bar */
     .ticket-actions-bar {
-      margin-top: 2rem;
+      margin-top: 1.5rem;
       display: flex;
       justify-content: center;
       gap: 1rem;
       flex-wrap: wrap;
     }
 
-    /* States: Loading & Not Found */
-    .state-card {
-      background: var(--card-bg);
-      border: 1px solid var(--ticket-border);
-      border-radius: 24px;
-      padding: 3.5rem 2rem;
-      text-align: center;
-      max-width: 550px;
-      margin: 2rem auto;
+    /* Toast Notification */
+    .toast-popup {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #10b981;
+      color: #000;
+      padding: 0.8rem 1.4rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .state-icon {
-      font-size: 3rem;
-      margin-bottom: 1.25rem;
+    .toast-popup.show {
+      transform: translateY(0);
+      opacity: 1;
     }
 
     /* Print View Only Stylings */
@@ -405,13 +792,16 @@
         color: #000 !important;
         padding: 0 !important;
       }
-      .navbar, .footer, .ticket-actions-bar, .ticket-header, .cursor-dot, .cursor-outline {
+      .navbar, .footer, .portal-hero, .portal-sidebar, .ticket-top-nav-bar, .ticket-actions-bar, .cursor-dot, .cursor-outline {
         display: none !important;
       }
-      .ticket-page-container {
+      .portal-container {
         padding: 0 !important;
         margin: 0 !important;
         max-width: 100% !important;
+      }
+      .portal-grid {
+        display: block !important;
       }
       .ticket-card {
         box-shadow: none !important;
@@ -435,174 +825,357 @@
         border-color: #000 !important;
         color: #000 !important;
       }
+      .cutout-top, .cutout-bottom {
+        display: none !important;
+      }
     }
   </style>
 </head>
 
 <body>
   <!-- ═══ HEADER / NAVIGATION ═══ -->
-  <header class="navbar" id="navbar">
-    <div class="nav-container">
-      <a href="../index.html" class="nav-logo">
-        <img src="https://i.ibb.co/LXTydtj1/Nex.png" alt="NexCell Logo" width="40" height="40">
-        <span class="logo-text">NexCell<span class="dot">.</span></span>
-      </a>
-      <div class="nav-actions">
-        <a href="apply.html" class="btn-secondary" style="font-size: 0.85rem; padding: 0.45rem 1rem;">Browse Events</a>
-        <a href="../index.html" class="btn-primary" style="font-size: 0.85rem; padding: 0.45rem 1.1rem;">Home</a>
+  <nav class="navbar" id="navbar">
+    <a href="../index.html" class="nav-logo" aria-label="NexCell Home">
+      <div class="nav-logo-icon">
+        <img src="https://i.ibb.co/LXTydtj1/Nex.png" alt="NexCell Logo" class="logo-img" width="42" height="42">
       </div>
-    </div>
-  </header>
+      <div class="nav-logo-text">NexCell<span>.</span></div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li class="nav-dropdown">
+        <a href="javascript:void(0)" class="dropdown-trigger">Events <span class="dropdown-icon">▾</span></a>
+        <ul class="dropdown-menu">
+          <li><a href="../index.html#upcoming-events">Upcoming Events</a></li>
+          <li><a href="../index.html#events">Past Events</a></li>
+          <li><a href="apply.html">Apply / Register ★</a></li>
+          <li><a href="ticket.html" style="color: var(--ticket-gold);">Verify Pass 🎟️</a></li>
+        </ul>
+      </li>
+      <li><a href="../index.html#team">Team</a></li>
+      <li><a href="../index.html#reviews">Reviews</a></li>
+      <li class="mobile-cta-li"><a href="apply.html" class="mobile-nav-cta">Apply for Events</a></li>
+    </ul>
+    <a href="apply.html" class="nav-cta">Apply for Events</a>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
 
-  <main class="ticket-page-container">
+  <!-- ═══ MAIN PORTAL CONTAINER ═══ -->
+  <main class="portal-container">
 
-    <!-- Loading State -->
-    <div id="loadingState" class="state-card">
-      <div class="state-icon">🎟️</div>
-      <h3 style="font-size: 1.4rem; color: #fff; margin-bottom: 0.5rem;">Verifying Admission Ticket...</h3>
-      <p style="color: var(--text-muted); font-size: 0.9rem;">Connecting to NexCell secure pass registry.</p>
-    </div>
-
-    <!-- Error / Not Found State -->
-    <div id="notFoundState" class="state-card" style="display: none;">
-      <div class="state-icon">⚠️</div>
-      <h3 style="font-size: 1.4rem; color: #ef4444; margin-bottom: 0.5rem;">Ticket Not Found or Unverified</h3>
-      <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;" id="notFoundMessage">
-        The pass code provided is invalid, has expired, or is still awaiting confirmation by the NexCell committee.
+    <!-- Hero Header -->
+    <header class="portal-hero">
+      <div class="badge-pill">
+        <span class="pulse-dot"></span>
+        Official Gate Credential Verification
+      </div>
+      <h1 class="portal-title">
+        Verify & View Your <span class="gold-accent">Admission Pass.</span>
+      </h1>
+      <p class="portal-desc">
+        Look up your official digital admission credential, check verification status, or download your gate check-in QR pass.
       </p>
-      <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
-        <input type="text" id="manualCodeInput" class="form-input" placeholder="Enter NEX-XXXX-XXXX" style="max-width: 240px; text-transform: uppercase;">
-        <button type="button" class="btn-primary" id="btnManualSearch">Verify Pass</button>
-      </div>
-      <div style="margin-top: 1.5rem;">
-        <a href="apply.html" style="font-size: 0.85rem; color: var(--accent-light-blue); text-decoration: underline;">Return to Events Portal</a>
-      </div>
-    </div>
+    </header>
 
-    <!-- Verified Ticket Presentation -->
-    <div id="ticketContainer" style="display: none;">
-      <div class="ticket-header">
-        <div class="ticket-tag">
-          <span>✓</span> Official Admission Credential
-        </div>
-        <h1 class="ticket-title">Your <span class="gold-accent">NexCell Pass</span></h1>
-        <p class="ticket-subtitle">Present this QR pass on your phone or printed at the entrance gate.</p>
-      </div>
+    <!-- Main Two-Column Portal Grid -->
+    <div class="portal-grid">
 
-      <div class="ticket-card" id="printableTicket">
-        <div class="cutout-top"></div>
-        <div class="cutout-bottom"></div>
+      <!-- Left Column: Guidelines & Protocols -->
+      <aside class="portal-sidebar">
 
-        <!-- Left: Main Pass Details -->
-        <div class="ticket-main">
-          <div>
-            <div class="ticket-brand">
-              <div class="ticket-logo">
-                <img src="https://i.ibb.co/LXTydtj1/Nex.png" alt="NexCell">
-              </div>
-              <div class="ticket-brand-text">
-                <h4>NexCell Entrepreneurship Club</h4>
-                <span>Mirai School of Technology · RIT Bangalore</span>
-              </div>
-            </div>
-
-            <div class="event-heading">
-              <span class="event-type-badge" id="ticketEventTrack">Event Pass</span>
-              <h2 class="event-name" id="ticketEventTitle">Mirai 0→1 Flagship Ideathon</h2>
-              <div class="event-venue-date">
-                <div>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                  </svg>
-                  <span id="ticketEventDate">November 15, 2026 · 9:30 AM IST</span>
-                </div>
-                <div>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                  <span id="ticketEventVenue">Main Auditorium, Rathinam Campus, Bangalore</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="attendee-details-grid">
-            <div class="attendee-item">
-              <label>Admit One / Attendee</label>
-              <div class="val" id="ticketAttendeeName">-</div>
-            </div>
-            <div class="attendee-item">
-              <label>Team / Organization</label>
-              <div class="val" id="ticketTeamName">Solo Participant</div>
-            </div>
-            <div class="attendee-item">
-              <label>Contact Email</label>
-              <div class="val" id="ticketAttendeeEmail" style="font-size: 0.85rem; word-break: break-all;">-</div>
-            </div>
-            <div class="attendee-item">
-              <label>Issued Date</label>
-              <div class="val" id="ticketIssuedDate">-</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right: Stub with Dynamic QR Code -->
-        <div class="ticket-stub">
-          <div class="admission-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-              <polyline points="20 6 9 17 4 12"></polyline>
+        <div class="portal-side-card">
+          <h4 class="side-card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
             </svg>
-            <span>Verified Pass</span>
+            Gate Check-in Protocol
+          </h4>
+          <ul class="perk-checklist">
+            <li>
+              <span class="check-icon">✓</span>
+              <span><strong>Scannable QR:</strong> Present your pass on your smartphone or printout at the entrance gate.</span>
+            </li>
+            <li>
+              <span class="check-icon">✓</span>
+              <span><strong>Identity Verification:</strong> Please carry a valid college/institute ID matching your registered name.</span>
+            </li>
+            <li>
+              <span class="check-icon">✓</span>
+              <span><strong>Admission Security:</strong> Each ticket code is cryptographically unique and validated against the registry.</span>
+            </li>
+            <li>
+              <span class="check-icon">✓</span>
+              <span><strong>Physical Help Desk:</strong> In case of connectivity issues, physical check-in is available at the venue desk.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="portal-side-card">
+          <h4 class="side-card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            How Verification Works
+          </h4>
+          <ol class="timeline-steps">
+            <li class="timeline-step">
+              <h5>1. Enter Code or Email</h5>
+              <p>Type your <code>NEX-...</code> code or applicant email address.</p>
+            </li>
+            <li class="timeline-step">
+              <h5>2. Registry Verification</h5>
+              <p>The system queries confirmed event admissions in real time.</p>
+            </li>
+            <li class="timeline-step">
+              <h5>3. Access QR Gate Pass</h5>
+              <p>Save pass as PDF or present the scannable QR badge at entry.</p>
+            </li>
+          </ol>
+        </div>
+
+        <div class="portal-side-card" style="border-color: rgba(243, 156, 18, 0.3);">
+          <h4 class="side-card-title" style="color: var(--ticket-gold);">
+            💡 Organizer Tip
+          </h4>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
+            Taking a screenshot or downloading the PDF pass beforehand ensures seamless entrance even if campus mobile reception is congested.
+          </p>
+        </div>
+
+      </aside>
+
+      <!-- Right Column: Interactive Pass Search & Presentation -->
+      <section class="portal-main-panel">
+
+        <!-- Search / Lookup Form Card -->
+        <div class="lookup-card" id="lookupCard">
+          <h2 class="lookup-title">Find Your Admission Pass</h2>
+          <p class="lookup-desc">
+            Enter the unique Ticket Code sent to your email (e.g., <code>NEX-MIRAI-XXXXX</code>) or the email address used during registration.
+          </p>
+
+          <form id="passSearchForm" onsubmit="return false;">
+            <div class="search-input-group">
+              <div class="search-input-wrapper">
+                <svg class="search-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input
+                  type="text"
+                  id="passSearchInput"
+                  class="portal-search-input"
+                  placeholder="Enter Ticket Code or Registered Email"
+                  autocomplete="off"
+                  autocapitalize="characters"
+                  spellcheck="false"
+                  required
+                >
+              </div>
+              <button type="submit" class="btn-verify-action" id="btnSearchSubmit">
+                <span>Verify Pass</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </form>
+
+          <div class="sample-tags-row">
+            <span>Quick formats:</span>
+            <span class="sample-code-tag" id="tagCodeFormat" title="Ticket Code format">NEX-EVENT-XXXX</span>
+            <span class="sample-code-tag" id="tagDemoCode" style="cursor: pointer;" title="Click to test sample pass">Try: NEX-DEMO-2026</span>
           </div>
 
-          <!-- Dynamic QR Container -->
-          <div class="qr-frame" id="qrcode" title="Scan to verify admission"></div>
-
-          <div class="ticket-code-display" id="ticketCodeText">NEX-PASS-0000</div>
-          <p class="scan-note">Gate Security will scan this QR badge upon entrance.</p>
+          <!-- Alert message box for errors or pending review info -->
+          <div id="searchAlertBox" class="search-alert-box warning" style="display: none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <div id="searchAlertContent">
+              <!-- Dynamic alert text -->
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Actions -->
-      <div class="ticket-actions-bar">
-        <button type="button" class="btn-primary" id="btnPrintPass" style="display: flex; align-items: center; gap: 0.5rem;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 6 2 18 2 18 9"></polyline>
-            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-            <rect x="6" y="14" width="12" height="8"></rect>
-          </svg>
-          Print / Save Pass (PDF)
-        </button>
-        <button type="button" class="btn-secondary" id="btnShareTicket" style="display: flex; align-items: center; gap: 0.5rem;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="18" cy="5" r="3"></circle>
-            <circle cx="6" cy="12" r="3"></circle>
-            <circle cx="18" cy="19" r="3"></circle>
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-          </svg>
-          Share Pass Link
-        </button>
-        <a href="../index.html" class="btn-secondary">Return Home</a>
-      </div>
+        <!-- Loading State Card -->
+        <div class="loading-card" id="ticketLoadingCard" style="display: none;">
+          <div class="spinner-gold"></div>
+          <h3 style="font-size: 1.35rem; color: #fff; margin-bottom: 0.5rem; font-weight: 700;">Verifying Admission Credential...</h3>
+          <p style="color: var(--text-muted); font-size: 0.92rem; margin: 0;">Querying NexCell event registry in real time.</p>
+        </div>
+
+        <!-- Verified Ticket Presentation -->
+        <div class="ticket-result-container" id="ticketResultContainer" style="display: none;">
+          
+          <div class="ticket-top-nav-bar">
+            <button type="button" class="btn-back-search" id="btnBackToSearch">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              Look up another pass
+            </button>
+            <div style="font-size: 0.85rem; color: #10b981; font-weight: 700; display: flex; align-items: center; gap: 0.4rem;">
+              <span>●</span> Verified & Active
+            </div>
+          </div>
+
+          <!-- Holographic Perforated Ticket Card -->
+          <div class="ticket-card" id="printableTicket">
+            <div class="cutout-top"></div>
+            <div class="cutout-bottom"></div>
+
+            <!-- Left: Main Pass Details -->
+            <div class="ticket-main">
+              <div>
+                <div class="ticket-brand">
+                  <div class="ticket-logo">
+                    <img src="https://i.ibb.co/LXTydtj1/Nex.png" alt="NexCell">
+                  </div>
+                  <div class="ticket-brand-text">
+                    <h4>NexCell Entrepreneurship Club</h4>
+                    <span>Mirai School of Technology · RIT Bangalore</span>
+                  </div>
+                </div>
+
+                <div class="event-heading">
+                  <span class="event-type-badge" id="ticketEventTrack">Event Pass</span>
+                  <h2 class="event-name" id="ticketEventTitle">Mirai 0→1 Flagship Ideathon</h2>
+                  <div class="event-venue-date">
+                    <div>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      <span id="ticketEventDate">November 15, 2026 · 9:30 AM IST</span>
+                    </div>
+                    <div>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                      </svg>
+                      <span id="ticketEventVenue">Main Auditorium, Rathinam Campus, Bangalore</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="attendee-details-grid">
+                <div class="attendee-item">
+                  <label>Admit One / Attendee</label>
+                  <div class="val" id="ticketAttendeeName">-</div>
+                </div>
+                <div class="attendee-item">
+                  <label>Team / Organization</label>
+                  <div class="val" id="ticketTeamName">Solo Participant</div>
+                </div>
+                <div class="attendee-item">
+                  <label>Contact Email</label>
+                  <div class="val" id="ticketAttendeeEmail" style="font-size: 0.88rem;">-</div>
+                </div>
+                <div class="attendee-item">
+                  <label>Issued Date</label>
+                  <div class="val" id="ticketIssuedDate">-</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Stub with Dynamic QR Code -->
+            <div class="ticket-stub">
+              <div class="admission-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Verified Pass</span>
+              </div>
+
+              <!-- Dynamic QR Container -->
+              <div class="qr-frame" id="qrcode" title="Scan to verify admission"></div>
+
+              <div class="ticket-code-display" id="ticketCodeText">NEX-PASS-0000</div>
+              <p class="scan-note">Gate Security will scan this dynamic QR badge upon entrance.</p>
+            </div>
+          </div>
+
+          <!-- Actions Bar -->
+          <div class="ticket-actions-bar">
+            <button type="button" class="btn-primary" id="btnPrintPass" style="display: flex; align-items: center; gap: 0.5rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              Print / Save Pass (PDF)
+            </button>
+            <button type="button" class="btn-secondary" id="btnShareTicket" style="display: flex; align-items: center; gap: 0.5rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
+              Share Pass Link
+            </button>
+            <a href="apply.html" class="btn-secondary">Browse Events</a>
+          </div>
+
+        </div>
+
+      </section>
+
     </div>
 
   </main>
 
+  <!-- Toast Notification -->
+  <div id="toastPopup" class="toast-popup">Pass link copied to clipboard! 📋</div>
+
+  <!-- ═══ SCRIPT LOGIC ═══ -->
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const codeParam = urlParams.get('code') || urlParams.get('ticket');
+      // 1. Mobile Menu Toggle
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('navLinks');
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = navLinks.classList.toggle('open');
+          hamburger.classList.toggle('active', isOpen);
+        });
 
-      const loadingState = document.getElementById('loadingState');
-      const notFoundState = document.getElementById('notFoundState');
-      const notFoundMessage = document.getElementById('notFoundMessage');
-      const ticketContainer = document.getElementById('ticketContainer');
+        document.addEventListener('click', (e) => {
+          if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && !hamburger.contains(e.target)) {
+            navLinks.classList.remove('open');
+            hamburger.classList.remove('active');
+          }
+        });
+      }
 
+      // 2. DOM Elements
+      const lookupCard = document.getElementById('lookupCard');
+      const ticketLoadingCard = document.getElementById('ticketLoadingCard');
+      const ticketResultContainer = document.getElementById('ticketResultContainer');
+      const passSearchForm = document.getElementById('passSearchForm');
+      const passSearchInput = document.getElementById('passSearchInput');
+      const btnSearchSubmit = document.getElementById('btnSearchSubmit');
+      const searchAlertBox = document.getElementById('searchAlertBox');
+      const searchAlertContent = document.getElementById('searchAlertContent');
+      const btnBackToSearch = document.getElementById('btnBackToSearch');
+      const tagDemoCode = document.getElementById('tagDemoCode');
+      const toastPopup = document.getElementById('toastPopup');
+
+      // Ticket Presentation fields
       const ticketEventTrack = document.getElementById('ticketEventTrack');
       const ticketEventTitle = document.getElementById('ticketEventTitle');
       const ticketEventDate = document.getElementById('ticketEventDate');
@@ -616,81 +1189,168 @@
 
       const btnPrintPass = document.getElementById('btnPrintPass');
       const btnShareTicket = document.getElementById('btnShareTicket');
-      const btnManualSearch = document.getElementById('btnManualSearch');
-      const manualCodeInput = document.getElementById('manualCodeInput');
 
-      // Register Action Listeners
-      btnPrintPass.addEventListener('click', () => {
-        window.print();
-      });
-
-      btnShareTicket.addEventListener('click', async () => {
-        const shareUrl = window.location.href;
-        if (navigator.share) {
-          try {
-            await navigator.share({
-              title: `NexCell Event Pass — ${ticketEventTitle.textContent}`,
-              text: `Here is my verified admission pass for ${ticketEventTitle.textContent}!`,
-              url: shareUrl
-            });
-          } catch (e) {
-            // share dismissed
-          }
-        } else if (navigator.clipboard) {
-          await navigator.clipboard.writeText(shareUrl);
-          alert('Pass link copied to clipboard! 📋');
-        } else {
-          prompt('Copy your pass link:', shareUrl);
-        }
-      });
-
-      btnManualSearch.addEventListener('click', () => {
-        const code = manualCodeInput.value.trim().toUpperCase();
-        if (code) {
-          window.location.search = `?code=${encodeURIComponent(code)}`;
-        }
-      });
-
-      manualCodeInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          btnManualSearch.click();
-        }
-      });
-
-      if (!codeParam) {
-        showNotFound('No ticket code was specified in the URL. Please enter your pass code below.');
-        return;
+      // 3. UI Helpers
+      function showToast(msg) {
+        if (!toastPopup) return;
+        toastPopup.textContent = msg;
+        toastPopup.classList.add('show');
+        setTimeout(() => toastPopup.classList.remove('show'), 3000);
       }
 
-      await loadTicket(codeParam.trim().toUpperCase());
+      function showAlert(html, type = 'warning') {
+        searchAlertBox.className = `search-alert-box ${type}`;
+        searchAlertContent.innerHTML = html;
+        searchAlertBox.style.display = 'flex';
+      }
 
-      async function loadTicket(ticketCode) {
-        loadingState.style.display = 'block';
-        notFoundState.style.display = 'none';
-        ticketContainer.style.display = 'none';
+      function hideAlert() {
+        searchAlertBox.style.display = 'none';
+        searchAlertContent.innerHTML = '';
+      }
 
-        const { data, error } = await window.NexcellSupabase.getTicketByCode(ticketCode);
+      function showLookupView() {
+        lookupCard.style.display = 'block';
+        ticketLoadingCard.style.display = 'none';
+        ticketResultContainer.style.display = 'none';
+        passSearchInput.focus();
+      }
 
-        loadingState.style.display = 'none';
+      function showLoadingView() {
+        lookupCard.style.display = 'none';
+        ticketLoadingCard.style.display = 'block';
+        ticketResultContainer.style.display = 'none';
+      }
 
-        if (error || !data) {
-          showNotFound(`Ticket "${ticketCode}" was not found, has not yet been accepted by organizers, or is invalid.`);
+      function showResultView() {
+        lookupCard.style.display = 'none';
+        ticketLoadingCard.style.display = 'none';
+        ticketResultContainer.style.display = 'flex';
+      }
+
+      // 4. Pass Lookup Engine
+      async function executeLookup(query) {
+        const cleanQuery = (query || '').trim();
+        if (!cleanQuery) {
+          showAlert('Please enter your Ticket Code (e.g. <code>NEX-MIRAI-XXXXX</code>) or registered applicant email.');
           return;
         }
 
-        // Render Ticket Details
-        ticketEventTrack.textContent = data.event_slug ? data.event_slug.toUpperCase() : 'NEXCELL EVENT';
+        hideAlert();
+        showLoadingView();
+
+        try {
+          let ticketData = null;
+
+          // Check if query is an email address
+          if (cleanQuery.includes('@')) {
+            ticketData = await lookupByEmail(cleanQuery);
+          } else {
+            ticketData = await lookupByCode(cleanQuery.toUpperCase());
+          }
+
+          if (!ticketData) {
+            showLookupView();
+            showAlert(
+              `<strong>Pass Not Found or Pending:</strong> We could not find a confirmed admission pass for <code>${escapeHtml(cleanQuery)}</code>.<br>` +
+              `<span style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px; display: inline-block;">` +
+              `• Double check for typing errors.<br>` +
+              `• If you submitted an application recently, it might still be under review by the committee.<br>` +
+              `• Contact the team at <a href="mailto:nexcell@mirai.rit.edu" style="color: var(--ticket-gold); text-decoration: underline;">nexcell@mirai.rit.edu</a> if you believe this is an error.</span>`,
+              'warning'
+            );
+            return;
+          }
+
+          // Successfully found ticket! Render it
+          await renderTicket(ticketData);
+          showResultView();
+
+          // Smoothly update URL query param without reload
+          const newUrl = `${window.location.pathname}?code=${encodeURIComponent(ticketData.ticket_code)}`;
+          window.history.pushState({ code: ticketData.ticket_code }, '', newUrl);
+
+        } catch (err) {
+          console.error('Lookup exception:', err);
+          showLookupView();
+          showAlert(`An error occurred while verifying the pass: ${escapeHtml(err.message || 'Network error')}. Please try again.`, 'error');
+        }
+      }
+
+      async function lookupByCode(code) {
+        // Special Demo Pass Handler for instant previewing
+        if (code === 'NEX-DEMO-2026') {
+          return {
+            id: 'demo-sample-01',
+            event_slug: 'mirai-ideathon-2026',
+            applicant_name: 'Aditya Narayan',
+            applicant_email: 'aditya.n@mirai.rit.edu',
+            team_name: 'QuantumLeap AI',
+            ticket_code: 'NEX-DEMO-2026',
+            status: 'accepted',
+            created_at: new Date().toISOString(),
+            details: {
+              startup_name: 'QuantumLeap AI'
+            }
+          };
+        }
+
+        if (window.NexcellSupabase && typeof window.NexcellSupabase.getTicketByCode === 'function') {
+          const { data, error } = await window.NexcellSupabase.getTicketByCode(code);
+          if (!error && data) return data;
+        }
+
+        // Direct client fallback
+        if (window.NexcellSupabase && typeof window.NexcellSupabase.getClient === 'function') {
+          const client = await window.NexcellSupabase.getClient();
+          if (client) {
+            const { data, error } = await client
+              .from('event_submissions')
+              .select('id, event_slug, applicant_name, applicant_email, team_name, details, ticket_code, ticket_qr_data, status, created_at')
+              .eq('ticket_code', code)
+              .eq('status', 'accepted')
+              .maybeSingle();
+
+            if (!error && data) return data;
+          }
+        }
+
+        return null;
+      }
+
+      async function lookupByEmail(email) {
+        if (window.NexcellSupabase && typeof window.NexcellSupabase.getClient === 'function') {
+          const client = await window.NexcellSupabase.getClient();
+          if (client) {
+            const { data, error } = await client
+              .from('event_submissions')
+              .select('id, event_slug, applicant_name, applicant_email, team_name, details, ticket_code, ticket_qr_data, status, created_at')
+              .ilike('applicant_email', email)
+              .eq('status', 'accepted')
+              .order('created_at', { ascending: false })
+              .limit(1)
+              .maybeSingle();
+
+            if (!error && data) return data;
+          }
+        }
+        return null;
+      }
+
+      // 5. Render Ticket UI
+      async function renderTicket(data) {
+        ticketEventTrack.textContent = data.event_slug ? data.event_slug.replace(/-/g, ' ').toUpperCase() : 'NEXCELL EVENT';
         
-        // Fetch form definition for detailed venue & human event title if available
-        let title = data.event_slug ? data.event_slug.replace(/-/g, ' ').toUpperCase() : 'NexCell Event';
+        let title = data.event_slug ? data.event_slug.replace(/-/g, ' ').toUpperCase() : 'NexCell Event Pass';
         let venue = 'Rathinam Institute of Technology, Bangalore';
         let date = 'Confirmed Admission';
 
-        if (window.NexcellSupabase && data.event_slug) {
+        // Attempt to fetch event form metadata for richer presentation
+        if (window.NexcellSupabase && data.event_slug && typeof window.NexcellSupabase.getFormBySlug === 'function') {
           try {
             const formRes = await window.NexcellSupabase.getFormBySlug(data.event_slug);
             if (formRes && formRes.data) {
-              title = formRes.data.title || title;
+              if (formRes.data.title) title = formRes.data.title;
               if (formRes.data.venue) venue = formRes.data.venue;
               if (formRes.data.event_date) {
                 date = new Date(formRes.data.event_date).toLocaleString('en-US', {
@@ -703,7 +1363,7 @@
               }
             }
           } catch (e) {
-            console.warn('Form details load fallback:', e);
+            console.warn('Form metadata lookup skipped:', e);
           }
         }
 
@@ -711,18 +1371,19 @@
         ticketEventVenue.textContent = venue;
         ticketEventDate.textContent = date;
 
-        ticketAttendeeName.textContent = data.applicant_name;
-        ticketAttendeeEmail.textContent = data.applicant_email;
-        ticketTeamName.textContent = data.team_name || (data.details && data.details.startup_name) || 'Solo Participant';
-        ticketIssuedDate.textContent = new Date(data.created_at).toLocaleDateString('en-US', {
+        ticketAttendeeName.textContent = data.applicant_name || 'Confirmed Attendee';
+        ticketAttendeeEmail.textContent = data.applicant_email || '-';
+        ticketTeamName.textContent = data.team_name || (data.details && (data.details.startup_name || data.details.team_name)) || 'Individual Participant';
+        
+        ticketIssuedDate.textContent = data.created_at ? new Date(data.created_at).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'short',
           day: 'numeric'
-        });
+        }) : 'Verified';
 
         ticketCodeText.textContent = data.ticket_code;
 
-        // Render Scannable QR Code
+        // Render high-res dynamic QR Code
         qrcodeContainer.innerHTML = '';
         const verifyUrl = `${window.location.origin}${window.location.pathname}?code=${encodeURIComponent(data.ticket_code)}`;
         
@@ -734,14 +1395,70 @@
           colorLight: "#ffffff",
           correctLevel: QRCode.CorrectLevel.H
         });
-
-        ticketContainer.style.display = 'block';
       }
 
-      function showNotFound(msg) {
-        loadingState.style.display = 'none';
-        ticketContainer.style.display = 'none';
-        notFoundMessage.textContent = msg;
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      // 6. Action Listeners
+      passSearchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        executeLookup(passSearchInput.value);
+      });
+
+      btnBackToSearch.addEventListener('click', () => {
+        showLookupView();
+        // Clear code param cleanly
+        window.history.pushState({}, '', window.location.pathname);
+      });
+
+      if (tagDemoCode) {
+        tagDemoCode.addEventListener('click', () => {
+          passSearchInput.value = 'NEX-DEMO-2026';
+          executeLookup('NEX-DEMO-2026');
+        });
+      }
+
+      btnPrintPass.addEventListener('click', () => {
+        window.print();
+      });
+
+      btnShareTicket.addEventListener('click', async () => {
+        const shareUrl = window.location.href;
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: `NexCell Admission Pass — ${ticketEventTitle.textContent}`,
+              text: `Here is my verified admission pass for ${ticketEventTitle.textContent}!`,
+              url: shareUrl
+            });
+          } catch (e) {
+            // Dismissed
+          }
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(shareUrl);
+          showToast('Pass link copied to clipboard! 📋');
+        } else {
+          prompt('Copy your pass link:', shareUrl);
+        }
+      });
+
+      // 7. Initial Load Evaluation
+      const urlParams = new URLSearchParams(window.location.search);
+      const codeParam = urlParams.get('code') || urlParams.get('ticket');
+
+      if (codeParam && codeParam.trim()) {
+        passSearchInput.value = codeParam.trim();
+        await executeLookup(codeParam.trim());
+      } else {
+        showLookupView();
       }
     });
   </script>
