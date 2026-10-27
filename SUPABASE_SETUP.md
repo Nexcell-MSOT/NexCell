@@ -32,27 +32,25 @@ The NexCell platform relies on Supabase as a headless backend-as-a-service to po
 
 ---
 
-## 🚀 Step 1: Create a Supabase Project
+## 🚀 Connected Supabase Project
 
-1. Log in to [Supabase Dashboard](https://supabase.com/dashboard).
-2. Click **"New project"**.
-3. Fill in the project configuration:
-   - **Name:** `nexcell-production` (or `nexcell-dev` for testing)
-   - **Database Password:** Generate and securely store a strong password in the club password manager.
-   - **Region:** Select the region closest to our primary audience in India:
-     - Recommended: `South Asia (Mumbai) - ap-south-1` or `Southeast Asia (Singapore) - ap-southeast-1`.
-   - **Pricing Plan:** Free tier is fully sufficient.
-4. Click **"Create new project"** and wait ~2 minutes for infrastructure provisioning.
+- **Project ID:** `ejsrnuabenjqplxqswev`
+- **Project URL:** `https://ejsrnuabenjqplxqswev.supabase.co`
+- **Dashboard Link:** [https://supabase.com/dashboard/project/ejsrnuabenjqplxqswev](https://supabase.com/dashboard/project/ejsrnuabenjqplxqswev)
 
 ---
 
-## 🗄️ Step 2: Run Database Migration (`schema.sql`)
+## 🗄️ Step 1: Run Database Migration in SQL Editor
 
-1. In your Supabase Dashboard sidebar, navigate to the **SQL Editor** (terminal icon).
-2. Click **"New query"**.
-3. Open [`database/schema.sql`](file:///Users/sidd/Documents/nexcel-101/database/schema.sql) from this repository, copy the entire file contents, and paste them into the SQL Editor.
-4. Click **"Run"** (or press `Cmd/Ctrl + Enter`).
-5. Verify in the output panel:
+1. Open your project's SQL Editor directly:  
+   👉 **[https://supabase.com/dashboard/project/ejsrnuabenjqplxqswev/sql/new](https://supabase.com/dashboard/project/ejsrnuabenjqplxqswev/sql/new)**
+2. Copy the entire contents of [`database/schema.sql`](file:///Users/sidd/Documents/nexcel-101/database/schema.sql) and paste them into the query editor.
+3. Click the green **"Run"** button (or press `Cmd/Ctrl + Enter`).
+4. You will see `Success. No rows returned.` In the Table Editor, you will now see:
+   - `custom_forms` (with initial seed forms)
+   - `event_submissions` (with UPI payment verification & ticket columns)
+   - `media_assets`
+   - Storage buckets: `public-assets` & `private-submissions`
    - `Success. No rows returned.`
    - Tables created:
      - `public.media_assets`

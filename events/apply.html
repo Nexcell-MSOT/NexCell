@@ -53,6 +53,19 @@
       min-height: 100vh;
     }
 
+    /* Form & Input Cursor Handling */
+    @media (hover: hover) and (pointer: fine) {
+      input, textarea {
+        cursor: text !important;
+      }
+      select, button, a, .drop-zone, .btn-portal-submit, .btn-copy-vpa, .file-remove-btn, .stepper-item, .hamburger {
+        cursor: pointer !important;
+      }
+      .cursor-dot, .cursor-outline {
+        pointer-events: none !important;
+      }
+    }
+
     .portal-container {
       max-width: 1200px;
       margin: 0 auto;
@@ -282,6 +295,115 @@
       height: 200px;
       background: radial-gradient(circle, rgba(74, 124, 255, 0.12) 0%, transparent 70%);
       pointer-events: none;
+    }
+
+    /* Multi-Step Stepper Bar */
+    .form-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--portal-border);
+      position: relative;
+    }
+
+    .stepper-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+    }
+
+    .stepper-item.active {
+      color: #ffffff;
+    }
+
+    .stepper-item.active .stepper-circle {
+      background: var(--portal-gold);
+      color: #000;
+      box-shadow: 0 0 12px var(--portal-gold-glow);
+    }
+
+    .stepper-item.completed .stepper-circle {
+      background: #10b981;
+      color: #fff;
+    }
+
+    .stepper-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .stepper-line {
+      flex: 1;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 0 1rem;
+    }
+
+    /* Event Meta Live Banner */
+    .event-info-box {
+      background: rgba(18, 24, 48, 0.8);
+      border: 1px solid var(--portal-border);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .event-info-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.25rem;
+    }
+
+    .event-info-meta {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .fee-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+
+    .fee-badge.paid {
+      background: rgba(243, 156, 18, 0.15);
+      border: 1px solid rgba(243, 156, 18, 0.4);
+      color: var(--portal-gold);
+    }
+
+    .fee-badge.free {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #10b981;
     }
 
     .form-header {
@@ -571,6 +693,105 @@
       color: #ef4444;
     }
 
+    /* UPI Payment Step Screen */
+    .payment-step-card {
+      background: rgba(14, 19, 39, 0.95);
+      border: 1px solid var(--portal-border);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .upi-grid {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 700px) {
+      .upi-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+    }
+
+    .upi-qr-box {
+      background: #ffffff;
+      padding: 14px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .upi-qr-box img {
+      width: 100%;
+      max-width: 200px;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .upi-qr-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #0a0e1a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 0.5rem;
+    }
+
+    .upi-info-details h4 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+    }
+
+    .amount-highlight {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--portal-gold);
+      margin-bottom: 1rem;
+    }
+
+    .vpa-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 0.5rem 1rem;
+      font-family: monospace;
+      font-size: 0.95rem;
+      color: #fff;
+      margin-bottom: 1.25rem;
+    }
+
+    .btn-copy-vpa {
+      background: var(--portal-gold);
+      color: #000;
+      border: none;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .upi-steps-list {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      list-style-position: inside;
+      margin: 0;
+      padding: 0;
+    }
+
     /* Progress & Status */
     .upload-progress-wrap {
       display: none;
@@ -600,50 +821,71 @@
     .progress-status-text {
       display: flex;
       justify-content: space-between;
-      font-size: 0.82rem;
-      color: var(--text-secondary);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Alert Box */
+    .portal-alert {
+      display: none;
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      margin-top: 1.5rem;
+    }
+
+    .portal-alert.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #f87171;
+    }
+
+    .portal-alert.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
     }
 
     /* Submit Button */
     .btn-portal-submit {
       width: 100%;
-      padding: 1.1rem;
+      padding: 1.1rem 2rem;
       border-radius: 14px;
-      border: none;
       background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-      color: #ffffff;
+      color: #070a14;
+      font-size: 1rem;
       font-weight: 800;
-      font-size: 1.05rem;
       letter-spacing: 0.5px;
+      border: none;
       cursor: pointer;
-      transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.8rem;
+      gap: 0.75rem;
+      box-shadow: 0 10px 25px rgba(243, 156, 18, 0.3);
+      transition: all 0.3s ease;
       margin-top: 2rem;
-      box-shadow: 0 10px 25px rgba(243, 156, 18, 0.28);
     }
 
     .btn-portal-submit:hover:not(:disabled) {
-      transform: translateY(-3px);
+      transform: translateY(-2px);
       box-shadow: 0 15px 35px rgba(243, 156, 18, 0.45);
-      filter: brightness(1.1);
+      filter: brightness(1.08);
     }
 
     .btn-portal-submit:disabled {
-      opacity: 0.65;
+      opacity: 0.6;
       cursor: not-allowed;
-      transform: none !important;
+      transform: none;
     }
 
     .btn-spinner {
       display: none;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(0, 0, 0, 0.2);
+      border-top-color: #000;
       border-radius: 50%;
-      border-top-color: #fff;
       animation: spin 0.8s linear infinite;
     }
 
@@ -651,52 +893,33 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Alert Banner */
-    .portal-alert {
-      display: none;
-      border-radius: 12px;
-      padding: 1rem 1.25rem;
-      margin-top: 1.25rem;
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-
-    .portal-alert.success {
-      display: block;
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.35);
-      color: #34d399;
-    }
-
-    .portal-alert.error {
-      display: block;
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      color: #f87171;
-    }
-
-    /* Success Card State */
+    /* Success Overlay */
     .success-overlay {
       display: none;
       text-align: center;
       padding: 3rem 1.5rem;
-      animation: fadeIn 0.4s ease;
     }
 
     .success-overlay.visible {
       display: block;
+      animation: successPop 0.4s ease;
+    }
+
+    @keyframes successPop {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     .success-emblem {
-      width: 76px;
-      height: 76px;
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 1.5rem;
       border-radius: 50%;
       background: rgba(16, 185, 129, 0.15);
       border: 2px solid #10b981;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 1.5rem;
       color: #10b981;
       font-size: 2.2rem;
       box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
@@ -759,10 +982,6 @@
 
     <!-- Hero Header -->
     <header class="portal-hero">
-      <div class="badge-pill">
-        <span class="pulse-dot"></span>
-        <span>Secure Application Gateway · 2026</span>
-      </div>
       <h1 class="portal-title">
         Bring Your Ideas into <span class="gold-accent">Reality.</span>
       </h1>
@@ -805,7 +1024,7 @@
             </li>
             <li>
               <span class="check-icon">✓</span>
-              <span><strong>Size Limit:</strong> Max 10MB per uploaded file. Up to 5 files per application.</span>
+              <span><strong>Size Limit:</strong> Max 15MB per uploaded file. Up to 5 files per application.</span>
             </li>
             <li>
               <span class="check-icon">✓</span>
@@ -825,15 +1044,15 @@
           <ol class="timeline-steps">
             <li class="timeline-step">
               <h5>1. Submission Received</h5>
-              <p>You'll receive an instant confirmation and reference ID.</p>
+              <p>You'll receive an instant confirmation reference ID.</p>
             </li>
             <li class="timeline-step">
-              <h5>2. Mentor Evaluation</h5>
-              <p>The tech and venture panel reviews problem statement & deck.</p>
+              <h5>2. Committee Verification</h5>
+              <p>Payment UTR is verified & mentors review project materials.</p>
             </li>
             <li class="timeline-step">
-              <h5>3. Shortlist Drop</h5>
-              <p>Shortlisted teams are contacted via WhatsApp and email for pitch rounds.</p>
+              <h5>3. QR Ticket Pass Issued</h5>
+              <p>Accepted attendees receive a dynamic QR Admission Pass.</p>
             </li>
           </ol>
         </div>
@@ -852,121 +1071,190 @@
       <!-- Right Column: Interactive Form -->
       <section class="portal-form-card" id="formContainer">
 
+        <!-- Stepper (Visible for Paid Events) -->
+        <div class="form-stepper" id="formStepper" style="display: none;">
+          <div class="stepper-item active" id="step1Indicator">
+            <span class="stepper-circle">1</span>
+            <span>Application Details</span>
+          </div>
+          <div class="stepper-line"></div>
+          <div class="stepper-item" id="step2Indicator">
+            <span class="stepper-circle">2</span>
+            <span>UPI Payment</span>
+          </div>
+        </div>
+
+        <!-- Live Event Banner -->
+        <div class="event-info-box" id="eventInfoBox" style="display: none;">
+          <div>
+            <div class="event-info-title" id="eventInfoTitle">Selected Event</div>
+            <div class="event-info-meta">
+              <span id="eventInfoDate">📅 Date TBD</span>
+              <span id="eventInfoVenue">📍 Venue TBD</span>
+            </div>
+          </div>
+          <div id="eventInfoFeeBadge">
+            <span class="fee-badge free">Free Entry</span>
+          </div>
+        </div>
+
         <!-- Form Elements -->
         <form id="eventApplicationForm" novalidate>
-          <div class="form-header">
-            <h3>Event & Pitch Submission</h3>
-            <p>Fill in the required details and upload your deck to get started.</p>
-          </div>
 
-          <!-- Section 1: Event Selection -->
-          <div class="form-section-title">01. Target Event / Category</div>
-          <div class="form-group">
-            <label class="form-label" for="eventSlug">
-              Select Event / Track <span class="required">*</span>
-            </label>
-            <select class="form-select" id="eventSlug" name="event_slug" required>
-              <option value="" disabled selected>— Choose an upcoming initiative or track —</option>
-              <option value="mirai-0-1-ideathon">Mirai 0→1 Ideathon (Flagship Pitch Competition)</option>
-              <option value="founder-fireside">Founder Fireside & Networking Dinner</option>
-              <option value="incubation-cohort-2026">NexCell Incubation Cohort 2026</option>
-              <option value="campus-challenge">Campus Entrepreneurship Challenge</option>
-              <option value="general-pitch-review">General Pitch Deck Review & Mentorship</option>
-            </select>
-            <div class="field-error" id="eventSlugError">Please select an event.</div>
-          </div>
-
-          <!-- Section 2: Applicant Information -->
-          <div class="form-section-title">02. Lead Applicant Information</div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label" for="applicantName">
-                Full Name <span class="required">*</span>
-              </label>
-              <input class="form-input" type="text" id="applicantName" name="applicant_name" placeholder="e.g. Alex Morgan" required>
-              <div class="field-error" id="applicantNameError">Full name is required.</div>
+          <!-- ── STEP 1: FORM DETAILS ── -->
+          <div id="step1Container">
+            <div class="form-header">
+              <h3 id="formHeadingText">Event & Pitch Submission</h3>
+              <p id="formSubheadingText">Fill in the required details and upload your deck to get started.</p>
             </div>
+
+            <!-- Section 1: Event Selection -->
+            <div class="form-section-title">01. Target Event / Category</div>
             <div class="form-group">
-              <label class="form-label" for="applicantEmail">
-                Email Address <span class="required">*</span>
+              <label class="form-label" for="eventSlug">
+                Select Event / Track <span class="required">*</span>
               </label>
-              <input class="form-input" type="email" id="applicantEmail" name="applicant_email" placeholder="alex@college.edu" required>
-              <div class="field-error" id="applicantEmailError">Please enter a valid email address.</div>
+              <select class="form-select" id="eventSlug" name="event_slug" required>
+                <option value="" disabled selected>— Loading available events —</option>
+              </select>
+              <div class="field-error" id="eventSlugError">Please select an event.</div>
             </div>
-          </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label" for="applicantPhone">
-                Phone / WhatsApp <span class="optional">(Recommended)</span>
-              </label>
-              <input class="form-input" type="tel" id="applicantPhone" name="applicant_phone" placeholder="+91 98765 43210">
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="collegeDept">
-                Department & Year <span class="optional">(Optional)</span>
-              </label>
-              <input class="form-input" type="text" id="collegeDept" name="college_dept" placeholder="e.g. 2nd Year B.Tech CSE">
-            </div>
-          </div>
-
-          <!-- Section 3: Project Details -->
-          <div class="form-section-title">03. Project & Team Information</div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label" for="teamName">
-                Team Name <span class="optional">(Leave blank if Solo)</span>
-              </label>
-              <input class="form-input" type="text" id="teamName" name="team_name" placeholder="e.g. Team Hyperion">
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="projectTitle">
-                Idea / Startup Name
-              </label>
-              <input class="form-input" type="text" id="projectTitle" name="project_title" placeholder="e.g. EcoCharge AI">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="ideaSummary">
-              Executive Summary / Pitch <span class="optional">(Max 500 characters)</span>
-            </label>
-            <textarea class="form-textarea" id="ideaSummary" name="idea_summary" rows="3" maxlength="500" placeholder="Describe the problem, your solution, and what stage you're currently in..."></textarea>
-            <div class="field-hint" id="charCounter">0 / 500 characters</div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="externalLink">
-              Demo / GitHub / Prototype Link <span class="optional">(Optional)</span>
-            </label>
-            <input class="form-input" type="url" id="externalLink" name="external_link" placeholder="https://github.com/... or https://figma.com/...">
-          </div>
-
-          <!-- Section 4: File Uploader -->
-          <div class="form-section-title">04. Document & Pitch Deck Uploads</div>
-          <div class="form-group">
-            <label class="form-label">
-              Upload Files <span class="optional">(PDF, DOCX, PNG, JPG — Max 10MB each)</span>
-            </label>
-
-            <!-- Drag and Drop Target -->
-            <div class="drop-zone" id="dropZone" role="button" tabindex="0" aria-label="Drop files here or click to select">
-              <div class="drop-icon-wrap">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="17 8 12 3 7 8"></polyline>
-                  <line x1="12" y1="3" x2="12" y2="15"></line>
-                </svg>
+            <!-- Section 2: Standard Applicant Information -->
+            <div class="form-section-title">02. Lead Applicant Information</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="applicantName">
+                  Full Name <span class="required">*</span>
+                </label>
+                <input class="form-input" type="text" id="applicantName" name="applicant_name" placeholder="e.g. Alex Morgan" required>
+                <div class="field-error" id="applicantNameError">Full name is required.</div>
               </div>
-              <div class="drop-title">Drag & drop your files here</div>
-              <div class="drop-subtitle">or <span style="color: var(--accent-light-blue); text-decoration: underline;">browse computer</span> to choose files</div>
-              <div class="drop-badge">PDF · DOCX · PNG · JPG (Max 10MB)</div>
-              <input type="file" id="fileInput" multiple accept=".pdf,.docx,.doc,.png,.jpg,.jpeg,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/png,image/jpeg" style="display: none;">
+              <div class="form-group">
+                <label class="form-label" for="applicantEmail">
+                  Email Address <span class="required">*</span>
+                </label>
+                <input class="form-input" type="email" id="applicantEmail" name="applicant_email" placeholder="alex@college.edu" required>
+                <div class="field-error" id="applicantEmailError">Please enter a valid email address.</div>
+              </div>
             </div>
 
-            <!-- Selected Files List Container -->
-            <div class="files-list" id="filesList"></div>
-            <div class="field-error" id="fileUploadError"></div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="applicantPhone">
+                  Phone / WhatsApp <span class="optional">(Recommended)</span>
+                </label>
+                <input class="form-input" type="tel" id="applicantPhone" name="applicant_phone" placeholder="+91 98765 43210">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="teamName">
+                  Team / Startup Name <span class="optional">(Solo if blank)</span>
+                </label>
+                <input class="form-input" type="text" id="teamName" name="team_name" placeholder="e.g. Team Hyperion">
+              </div>
+            </div>
+
+            <!-- Section 3: Dynamic Custom Fields from Form Builder -->
+            <div id="dynamicFieldsContainer"></div>
+
+            <!-- Section 4: File Uploader -->
+            <div class="form-section-title">04. Document & Pitch Deck Uploads</div>
+            <div class="form-group">
+              <label class="form-label">
+                Upload Files <span class="optional">(PDF, DOCX, PNG, JPG — Max 15MB each)</span>
+              </label>
+
+              <!-- Drag and Drop Target -->
+              <div class="drop-zone" id="dropZone" role="button" tabindex="0" aria-label="Drop files here or click to select">
+                <div class="drop-icon-wrap">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                </div>
+                <div class="drop-title">Drag & drop your files here</div>
+                <div class="drop-subtitle">or <span style="color: var(--accent-light-blue); text-decoration: underline;">browse computer</span> to choose files</div>
+                <div class="drop-badge">PDF · DOCX · PNG · JPG (Max 15MB)</div>
+                <input type="file" id="fileInput" multiple accept=".pdf,.docx,.doc,.png,.jpg,.jpeg,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/png,image/jpeg" style="display: none;">
+              </div>
+
+              <!-- Selected Files List Container -->
+              <div class="files-list" id="filesList"></div>
+              <div class="field-error" id="fileUploadError"></div>
+            </div>
+
+            <!-- Next Step / Submit Button for Step 1 -->
+            <button type="button" class="btn-portal-submit" id="btnStep1Proceed">
+              <span id="btnStep1Text">Submit Application</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <!-- ── STEP 2: UPI PAYMENT (FOR PAID EVENTS) ── -->
+          <div id="step2Container" style="display: none;">
+            <div class="form-header">
+              <h3>Complete Registration Fee</h3>
+              <p>Scan the official NexCell UPI QR code to complete payment and enter your transaction UTR.</p>
+            </div>
+
+            <div class="payment-step-card">
+              <div class="upi-grid">
+                <div class="upi-qr-box">
+                  <img id="upiQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=nexcell@upi&pn=NexCell&am=150&cu=INR" alt="NexCell UPI QR Code">
+                  <span class="upi-qr-label">Scan with Any UPI App</span>
+                </div>
+                <div class="upi-info-details">
+                  <h4>Registration Amount</h4>
+                  <div class="amount-highlight" id="upiDisplayAmount">₹150.00</div>
+                  <div>
+                    <label class="form-label" style="margin-bottom: 0.3rem;">Official NexCell UPI VPA:</label>
+                    <div class="vpa-pill">
+                      <span id="upiDisplayVpa">nexcell@upi</span>
+                      <button type="button" class="btn-copy-vpa" id="btnCopyVpa">Copy VPA</button>
+                    </div>
+                  </div>
+                  <ol class="upi-steps-list">
+                    <li>Open <strong>GPay, PhonePe, Paytm, or BHIM</strong>.</li>
+                    <li>Scan the QR code or transfer directly to the UPI ID.</li>
+                    <li>Copy the <strong>12-digit UTR / Reference No.</strong> and paste below.</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="paymentUtr">
+                  12-Digit UPI / UTR Transaction Reference Number <span class="required">*</span>
+                </label>
+                <input class="form-input" type="text" id="paymentUtr" name="payment_utr" placeholder="e.g. 428901234567" maxlength="20">
+                <div class="field-hint">Found under payment details in your UPI app (UTR / UPI Ref ID).</div>
+                <div class="field-error" id="paymentUtrError">Please enter a valid 12-digit transaction reference number.</div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="paymentReceiptFile">
+                  Payment Receipt Screenshot <span class="optional">(Optional but speeds up verification)</span>
+                </label>
+                <input class="form-input" type="file" id="paymentReceiptFile" accept="image/*,.pdf">
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <button type="button" class="btn-secondary" id="btnBackToStep1" style="flex: 1; padding: 1rem 1.5rem;">
+                ← Back to Application
+              </button>
+              <button type="submit" class="btn-portal-submit" id="submitBtn" style="flex: 2; margin-top: 0;">
+                <span class="btn-spinner" id="btnSpinner"></span>
+                <span class="btn-text" id="btnText">Verify & Submit Application</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
           </div>
 
           <!-- Upload Progress Bar -->
@@ -983,27 +1271,21 @@
           <!-- Alert Status Box -->
           <div class="portal-alert" id="portalAlert"></div>
 
-          <!-- Submit Button -->
-          <button type="submit" class="btn-portal-submit" id="submitBtn">
-            <span class="btn-spinner" id="btnSpinner"></span>
-            <span class="btn-text" id="btnText">Submit Application</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
         </form>
 
         <!-- Success Confirmation State (Replaces form upon completion) -->
         <div class="success-overlay" id="successOverlay">
           <div class="success-emblem">✓</div>
           <h2 class="success-title">Application Submitted!</h2>
-          <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 1.5rem;">
+          <p style="color: var(--text-secondary); max-width: 520px; margin: 0 auto 1.5rem;" id="successDescText">
             Thank you for applying to NexCell. Your details and documents have been secured in our PostgreSQL database.
           </p>
           <div>
             <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); display: block;">Submission Reference</span>
             <div class="submission-id-box" id="displaySubmissionId">#NEX-PENDING</div>
+          </div>
+          <div id="ticketInstructionsBox" style="margin-bottom: 2rem; font-size: 0.9rem; color: #fce07a; background: rgba(243, 156, 18, 0.1); border: 1px solid rgba(243, 156, 18, 0.3); border-radius: 12px; padding: 1rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+            🎟️ <strong>Admission Pass:</strong> Once your application is reviewed and accepted by organizers, your verified digital QR ticket will be accessible at <code>events/ticket.html</code>.
           </div>
           <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
             <button type="button" class="btn-secondary" id="btnResetForm">Submit Another Application</button>
@@ -1036,6 +1318,7 @@
             <li><a href="../index.html#upcoming-events">Upcoming Events</a></li>
             <li><a href="../index.html#events">Past Events</a></li>
             <li><a href="apply.html">Apply for Events</a></li>
+            <li><a href="ticket.html">Check Ticket Pass</a></li>
             <li><a href="../index.html#reviews">Reviews</a></li>
           </ul>
         </div>
@@ -1055,30 +1338,251 @@
 
   <!-- Interactive Client-side Script -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       // 1. Check Configuration Status
       const configNotice = document.getElementById('configNotice');
       if (window.NexcellSupabase && !window.NexcellSupabase.isConfigured()) {
         configNotice.classList.add('active');
       }
 
-      // 2. Character counter for summary
-      const ideaSummary = document.getElementById('ideaSummary');
-      const charCounter = document.getElementById('charCounter');
-      if (ideaSummary && charCounter) {
-        ideaSummary.addEventListener('input', () => {
-          charCounter.textContent = `${ideaSummary.value.length} / 500 characters`;
-        });
-      }
-
-      // 3. File Management State
+      // State
+      let allForms = [];
+      let currentForm = null;
       const selectedFiles = [];
+
+      // Elements
+      const formContainer = document.getElementById('formContainer');
+      const eventSlug = document.getElementById('eventSlug');
+      const eventSlugError = document.getElementById('eventSlugError');
+      const eventInfoBox = document.getElementById('eventInfoBox');
+      const eventInfoTitle = document.getElementById('eventInfoTitle');
+      const eventInfoDate = document.getElementById('eventInfoDate');
+      const eventInfoVenue = document.getElementById('eventInfoVenue');
+      const eventInfoFeeBadge = document.getElementById('eventInfoFeeBadge');
+
+      const formStepper = document.getElementById('formStepper');
+      const step1Indicator = document.getElementById('step1Indicator');
+      const step2Indicator = document.getElementById('step2Indicator');
+      const step1Container = document.getElementById('step1Container');
+      const step2Container = document.getElementById('step2Container');
+      const btnStep1Proceed = document.getElementById('btnStep1Proceed');
+      const btnStep1Text = document.getElementById('btnStep1Text');
+      const btnBackToStep1 = document.getElementById('btnBackToStep1');
+
+      const dynamicFieldsContainer = document.getElementById('dynamicFieldsContainer');
+
+      const applicantName = document.getElementById('applicantName');
+      const applicantEmail = document.getElementById('applicantEmail');
+      const applicantPhone = document.getElementById('applicantPhone');
+      const teamName = document.getElementById('teamName');
+
+      const applicantNameError = document.getElementById('applicantNameError');
+      const applicantEmailError = document.getElementById('applicantEmailError');
+
+      // UPI Elements
+      const upiQrImage = document.getElementById('upiQrImage');
+      const upiDisplayAmount = document.getElementById('upiDisplayAmount');
+      const upiDisplayVpa = document.getElementById('upiDisplayVpa');
+      const btnCopyVpa = document.getElementById('btnCopyVpa');
+      const paymentUtr = document.getElementById('paymentUtr');
+      const paymentUtrError = document.getElementById('paymentUtrError');
+      const paymentReceiptFile = document.getElementById('paymentReceiptFile');
+
+      // File Upload Elements
       const dropZone = document.getElementById('dropZone');
       const fileInput = document.getElementById('fileInput');
       const filesList = document.getElementById('filesList');
       const fileUploadError = document.getElementById('fileUploadError');
 
-      // Click to browse
+      // Submission Elements
+      const form = document.getElementById('eventApplicationForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const btnSpinner = document.getElementById('btnSpinner');
+      const btnText = document.getElementById('btnText');
+      const portalAlert = document.getElementById('portalAlert');
+      const uploadProgressWrap = document.getElementById('uploadProgressWrap');
+      const progressBarFill = document.getElementById('progressBarFill');
+      const progressStatusLabel = document.getElementById('progressStatusLabel');
+      const progressPercentage = document.getElementById('progressPercentage');
+      const successOverlay = document.getElementById('successOverlay');
+      const displaySubmissionId = document.getElementById('displaySubmissionId');
+      const btnResetForm = document.getElementById('btnResetForm');
+
+      // 2. Fetch and initialize forms from Supabase
+      async function initForms() {
+        const { data } = await window.NexcellSupabase.getForms(true);
+        allForms = data || [];
+
+        eventSlug.innerHTML = '<option value="" disabled selected>— Choose an upcoming initiative or track —</option>';
+        allForms.forEach(f => {
+          const opt = document.createElement('option');
+          opt.value = f.slug;
+          opt.textContent = `${f.title} ${f.is_paid ? `(₹${f.fee_amount})` : '(Free)'}`;
+          eventSlug.appendChild(opt);
+        });
+
+        // Check URL query param ?event=slug
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventParam = urlParams.get('event');
+
+        if (eventParam) {
+          const match = allForms.find(f => f.slug === eventParam);
+          if (match) {
+            eventSlug.value = match.slug;
+            selectForm(match);
+          } else {
+            // Fetch directly by slug in case not in active list
+            const single = await window.NexcellSupabase.getFormBySlug(eventParam);
+            if (single && single.data) {
+              const opt = document.createElement('option');
+              opt.value = single.data.slug;
+              opt.textContent = single.data.title;
+              eventSlug.appendChild(opt);
+              eventSlug.value = single.data.slug;
+              selectForm(single.data);
+            }
+          }
+        }
+      }
+
+      eventSlug.addEventListener('change', () => {
+        const selected = allForms.find(f => f.slug === eventSlug.value);
+        if (selected) {
+          selectForm(selected);
+        }
+        eventSlug.classList.remove('is-invalid');
+        eventSlugError.classList.remove('visible');
+      });
+
+      function selectForm(formData) {
+        currentForm = formData;
+
+        // Render Banner
+        eventInfoTitle.textContent = formData.title;
+        eventInfoDate.textContent = formData.event_date 
+          ? `📅 ${new Date(formData.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+          : '📅 Date Announced Soon';
+        eventInfoVenue.textContent = formData.venue ? `📍 ${formData.venue}` : '📍 Rathinam Campus, Bangalore';
+
+        if (formData.is_paid) {
+          eventInfoFeeBadge.innerHTML = `<span class="fee-badge paid">₹${formData.fee_amount || 0} Registration Fee</span>`;
+          formStepper.style.display = 'flex';
+          btnStep1Text.textContent = `Continue to Payment (₹${formData.fee_amount || 0}) →`;
+
+          // Configure UPI QR
+          const vpa = formData.upi_id || 'nexcell@upi';
+          const amount = formData.fee_amount || 0;
+          upiDisplayVpa.textContent = vpa;
+          upiDisplayAmount.textContent = `₹${amount}.00`;
+
+          if (formData.upi_qr_url) {
+            upiQrImage.src = formData.upi_qr_url;
+          } else {
+            const upiUri = `upi://pay?pa=${encodeURIComponent(vpa)}&pn=NexCell%20Club&am=${encodeURIComponent(amount)}&cu=INR`;
+            upiQrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUri)}`;
+          }
+        } else {
+          eventInfoFeeBadge.innerHTML = `<span class="fee-badge free">Free Entry</span>`;
+          formStepper.style.display = 'none';
+          btnStep1Text.textContent = 'Submit Application';
+        }
+
+        eventInfoBox.style.display = 'flex';
+
+        // Render Dynamic Fields
+        renderDynamicFields(formData.fields || []);
+      }
+
+      function renderDynamicFields(fields) {
+        dynamicFieldsContainer.innerHTML = '';
+        if (!fields || !fields.length) return;
+
+        // Standard IDs already in form
+        const standardIds = ['applicant_name', 'applicant_email', 'applicant_phone', 'team_name'];
+        const customFields = fields.filter(f => !standardIds.includes(f.id));
+
+        if (!customFields.length) return;
+
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'form-section-title';
+        titleDiv.textContent = '03. Event Specific Details';
+        dynamicFieldsContainer.appendChild(titleDiv);
+
+        customFields.forEach(f => {
+          if (f.type === 'file') return; // Handled by global dropzone
+
+          const group = document.createElement('div');
+          group.className = 'form-group';
+
+          const label = document.createElement('label');
+          label.className = 'form-label';
+          label.setAttribute('for', `custom_${f.id}`);
+          label.innerHTML = `
+            ${f.label} ${f.required ? '<span class="required">*</span>' : '<span class="optional">(Optional)</span>'}
+          `;
+          group.appendChild(label);
+
+          let inputEl;
+          if (f.type === 'textarea') {
+            inputEl = document.createElement('textarea');
+            inputEl.rows = 3;
+            inputEl.className = 'form-textarea';
+          } else if (f.type === 'select') {
+            inputEl = document.createElement('select');
+            inputEl.className = 'form-select';
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = '';
+            defaultOpt.textContent = `— Select ${f.label} —`;
+            inputEl.appendChild(defaultOpt);
+            if (Array.isArray(f.options)) {
+              f.options.forEach(opt => {
+                const o = document.createElement('option');
+                o.value = opt;
+                o.textContent = opt;
+                inputEl.appendChild(o);
+              });
+            }
+          } else {
+            inputEl = document.createElement('input');
+            inputEl.type = f.type || 'text';
+            inputEl.className = 'form-input';
+          }
+
+          inputEl.id = `custom_${f.id}`;
+          inputEl.name = `custom_${f.id}`;
+          inputEl.placeholder = f.placeholder || '';
+          if (f.required) inputEl.required = true;
+
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'field-error';
+          errorDiv.id = `error_custom_${f.id}`;
+          errorDiv.textContent = `${f.label} is required.`;
+
+          group.appendChild(inputEl);
+          group.appendChild(errorDiv);
+          dynamicFieldsContainer.appendChild(group);
+
+          // Clear error on input
+          inputEl.addEventListener('input', () => {
+            inputEl.classList.remove('is-invalid');
+            errorDiv.classList.remove('visible');
+          });
+        });
+      }
+
+      // Copy VPA Button
+      btnCopyVpa.addEventListener('click', async () => {
+        const vpa = upiDisplayVpa.textContent;
+        try {
+          await navigator.clipboard.writeText(vpa);
+          btnCopyVpa.textContent = 'Copied! ✓';
+          setTimeout(() => btnCopyVpa.textContent = 'Copy VPA', 2000);
+        } catch (e) {
+          prompt('Copy UPI ID:', vpa);
+        }
+      });
+
+      // 3. File Management State
       dropZone.addEventListener('click', () => fileInput.click());
       dropZone.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -1087,7 +1591,6 @@
         }
       });
 
-      // Drag & Drop events
       ['dragenter', 'dragover'].forEach(name => {
         dropZone.addEventListener(name, (e) => {
           e.preventDefault();
@@ -1114,7 +1617,7 @@
       fileInput.addEventListener('change', () => {
         if (fileInput.files && fileInput.files.length) {
           handleIncomingFiles(fileInput.files);
-          fileInput.value = ''; // reset so same file can be re-selected if needed
+          fileInput.value = '';
         }
       });
 
@@ -1128,12 +1631,8 @@
         }
 
         for (const file of Array.from(files)) {
-          // Check if already in list
-          if (selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
-            continue;
-          }
+          if (selectedFiles.some(f => f.name === file.name && f.size === file.size)) continue;
 
-          // Validate file using NexcellSupabase
           const validation = window.NexcellSupabase
             ? window.NexcellSupabase.validateFile(file)
             : { valid: true };
@@ -1192,9 +1691,8 @@
           filesList.appendChild(chip);
         });
 
-        // Attach remove button listeners
         filesList.querySelectorAll('.file-remove-btn').forEach(btn => {
-          btn.addEventListener('click', (e) => {
+          btn.addEventListener('click', () => {
             const idx = parseInt(btn.getAttribute('data-index'), 10);
             selectedFiles.splice(idx, 1);
             renderFilesList();
@@ -1202,58 +1700,10 @@
         });
       }
 
-      // 4. Real-time field error clearance
-      const eventSlug = document.getElementById('eventSlug');
-      const applicantName = document.getElementById('applicantName');
-      const applicantEmail = document.getElementById('applicantEmail');
-      const eventSlugError = document.getElementById('eventSlugError');
-      const applicantNameError = document.getElementById('applicantNameError');
-      const applicantEmailError = document.getElementById('applicantEmailError');
-
-      eventSlug.addEventListener('change', () => {
-        if (eventSlug.value.trim()) {
-          eventSlug.classList.remove('is-invalid');
-          eventSlugError.classList.remove('visible');
-        }
-      });
-
-      applicantName.addEventListener('input', () => {
-        if (applicantName.value.trim()) {
-          applicantName.classList.remove('is-invalid');
-          applicantNameError.classList.remove('visible');
-        }
-      });
-
-      applicantEmail.addEventListener('input', () => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (emailRegex.test(applicantEmail.value.trim())) {
-          applicantEmail.classList.remove('is-invalid');
-          applicantEmailError.classList.remove('visible');
-        }
-      });
-
-      // 5. Form Submission Handling
-      const form = document.getElementById('eventApplicationForm');
-      const submitBtn = document.getElementById('submitBtn');
-      const btnSpinner = document.getElementById('btnSpinner');
-      const btnText = document.getElementById('btnText');
-      const portalAlert = document.getElementById('portalAlert');
-      const uploadProgressWrap = document.getElementById('uploadProgressWrap');
-      const progressBarFill = document.getElementById('progressBarFill');
-      const progressStatusLabel = document.getElementById('progressStatusLabel');
-      const progressPercentage = document.getElementById('progressPercentage');
-      const successOverlay = document.getElementById('successOverlay');
-      const displaySubmissionId = document.getElementById('displaySubmissionId');
-      const btnResetForm = document.getElementById('btnResetForm');
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        portalAlert.className = 'portal-alert';
-        portalAlert.style.display = 'none';
-
-        // Validate required fields
+      // 4. Step 1 Validation & Flow
+      function validateStep1() {
         let isValid = true;
-        let firstInvalidField = null;
+        let firstInvalid = null;
 
         [eventSlug, applicantName, applicantEmail].forEach(el => el.classList.remove('is-invalid'));
         [eventSlugError, applicantNameError, applicantEmailError].forEach(el => el.classList.remove('visible'));
@@ -1262,14 +1712,14 @@
           eventSlug.classList.add('is-invalid');
           eventSlugError.classList.add('visible');
           isValid = false;
-          firstInvalidField = firstInvalidField || eventSlug;
+          firstInvalid = firstInvalid || eventSlug;
         }
 
         if (!applicantName.value.trim()) {
           applicantName.classList.add('is-invalid');
           applicantNameError.classList.add('visible');
           isValid = false;
-          firstInvalidField = firstInvalidField || applicantName;
+          firstInvalid = firstInvalid || applicantName;
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -1277,44 +1727,125 @@
           applicantEmail.classList.add('is-invalid');
           applicantEmailError.classList.add('visible');
           isValid = false;
-          firstInvalidField = firstInvalidField || applicantEmail;
+          firstInvalid = firstInvalid || applicantEmail;
         }
 
-        if (!isValid) {
-          showAlert('Please complete all required fields correctly before submitting.', 'error');
-          if (firstInvalidField) firstInvalidField.focus();
-          return;
+        // Validate any required custom fields
+        if (currentForm && currentForm.fields) {
+          currentForm.fields.forEach(f => {
+            if (f.required && !['applicant_name', 'applicant_email', 'applicant_phone', 'team_name'].includes(f.id)) {
+              const el = document.getElementById(`custom_${f.id}`);
+              const err = document.getElementById(`error_custom_${f.id}`);
+              if (el && !el.value.trim()) {
+                el.classList.add('is-invalid');
+                if (err) err.classList.add('visible');
+                isValid = false;
+                firstInvalid = firstInvalid || el;
+              }
+            }
+          });
         }
 
-        // Gather payload
+        if (!isValid && firstInvalid) {
+          firstInvalid.focus();
+        }
+
+        return isValid;
+      }
+
+      // Step 1 Proceed Button Click
+      btnStep1Proceed.addEventListener('click', () => {
+        if (!validateStep1()) return;
+
+        if (currentForm && currentForm.is_paid) {
+          // Switch to Step 2: Payment
+          step1Container.style.display = 'none';
+          step2Container.style.display = 'block';
+          step1Indicator.classList.remove('active');
+          step1Indicator.classList.add('completed');
+          step2Indicator.classList.add('active');
+          window.scrollTo({ top: formContainer.offsetTop - 100, behavior: 'smooth' });
+        } else {
+          // Free event: trigger direct submission
+          triggerSubmission();
+        }
+      });
+
+      btnBackToStep1.addEventListener('click', () => {
+        step2Container.style.display = 'none';
+        step1Container.style.display = 'block';
+        step2Indicator.classList.remove('active');
+        step1Indicator.classList.remove('completed');
+        step1Indicator.classList.add('active');
+      });
+
+      // Step 2 Form Submit Event
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (currentForm && currentForm.is_paid) {
+          const utrVal = paymentUtr.value.trim();
+          if (!utrVal || utrVal.length < 6) {
+            paymentUtr.classList.add('is-invalid');
+            paymentUtrError.classList.add('visible');
+            paymentUtr.focus();
+            return;
+          }
+          paymentUtr.classList.remove('is-invalid');
+          paymentUtrError.classList.remove('visible');
+        }
+        triggerSubmission();
+      });
+
+      // 5. Final Submission Handler
+      async function triggerSubmission() {
+        portalAlert.className = 'portal-alert';
+        portalAlert.style.display = 'none';
+
+        // Extract custom answers
+        const customDetails = {};
+        if (currentForm && currentForm.fields) {
+          currentForm.fields.forEach(f => {
+            const el = document.getElementById(`custom_${f.id}`);
+            if (el) {
+              customDetails[f.id] = el.value ? el.value.trim() : null;
+            }
+          });
+        }
+
         const formData = {
+          form_id: currentForm ? currentForm.id : null,
           event_slug: eventSlug.value.trim(),
           applicant_name: applicantName.value.trim(),
           applicant_email: applicantEmail.value.trim(),
-          applicant_phone: document.getElementById('applicantPhone').value.trim() || null,
-          team_name: document.getElementById('teamName').value.trim() || null,
+          applicant_phone: applicantPhone.value.trim() || null,
+          team_name: teamName.value.trim() || null,
           details: {
-            college_dept: document.getElementById('collegeDept').value.trim() || null,
-            project_title: document.getElementById('projectTitle').value.trim() || null,
-            idea_summary: ideaSummary ? ideaSummary.value.trim() : null,
-            external_link: document.getElementById('externalLink').value.trim() || null,
+            ...customDetails,
             submitted_from_url: window.location.href,
           },
+          payment_status: currentForm && currentForm.is_paid ? 'pending_verification' : 'free',
+          payment_utr: currentForm && currentForm.is_paid ? paymentUtr.value.trim() : null,
         };
 
-        // UI Loading State
+        // If a receipt screenshot was uploaded in Step 2, append to files
+        const allUploads = [...selectedFiles];
+        if (paymentReceiptFile && paymentReceiptFile.files && paymentReceiptFile.files[0]) {
+          const receiptFile = paymentReceiptFile.files[0];
+          // Prepend tag to indicate it's payment proof
+          allUploads.push(new File([receiptFile], `RECEIPT_${receiptFile.name}`, { type: receiptFile.type }));
+        }
+
         setLoadingState(true);
 
         try {
-          // Progress tracker
           uploadProgressWrap.classList.add('active');
-          progressBarFill.style.width = '10%';
-          progressPercentage.textContent = '10%';
-          progressStatusLabel.textContent = selectedFiles.length > 0 ? 'Uploading documents...' : 'Registering application...';
+          progressBarFill.style.width = '15%';
+          progressPercentage.textContent = '15%';
+          progressStatusLabel.textContent = allUploads.length > 0 ? 'Uploading documents...' : 'Registering application...';
 
           const result = await window.NexcellSupabase.submitEventApplication(
             formData,
-            selectedFiles,
+            allUploads,
             {
               onFileProgress: (current, total, fileName) => {
                 const percent = Math.round((current / total) * 80);
@@ -1329,14 +1860,14 @@
             throw new Error(result.error || 'Failed to submit application.');
           }
 
-          // Complete Progress
           progressBarFill.style.width = '100%';
           progressPercentage.textContent = '100%';
           progressStatusLabel.textContent = 'Application confirmed!';
 
-          // Show Success Overlay
           setTimeout(() => {
             form.style.display = 'none';
+            formStepper.style.display = 'none';
+            eventInfoBox.style.display = 'none';
             successOverlay.classList.add('visible');
             displaySubmissionId.textContent = `#${result.submissionId.substring(0, 12).toUpperCase()}`;
             if (result.isDemo) {
@@ -1350,17 +1881,19 @@
         } finally {
           setLoadingState(false);
         }
-      });
+      }
 
       function setLoadingState(loading) {
         if (loading) {
           submitBtn.disabled = true;
+          btnStep1Proceed.disabled = true;
           btnSpinner.style.display = 'inline-block';
           btnText.textContent = 'Processing Application...';
         } else {
           submitBtn.disabled = false;
+          btnStep1Proceed.disabled = false;
           btnSpinner.style.display = 'none';
-          btnText.textContent = 'Submit Application';
+          btnText.textContent = 'Verify & Submit Application';
         }
       }
 
@@ -1370,7 +1903,7 @@
         portalAlert.style.display = 'block';
       }
 
-      // Reset Button on Success
+      // Reset Form on Success
       btnResetForm.addEventListener('click', () => {
         form.reset();
         selectedFiles.length = 0;
@@ -1378,11 +1911,20 @@
         uploadProgressWrap.classList.remove('active');
         progressBarFill.style.width = '0%';
         portalAlert.style.display = 'none';
+        step2Container.style.display = 'none';
+        step1Container.style.display = 'block';
+        if (currentForm && currentForm.is_paid) {
+          formStepper.style.display = 'flex';
+          step1Indicator.classList.add('active');
+          step1Indicator.classList.remove('completed');
+          step2Indicator.classList.remove('active');
+        }
         form.style.display = 'block';
+        eventInfoBox.style.display = 'flex';
         successOverlay.classList.remove('visible');
       });
 
-      // 6. Mobile Menu Navigation Handler
+      // Mobile Menu
       const hamburger = document.getElementById('hamburger');
       const navLinks = document.getElementById('navLinks');
 
@@ -1415,14 +1957,10 @@
       if (hamburger && navLinks) {
         hamburger.addEventListener('click', (e) => {
           e.stopPropagation();
-          if (navLinks.classList.contains('open')) {
-            closeMobileMenu();
-          } else {
-            openMobileMenu();
-          }
+          if (navLinks.classList.contains('open')) closeMobileMenu();
+          else openMobileMenu();
         });
 
-        // Close menu on link click (excluding dropdown trigger)
         navLinks.querySelectorAll('a').forEach(a => {
           a.addEventListener('click', (e) => {
             if (a.classList.contains('dropdown-trigger')) {
@@ -1439,28 +1977,25 @@
           });
         });
 
-        // Close menu when tapping outside
         document.addEventListener('click', (e) => {
           if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && !hamburger.contains(e.target)) {
             closeMobileMenu();
           }
         });
 
-        // Close menu on ESC
         document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && navLinks.classList.contains('open')) {
-            closeMobileMenu();
-          }
+          if (e.key === 'Escape' && navLinks.classList.contains('open')) closeMobileMenu();
         });
       }
 
-      // 7. Custom Cursor
+      // Custom Cursor Tracking Loop
       if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorOutline = document.querySelector('.cursor-outline');
+
         if (cursorDot && cursorOutline) {
-          let mouseX = 0, mouseY = 0;
-          let outlineX = 0, outlineY = 0;
+          let mouseX = -100, mouseY = -100;
+          let outlineX = -100, outlineY = -100;
           let isFirstMove = true;
           let cursorActive = false;
 
@@ -1468,7 +2003,7 @@
             if (cursorActive) return;
             cursorActive = true;
             requestAnimationFrame(function update() {
-              const lerp = 0.2;
+              const lerp = 0.22;
               const dx = mouseX - outlineX;
               const dy = mouseY - outlineY;
               outlineX += dx * lerp;
@@ -1502,16 +2037,40 @@
             runCursorLoop();
           }, { passive: true });
 
+          // Mouseover delegation for interactive feedback
           document.addEventListener('mouseover', (e) => {
-            const shouldHover = !!e.target.closest('a, button, input, select, textarea, .drop-zone, .file-chip, .portal-side-card');
+            const isText = !!e.target.closest('input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]), textarea');
+            if (isText) {
+              cursorDot.style.opacity = '0';
+              cursorOutline.style.opacity = '0';
+              return;
+            }
+
+            cursorDot.style.opacity = '1';
+            cursorOutline.style.opacity = '1';
+
+            const shouldHover = !!e.target.closest('a, button, select, .drop-zone, .file-chip, .btn-copy-vpa, .fee-badge, .stepper-item');
             if (shouldHover) {
               document.body.classList.add('cursor-hover');
             } else {
               document.body.classList.remove('cursor-hover');
             }
           });
+
+          document.addEventListener('mouseleave', () => {
+            cursorDot.style.opacity = '0';
+            cursorOutline.style.opacity = '0';
+          });
+
+          document.addEventListener('mouseenter', () => {
+            cursorDot.style.opacity = '1';
+            cursorOutline.style.opacity = '1';
+          });
         }
       }
+
+      // Initialize forms from Supabase
+      await initForms();
     });
   </script>
 </body>
