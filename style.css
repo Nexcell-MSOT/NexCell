@@ -1358,6 +1358,18 @@ body.nav-open {
   object-fit: cover;
   object-position: center;
   display: block;
+  background: linear-gradient(110deg, #0e1428 8%, #1a2347 24%, #0e1428 40%);
+  background-size: 200% 100%;
+  animation: teamSkeleton 1.8s ease-in-out infinite;
+  transition: opacity 0.35s ease;
+}
+.team-card img.is-loaded {
+  animation: none;
+  background: transparent;
+}
+@keyframes teamSkeleton {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 .team-img-sarthak {
   object-position: center 25% !important;

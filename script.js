@@ -409,3 +409,28 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     });
   }
 })();
+
+// ── Team Card Image Loading & Fallback Resilience ──
+function initTeamImages() {
+  const teamImages = document.querySelectorAll('.team-card img');
+  teamImages.forEach(img => {
+    const markLoaded = () => img.classList.add('is-loaded');
+    if (img.complete && img.naturalWidth > 0) {
+      markLoaded();
+    } else {
+      img.addEventListener('load', markLoaded, { once: true });
+      img.addEventListener('error', () => {
+        markLoaded();
+        if (!img.src.includes('fallback.svg') && !img.src.includes('anuj.svg')) {
+          img.src = 'images/team/fallback.svg';
+        }
+      }, { once: true });
+    }
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initTeamImages);
+} else {
+  initTeamImages();
+}
