@@ -1478,6 +1478,29 @@
     </div>
   </div>
 
+  <!-- ═══ REJECTION REASON MODAL ═══ -->
+  <div class="modal-backdrop" id="rejectReasonModal" style="z-index: 1100;">
+    <div class="modal-card" style="max-width: 520px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+        <div>
+          <h3 style="font-size: 1.3rem; font-weight: 800; color: #fff;">Reject Submission</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">Provide constructive feedback or a reason for rejection</p>
+        </div>
+        <button type="button" class="btn-delete-field" id="btnCloseRejectModal" style="font-size: 1.25rem;" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <label class="form-label">Feedback / Reason for Applicant</label>
+        <textarea class="form-input" id="rejectReasonInput" rows="3" style="resize: vertical; font-family: inherit;">Does not match track criteria / Capacity reached</textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+        <button type="button" class="btn-secondary" id="btnCancelRejectModal">Cancel</button>
+        <button type="button" class="btn-action-reject" id="btnConfirmReject">Confirm Rejection</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Client-side Admin Logic -->
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
@@ -2219,22 +2242,35 @@
         modalStatusBadge.innerHTML = `<span class="status-badge ${sub.status}">${sub.status}</span>`;
 
         // Configure Accept/Reject button states
+        btnModalAccept.disabled = false;
+        btnModalAccept.textContent = 'Accept & Issue QR Ticket';
+        btnModalReject.disabled = false;
+        btnModalReject.textContent = 'Reject Submission';
+
         if (sub.status === 'accepted') {
           btnModalAccept.disabled = true;
           btnModalAccept.textContent = `Accepted (${sub.ticket_code || 'Issued'})`;
-          btnModalReject.disabled = false;
         } else if (sub.status === 'rejected') {
-          btnModalAccept.disabled = false;
-          btnModalAccept.textContent = 'Accept & Issue QR Ticket';
           btnModalReject.disabled = true;
-        } else {
-          btnModalAccept.disabled = false;
-          btnModalAccept.textContent = 'Accept & Issue QR Ticket';
-          btnModalReject.disabled = false;
+          btnModalReject.textContent = 'Rejected';
         }
 
         reviewModal.classList.add('open');
       }
+
+      // Reject Modal Elements
+      const rejectReasonModal = document.getElementById('rejectReasonModal');
+      const rejectReasonInput = document.getElementById('rejectReasonInput');
+      const btnCloseRejectModal = document.getElementById('btnCloseRejectModal');
+      const btnCancelRejectModal = document.getElementById('btnCancelRejectModal');
+      const btnConfirmReject = document.getElementById('btnConfirmReject');
+
+      function closeRejectModal() {
+        rejectReasonModal.classList.remove('open');
+      }
+
+      btnCloseRejectModal.addEventListener('click', closeRejectModal);
+      btnCancelRejectModal.addEventListener('click', closeRejectModal);
 
       // Email Dispatch Modal Elements
       const emailDispatchModal = document.getElementById('emailDispatchModal');
@@ -2262,7 +2298,10 @@
           btnCopyEmailText.textContent = 'Copied to Clipboard!';
           setTimeout(() => btnCopyEmailText.textContent = 'Copy Email Text', 2000);
         } catch (e) {
-          prompt('Copy email text:', fullText);
+          emailBody.select();
+          document.execCommand('copy');
+          btnCopyEmailText.textContent = 'Copied to Clipboard!';
+          setTimeout(() => btnCopyEmailText.textContent = 'Copy Email Text', 2000);
         }
       });
 
@@ -2291,6 +2330,8 @@
           return;
         }
 
+        btnModalAccept.disabled = false;
+        btnModalAccept.textContent = 'Accept & Issue QR Ticket';
         reviewModal.classList.remove('open');
         loadSubmissions();
 
@@ -2326,24 +2367,34 @@ https://nexcell.club`;
       });
 
       // Action 2: Reject Submission & Dispatch Constructive Notice
-      btnModalReject.addEventListener('click', async () => {
+      btnModalReject.addEventListener('click', () => {
+        if (!currentViewingSubmission) return;
+        rejectReasonInput.value = 'Does not match track criteria / Capacity reached';
+        rejectReasonModal.classList.add('open');
+      });
+
+      btnConfirmReject.addEventListener('click', async () => {
         if (!currentViewingSubmission) return;
 
-        const reason = prompt('Optional feedback / reason for rejection:', 'Does not match track criteria / Capacity reached');
-        if (reason === null) return;
+        const reason = rejectReasonInput.value.trim() || 'Does not match track criteria / Capacity reached';
 
-        btnModalReject.disabled = true;
-        btnModalReject.textContent = 'Rejecting...';
+        btnConfirmReject.disabled = true;
+        btnConfirmReject.textContent = 'Rejecting...';
 
         const res = await window.NexcellSupabase.rejectSubmission(currentViewingSubmission.id, reason);
         if (!res.success) {
           alert('Error rejecting submission: ' + res.error);
-          btnModalReject.disabled = false;
-          btnModalReject.textContent = 'Reject Submission';
+          btnConfirmReject.disabled = false;
+          btnConfirmReject.textContent = 'Confirm Rejection';
           return;
         }
 
+        btnConfirmReject.disabled = false;
+        btnConfirmReject.textContent = 'Confirm Rejection';
+        closeRejectModal();
         reviewModal.classList.remove('open');
+        btnModalReject.disabled = false;
+        btnModalReject.textContent = 'Reject Submission';
         loadSubmissions();
 
         // Populate and open Email Dispatch Modal
