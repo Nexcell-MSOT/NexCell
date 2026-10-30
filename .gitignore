@@ -1,0 +1,5 @@
+# Private assets & environment
+images/team/
+.env
+.env.*
+.DS_Store

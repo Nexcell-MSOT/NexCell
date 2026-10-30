@@ -379,19 +379,63 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
 }
 
 // ── Team Card Image Loading & Fallback Resilience ──
+function getInitialsAvatar(name) {
+  const parts = (name || 'NexCell Member').trim().split(/\s+/).filter(Boolean);
+  const initials = parts.length > 1
+    ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+    : (parts[0] ? parts[0].slice(0, 2).toUpperCase() : 'NC');
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 720" width="560" height="720">
+    <defs>
+      <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0b0f1d"/>
+        <stop offset="50%" stop-color="#111936"/>
+        <stop offset="100%" stop-color="#070a14"/>
+      </linearGradient>
+      <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#4a7cff"/>
+        <stop offset="100%" stop-color="#00d2ff"/>
+      </linearGradient>
+      <radialGradient id="cg" cx="50%" cy="45%" r="50%">
+        <stop offset="0%" stop-color="rgba(74,124,255,0.25)"/>
+        <stop offset="100%" stop-color="rgba(74,124,255,0)"/>
+      </radialGradient>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#bg)"/>
+    <circle cx="280" cy="320" r="160" fill="url(#cg)"/>
+    <circle cx="280" cy="320" r="100" fill="none" stroke="url(#g)" stroke-width="3" stroke-dasharray="6 4" opacity="0.6"/>
+    <circle cx="280" cy="320" r="92" fill="#0d142b" stroke="rgba(74,124,255,0.3)" stroke-width="2"/>
+    <text x="280" y="345" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="64" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="2">${initials}</text>
+    <text x="280" y="470" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="16" font-weight="600" fill="#88a0db" text-anchor="middle" letter-spacing="3">NEXCELL MEMBER</text>
+  </svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
 function initTeamImages() {
-  const teamImages = document.querySelectorAll('.team-card img');
-  teamImages.forEach(img => {
+  const teamCards = document.querySelectorAll('.team-card');
+  teamCards.forEach(card => {
+    const img = card.querySelector('img');
+    if (!img) return;
+    const nameEl = card.querySelector('.team-name');
+    const memberName = nameEl ? nameEl.textContent.trim() : '';
+
     const markLoaded = () => img.classList.add('is-loaded');
-    if (img.complete && img.naturalWidth > 0) {
+
+    const handleImgResult = () => {
+      // If ImgBB served the 180x180 "Image Not Found" error graphic
+      if (img.naturalWidth === 180 && img.naturalHeight === 180) {
+        img.src = getInitialsAvatar(memberName);
+      }
       markLoaded();
+    };
+
+    if (img.complete && img.naturalWidth > 0) {
+      handleImgResult();
     } else {
-      img.addEventListener('load', markLoaded, { once: true });
+      img.addEventListener('load', handleImgResult, { once: true });
       img.addEventListener('error', () => {
+        img.src = getInitialsAvatar(memberName);
         markLoaded();
-        if (!img.src.includes('fallback.svg') && !img.src.includes('anuj.svg')) {
-          img.src = 'images/team/fallback.svg';
-        }
       }, { once: true });
     }
   });
