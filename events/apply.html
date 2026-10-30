@@ -2084,6 +2084,31 @@
         }
       }
 
+      // Secret Admin Access: Ctrl+Shift+A / Cmd+Shift+A or double-clicking logo
+      const adminUrl = '../admin/index.html';
+      window.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+          e.preventDefault();
+          window.location.href = adminUrl;
+        }
+      });
+      const navLogo = document.querySelector('.nav-logo');
+      if (navLogo) {
+        navLogo.addEventListener('dblclick', (e) => {
+          e.preventDefault();
+          window.location.href = adminUrl;
+        });
+        let lastTap = 0;
+        navLogo.addEventListener('touchend', (e) => {
+          const now = Date.now();
+          if (now - lastTap < 400 && now - lastTap > 0) {
+            e.preventDefault();
+            window.location.href = adminUrl;
+          }
+          lastTap = now;
+        });
+      }
+
       // Initialize forms from Supabase
       await initForms();
     });
