@@ -506,16 +506,26 @@
 
     .preview-step-switcher {
       display: flex;
-      background: #0f152e;
+      background: #0d1226;
       border-bottom: 1px solid var(--admin-border);
-      padding: 0.4rem 1rem;
+      padding: 0.5rem 1rem;
       gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .preview-step-switcher.mobile-view {
+      max-width: 375px;
+      margin: 0.6rem auto 0;
+      border: 1px solid var(--admin-border);
+      border-radius: 12px;
+      background: rgba(13, 18, 38, 0.95);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
 
     .btn-preview-step-btn {
       flex: 1;
       background: transparent;
-      border: none;
+      border: 1px solid transparent;
       color: var(--text-muted);
       font-size: 0.75rem;
       font-weight: 700;
@@ -523,6 +533,7 @@
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s;
+      text-align: center;
     }
 
     .btn-preview-step-btn.active {
@@ -544,16 +555,27 @@
     .preview-device-canvas {
       max-width: 100%;
       margin: 0 auto;
-      transition: max-width 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     .preview-device-canvas.mobile-view {
-      max-width: 380px;
-      border: 8px solid #1a223e;
-      border-radius: 36px;
-      padding: 0.5rem;
+      max-width: 375px;
+      border: 10px solid #1a223e;
+      border-radius: 42px;
+      padding: 0.6rem 0.5rem 0.8rem;
       background: #0a0e1a;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(74, 124, 255, 0.15);
+      position: relative;
+    }
+
+    .preview-device-canvas.mobile-view::before {
+      content: '';
+      display: block;
+      width: 68px;
+      height: 5px;
+      background: #252f50;
+      border-radius: 10px;
+      margin: 0.2rem auto 0.65rem;
     }
 
     /* Mock Card Interior */
@@ -563,6 +585,14 @@
       border-radius: 20px;
       padding: 1.5rem;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    .preview-device-canvas.mobile-view .mock-card {
+      border-radius: 30px;
+      padding: 1.15rem 0.95rem;
+      border: 1px solid rgba(55, 75, 140, 0.35);
+      background: rgba(12, 17, 35, 0.98);
     }
 
     .mock-header h3 {
@@ -590,18 +620,33 @@
       gap: 0.75rem;
     }
 
+    .preview-device-canvas.mobile-view .mock-banner-box {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.85rem 0.95rem;
+      margin-bottom: 1rem;
+    }
+
     .mock-banner-info {
       font-size: 0.8rem;
       color: var(--text-secondary);
       display: flex;
       flex-direction: column;
-      gap: 0.2rem;
+      gap: 0.25rem;
+      width: 100%;
     }
 
     .mock-banner-title {
       font-weight: 800;
       color: #fff;
       font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    .preview-device-canvas.mobile-view .mock-banner-title {
+      font-size: 0.98rem;
+      line-height: 1.35;
     }
 
     .mock-fee-badge {
@@ -613,6 +658,15 @@
       padding: 0.3rem 0.65rem;
       border-radius: 6px;
       white-space: nowrap;
+    }
+
+    .preview-device-canvas.mobile-view .mock-fee-badge {
+      font-size: 0.75rem;
+      padding: 0.32rem 0.7rem;
+    }
+
+    .preview-device-canvas.mobile-view #mockPreviewFeeBadgeWrap {
+      align-self: flex-start;
     }
 
     .mock-fee-badge.paid {
@@ -1002,10 +1056,17 @@
       <!-- Navigation Tabs -->
       <nav class="admin-tabs">
         <button class="tab-btn active" data-tab="tab-builder">
-          <span>🛠️ Form Builder</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 6px;">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+          </svg>
+          <span>Form Builder</span>
         </button>
         <button class="tab-btn" data-tab="tab-inbox">
-          <span>📥 Applications Inbox</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 6px;">
+            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+            <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+          </svg>
+          <span>Applications Inbox</span>
           <span class="tab-badge" id="inboxCountBadge">0</span>
         </button>
       </nav>
@@ -1024,17 +1085,17 @@
             </div>
             <button type="button" class="btn-new-form" id="btnNewForm">+ Create Blank Form</button>
 
-            <!-- 1-Click Quick Starter Templates -->
+            <!-- Quick Starter Templates -->
             <div class="template-selector-pills">
-              <span class="template-label">⚡ 1-Click Templates:</span>
+              <span class="template-label">Templates:</span>
               <button type="button" class="btn-template-pill" data-template="ideathon" title="Pre-fills Ideathon format (Paid ₹150 + Pitch Deck)">
-                🏆 Ideathon (Paid ₹150)
+                Ideathon (Paid ₹150)
               </button>
               <button type="button" class="btn-template-pill" data-template="meetup" title="Pre-fills Free Networking / Fireside RSVP">
-                🎙️ Fireside Meetup (Free)
+                Fireside Meetup (Free)
               </button>
               <button type="button" class="btn-template-pill" data-template="hackathon" title="Pre-fills Hackathon Team Registration">
-                💻 24h Hackathon
+                24h Hackathon
               </button>
             </div>
           </div>
@@ -1140,11 +1201,15 @@
                   <span class="p-dot green"></span>
                 </div>
                 <div class="preview-url-pill">
-                  <span>🔒 </span><span id="previewUrlText">nexcell.club/events/apply.html</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 5px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><span id="previewUrlText">nexcell.club/events/apply.html</span>
                 </div>
                 <div class="preview-device-toggles">
-                  <button type="button" class="btn-device-toggle active" id="btnPreviewDesktop" title="Desktop View">🖥️ Full</button>
-                  <button type="button" class="btn-device-toggle" id="btnPreviewMobile" title="Mobile View">📱 Mobile</button>
+                  <button type="button" class="btn-device-toggle active" id="btnPreviewDesktop" title="Desktop View">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>Full
+                  </button>
+                  <button type="button" class="btn-device-toggle" id="btnPreviewMobile" title="Mobile View">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>Mobile
+                  </button>
                 </div>
               </div>
 
@@ -1168,8 +1233,8 @@
                       <div class="mock-banner-info">
                         <div class="mock-banner-title" id="mockPreviewBannerTitle">Mirai 0→1 Flagship Ideathon</div>
                         <div>
-                          <span id="mockPreviewBannerDate">📅 Nov 15, 2026</span> · 
-                          <span id="mockPreviewBannerVenue">📍 Auditorium, RIT</span>
+                          <span id="mockPreviewBannerDate">Nov 15, 2026</span> · 
+                          <span id="mockPreviewBannerVenue">Auditorium, RIT</span>
                         </div>
                       </div>
                       <div id="mockPreviewFeeBadgeWrap">
@@ -1180,7 +1245,7 @@
                     <!-- Step 1 Mockup View -->
                     <div id="mockStep1View">
                       <div class="mock-header">
-                        <h3 id="mockPreviewHeroTitle">Mirai 0→1 Flagship Ideathon</h3>
+                        <h3 id="mockPreviewHeroTitle">Application Submission</h3>
                         <p id="mockPreviewHeroDesc">Pitch your startup prototype to angel investors and industry leaders.</p>
                       </div>
 
@@ -1204,7 +1269,7 @@
                       <div class="mock-field-group" style="margin-top: 1rem;">
                         <label class="mock-field-label">Pitch Deck Presentation & Documents</label>
                         <div class="mock-dropzone">
-                          <div style="font-size: 1.25rem; margin-bottom: 0.25rem;">📄</div>
+                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--admin-gold); margin-bottom: 0.25rem;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
                           <div>Drag & drop pitch decks (.pdf, .docx)</div>
                         </div>
                       </div>
@@ -1237,7 +1302,7 @@
                       </div>
 
                       <button type="button" class="mock-submit-btn">
-                        Verify & Submit Application ✓
+                        Verify & Submit Application
                       </button>
                     </div>
 
@@ -1315,7 +1380,7 @@
           <h3 style="font-size: 1.4rem; font-weight: 800; color: #fff;" id="modalApplicantName">Applicant Review</h3>
           <p style="font-size: 0.85rem; color: var(--text-muted);" id="modalSubmissionId">#NEX-SUBMISSION-ID</p>
         </div>
-        <button type="button" class="btn-delete-field" id="btnCloseModal" style="font-size: 1.25rem;">✕</button>
+        <button type="button" class="btn-delete-field" id="btnCloseModal" style="font-size: 1.25rem;" aria-label="Close">&times;</button>
       </div>
 
       <div class="detail-grid">
@@ -1362,10 +1427,10 @@
       <div style="border-top: 1px solid var(--admin-border); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
         <div style="display: flex; gap: 0.75rem;">
           <button type="button" class="btn-action-accept" id="btnModalAccept">
-            ✓ Accept & Issue QR Ticket
+            Accept & Issue QR Ticket
           </button>
           <button type="button" class="btn-action-reject" id="btnModalReject">
-            ✕ Reject Submission
+            Reject Submission
           </button>
         </div>
         <div id="modalStatusBadge"></div>
@@ -1381,7 +1446,7 @@
           <h3 style="font-size: 1.35rem; font-weight: 800; color: #fff;" id="emailModalTitle">Dispatch Notification</h3>
           <p style="font-size: 0.85rem; color: var(--text-muted);" id="emailModalSubtitle">Notify applicant about their status</p>
         </div>
-        <button type="button" class="btn-delete-field" id="btnCloseEmailModal" style="font-size: 1.25rem;">✕</button>
+        <button type="button" class="btn-delete-field" id="btnCloseEmailModal" style="font-size: 1.25rem;" aria-label="Close">&times;</button>
       </div>
 
       <div class="form-group">
@@ -1401,12 +1466,12 @@
 
       <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
         <button type="button" class="btn-secondary" id="btnCopyEmailText">
-          📋 Copy Email Text
+          Copy Email Text
         </button>
         <div style="display: flex; gap: 0.75rem;">
           <button type="button" class="btn-secondary" id="btnDismissEmailModal">Done</button>
           <a href="#" class="btn-primary" id="btnSendMailto" style="display: inline-flex; align-items: center; gap: 0.5rem;">
-            ✉️ Open Mail Client
+            Open Mail Client
           </a>
         </div>
       </div>
@@ -1597,12 +1662,14 @@
         btnPreviewDesktop.classList.add('active');
         btnPreviewMobile.classList.remove('active');
         previewDeviceCanvas.classList.remove('mobile-view');
+        previewStepSwitcher.classList.remove('mobile-view');
       });
 
       btnPreviewMobile.addEventListener('click', () => {
         btnPreviewMobile.classList.add('active');
         btnPreviewDesktop.classList.remove('active');
         previewDeviceCanvas.classList.add('mobile-view');
+        previewStepSwitcher.classList.add('mobile-view');
       });
 
       // Preview Step Switcher (Step 1 Form vs Step 2 QR)
@@ -1679,16 +1746,16 @@
 
         // 2. Banner info
         mockPreviewBannerTitle.textContent = title;
-        mockPreviewBannerVenue.textContent = '📍 ' + venue;
+        mockPreviewBannerVenue.textContent = venue;
         if (dateVal) {
           try {
             const d = new Date(dateVal);
-            mockPreviewBannerDate.textContent = '📅 ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            mockPreviewBannerDate.textContent = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
           } catch (e) {
-            mockPreviewBannerDate.textContent = '📅 ' + dateVal;
+            mockPreviewBannerDate.textContent = dateVal;
           }
         } else {
-          mockPreviewBannerDate.textContent = '📅 Date TBD';
+          mockPreviewBannerDate.textContent = 'Date TBD';
         }
 
         // 3. Fee badge & Paid step controls
@@ -1712,7 +1779,7 @@
           mockPreviewFeeBadge.className = 'mock-fee-badge free';
           mockPreviewFeeBadge.textContent = 'Free Entry';
           previewStepSwitcher.style.display = 'none';
-          mockSubmitBtnText.textContent = 'Submit Free Application ✓';
+          mockSubmitBtnText.textContent = 'Submit Free Application';
           // Force back to Step 1
           mockStep1View.style.display = 'block';
           mockStep2View.style.display = 'none';
@@ -1721,7 +1788,7 @@
         }
 
         // 4. Hero text
-        mockPreviewHeroTitle.textContent = title;
+        mockPreviewHeroTitle.textContent = 'Application Submission';
         mockPreviewHeroDesc.textContent = desc;
 
         // 5. Dynamic fields rendering in mockup
@@ -1741,7 +1808,7 @@
           } else if (field.type === 'file') {
             fieldControlHtml = `
               <div class="mock-dropzone" style="padding: 0.65rem 0.75rem;">
-                <div style="font-size: 0.95rem; font-weight: 600; color: #fff;">📄 ${field.label || 'Upload Document'}</div>
+                <div style="font-size: 0.95rem; font-weight: 600; color: #fff;">${field.label || 'Upload Document'}</div>
                 <div style="font-size: 0.72rem; color: var(--text-muted);">PDF, PPTX, or ZIP files accepted</div>
               </div>`;
           } else {
@@ -1909,7 +1976,7 @@
           card.innerHTML = `
             <div class="field-card-header">
               <span class="field-order-tag">#${index + 1} · ${field.type.toUpperCase()}</span>
-              <button type="button" class="btn-delete-field" data-delete-idx="${index}" title="Remove question">✕</button>
+              <button type="button" class="btn-delete-field" data-delete-idx="${index}" title="Remove question" aria-label="Remove">&times;</button>
             </div>
             <div class="form-row">
               <div class="form-group">
@@ -2100,7 +2167,7 @@
               </span>
               ${sub.payment_utr ? `<div style="font-size: 0.75rem; color: var(--text-muted); font-family: monospace;">UTR: ${sub.payment_utr}</div>` : ''}
             </td>
-            <td>${filesCount > 0 ? `📁 ${filesCount} file(s)` : 'None'}</td>
+            <td>${filesCount > 0 ? `${filesCount} file(s)` : 'None'}</td>
             <td>
               <span class="status-badge ${sub.status}">${sub.status}</span>
               ${sub.ticket_code ? `<div style="font-size: 0.75rem; color: var(--admin-gold); font-family: monospace;">${sub.ticket_code}</div>` : ''}
@@ -2139,7 +2206,7 @@
             item.style.justifyContent = 'space-between';
             item.style.fontSize = '0.88rem';
             item.innerHTML = `
-              <span>📄 ${f.fileName}</span>
+              <span>${f.fileName}</span>
               <span style="color: var(--text-muted); font-size: 0.8rem;">${(f.sizeBytes / (1024*1024)).toFixed(2)} MB</span>
             `;
             modalFilesList.appendChild(item);
@@ -2154,15 +2221,15 @@
         // Configure Accept/Reject button states
         if (sub.status === 'accepted') {
           btnModalAccept.disabled = true;
-          btnModalAccept.textContent = `✓ Accepted (${sub.ticket_code || 'Issued'})`;
+          btnModalAccept.textContent = `Accepted (${sub.ticket_code || 'Issued'})`;
           btnModalReject.disabled = false;
         } else if (sub.status === 'rejected') {
           btnModalAccept.disabled = false;
-          btnModalAccept.textContent = '✓ Accept & Issue QR Ticket';
+          btnModalAccept.textContent = 'Accept & Issue QR Ticket';
           btnModalReject.disabled = true;
         } else {
           btnModalAccept.disabled = false;
-          btnModalAccept.textContent = '✓ Accept & Issue QR Ticket';
+          btnModalAccept.textContent = 'Accept & Issue QR Ticket';
           btnModalReject.disabled = false;
         }
 
@@ -2192,8 +2259,8 @@
         const fullText = `To: ${emailRecipient.value}\nSubject: ${emailSubject.value}\n\n${emailBody.value}`;
         try {
           await navigator.clipboard.writeText(fullText);
-          btnCopyEmailText.textContent = 'Copied to Clipboard! ✓';
-          setTimeout(() => btnCopyEmailText.textContent = '📋 Copy Email Text', 2000);
+          btnCopyEmailText.textContent = 'Copied to Clipboard!';
+          setTimeout(() => btnCopyEmailText.textContent = 'Copy Email Text', 2000);
         } catch (e) {
           prompt('Copy email text:', fullText);
         }
@@ -2220,7 +2287,7 @@
         if (!res.success) {
           alert('Error accepting submission: ' + res.error);
           btnModalAccept.disabled = false;
-          btnModalAccept.textContent = '✓ Accept & Issue QR Ticket';
+          btnModalAccept.textContent = 'Accept & Issue QR Ticket';
           return;
         }
 
@@ -2228,18 +2295,18 @@
         loadSubmissions();
 
         // Populate and open Email Dispatch Modal
-        emailModalTitle.textContent = '🎉 Application Accepted — Dispatch Ticket Pass';
+        emailModalTitle.textContent = 'Application Accepted — Dispatch Ticket Pass';
         emailModalSubtitle.textContent = `Ticket ${res.ticketCode} generated for ${currentViewingSubmission.applicant_name}`;
         emailRecipient.value = currentViewingSubmission.applicant_email;
-        emailSubject.value = `🎉 Congratulations! Your NexCell Admission Pass — ${currentViewingSubmission.event_slug}`;
+        emailSubject.value = `Congratulations! Your NexCell Admission Pass — ${currentViewingSubmission.event_slug}`;
         
         emailBody.value = 
 `Dear ${currentViewingSubmission.applicant_name},
 
 Congratulations! We are thrilled to inform you that your application for "${currentViewingSubmission.event_slug}" has been officially ACCEPTED by the NexCell Entrepreneurship Club.
 
-🎟️ Your Admission Ticket Code: ${res.ticketCode}
-🔗 View & Download your Digital QR Pass here:
+Admission Ticket Code: ${res.ticketCode}
+View & Download your Digital QR Pass here:
 ${res.ticketUrl}
 
 Important Instructions:
@@ -2272,7 +2339,7 @@ https://nexcell.club`;
         if (!res.success) {
           alert('Error rejecting submission: ' + res.error);
           btnModalReject.disabled = false;
-          btnModalReject.textContent = '✕ Reject Submission';
+          btnModalReject.textContent = 'Reject Submission';
           return;
         }
 

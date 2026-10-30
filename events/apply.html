@@ -964,7 +964,8 @@
         <ul class="dropdown-menu">
           <li><a href="../index.html#upcoming-events">Upcoming Events</a></li>
           <li><a href="../index.html#events">Past Events</a></li>
-          <li><a href="apply.html" style="color: var(--portal-gold);">Apply / Register ★</a></li>
+          <li><a href="apply.html" style="color: var(--portal-gold);">Apply / Register</a></li>
+          <li><a href="ticket.html">View Ticket</a></li>
         </ul>
       </li>
       <li><a href="../index.html#team">Team</a></li>
@@ -988,12 +989,17 @@
       <p class="portal-desc">
         Pitch your early-stage startup, register for upcoming ideathons, or submit your documents securely to the NexCell Entrepreneurship Club.
       </p>
+      <div style="margin-top: 1.25rem;">
+        <a href="ticket.html" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.25rem; border-radius: 999px; background: rgba(243, 156, 18, 0.12); border: 1px solid rgba(243, 156, 18, 0.4); color: #fce07a; font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: all 0.25s; box-shadow: 0 4px 15px rgba(243, 156, 18, 0.15);">
+          <span>Already Registered? <strong>View Your Ticket Pass →</strong></span>
+        </a>
+      </div>
     </header>
 
     <!-- Supabase Demo Notice Banner (Shown if credentials are not configured) -->
     <div id="configNotice" class="config-banner">
       <div>
-        <strong>⚙️ Admin Notice:</strong> Running in Preview/Demo mode. Submissions are validated client-side and simulated safely.
+        <strong>Admin Notice:</strong> Running in Preview/Demo mode. Submissions are validated client-side and simulated safely.
       </div>
       <div>
         <a href="../SUPABASE_SETUP.md" target="_blank">View Setup Guide →</a>
@@ -1015,19 +1021,19 @@
           </h4>
           <ul class="perk-checklist">
             <li>
-              <span class="check-icon">✓</span>
+              <span class="check-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
               <span><strong>Private Storage:</strong> Submissions and pitch decks are stored in isolated, access-controlled buckets.</span>
             </li>
             <li>
-              <span class="check-icon">✓</span>
+              <span class="check-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
               <span><strong>Supported Files:</strong> PDF presentations, Word documents (.docx), and high-res images (.png, .jpg).</span>
             </li>
             <li>
-              <span class="check-icon">✓</span>
+              <span class="check-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
               <span><strong>Size Limit:</strong> Max 15MB per uploaded file. Up to 5 files per application.</span>
             </li>
             <li>
-              <span class="check-icon">✓</span>
+              <span class="check-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
               <span><strong>Row Level Security:</strong> Submissions are readable only by authorized club mentors and administrators.</span>
             </li>
           </ul>
@@ -1059,7 +1065,11 @@
 
         <div class="portal-side-card" style="border-color: rgba(243, 156, 18, 0.3);">
           <h4 class="side-card-title" style="color: var(--portal-gold);">
-            💡 Pitch Tip
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"></path>
+              <line x1="9" y1="21" x2="15" y2="21"></line>
+            </svg>
+            Pitch Tip
           </h4>
           <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
             Focus on the problem you are solving, your target market, and why your team has the unfair advantage to build it. A 5-slide deck is better than a 30-page essay.
@@ -1089,8 +1099,8 @@
           <div>
             <div class="event-info-title" id="eventInfoTitle">Selected Event</div>
             <div class="event-info-meta">
-              <span id="eventInfoDate">📅 Date TBD</span>
-              <span id="eventInfoVenue">📍 Venue TBD</span>
+              <span id="eventInfoDate">Date TBD</span>
+              <span id="eventInfoVenue">Venue TBD</span>
             </div>
           </div>
           <div id="eventInfoFeeBadge">
@@ -1275,7 +1285,9 @@
 
         <!-- Success Confirmation State (Replaces form upon completion) -->
         <div class="success-overlay" id="successOverlay">
-          <div class="success-emblem">✓</div>
+          <div class="success-emblem">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
           <h2 class="success-title">Application Submitted!</h2>
           <p style="color: var(--text-secondary); max-width: 520px; margin: 0 auto 1.5rem;" id="successDescText">
             Thank you for applying to NexCell. Your details and documents have been secured in our PostgreSQL database.
@@ -1285,11 +1297,14 @@
             <div class="submission-id-box" id="displaySubmissionId">#NEX-PENDING</div>
           </div>
           <div id="ticketInstructionsBox" style="margin-bottom: 2rem; font-size: 0.9rem; color: #fce07a; background: rgba(243, 156, 18, 0.1); border: 1px solid rgba(243, 156, 18, 0.3); border-radius: 12px; padding: 1rem; max-width: 500px; margin-left: auto; margin-right: auto;">
-            🎟️ <strong>Admission Pass:</strong> Once your application is reviewed and accepted by organizers, your verified digital QR ticket will be accessible at <code>events/ticket.html</code>.
+            <strong>Admission Pass:</strong> Once your application is reviewed and accepted by organizers, your verified digital QR ticket will be accessible at <a href="ticket.html" style="color: #f39c12; font-weight: 700; text-decoration: underline;">events/ticket.html</a>.
           </div>
           <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+            <a href="ticket.html" class="btn-primary" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+              <span>View Ticket Pass</span>
+            </a>
             <button type="button" class="btn-secondary" id="btnResetForm">Submit Another Application</button>
-            <a href="../index.html" class="btn-primary">Return to NexCell Home</a>
+            <a href="../index.html" class="btn-secondary">Return to NexCell Home</a>
           </div>
         </div>
 
@@ -1326,7 +1341,7 @@
       <div class="footer-bottom">
         <div class="footer-bottom-inner">
           <p class="copyright">© 2026 NexCell — Mirai School of Technology. All rights reserved.</p>
-          <p class="credits">Built with 💙 by the <span class="highlight">NexCell Tech Team</span></p>
+          <p class="credits">Built by the <span class="highlight">NexCell Tech Team</span></p>
         </div>
       </div>
     </div>
@@ -1460,9 +1475,9 @@
         // Render Banner
         eventInfoTitle.textContent = formData.title;
         eventInfoDate.textContent = formData.event_date 
-          ? `📅 ${new Date(formData.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
-          : '📅 Date Announced Soon';
-        eventInfoVenue.textContent = formData.venue ? `📍 ${formData.venue}` : '📍 Rathinam Campus, Bangalore';
+          ? new Date(formData.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+          : 'Date Announced Soon';
+        eventInfoVenue.textContent = formData.venue ? formData.venue : 'Rathinam Campus, Bangalore';
 
         if (formData.is_paid) {
           eventInfoFeeBadge.innerHTML = `<span class="fee-badge paid">₹${formData.fee_amount || 0} Registration Fee</span>`;
@@ -1575,7 +1590,7 @@
         const vpa = upiDisplayVpa.textContent;
         try {
           await navigator.clipboard.writeText(vpa);
-          btnCopyVpa.textContent = 'Copied! ✓';
+          btnCopyVpa.textContent = 'Copied!';
           setTimeout(() => btnCopyVpa.textContent = 'Copy VPA', 2000);
         } catch (e) {
           prompt('Copy UPI ID:', vpa);
@@ -1685,7 +1700,7 @@
               </div>
             </div>
             <div class="file-actions">
-              <button type="button" class="file-remove-btn" data-index="${index}" title="Remove file" aria-label="Remove file">✕</button>
+              <button type="button" class="file-remove-btn" data-index="${index}" title="Remove file" aria-label="Remove file">&times;</button>
             </div>
           `;
           filesList.appendChild(chip);
