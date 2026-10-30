@@ -377,15 +377,3 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     });
   });
 }
-
-// ── Team Image Error Handling & Initials Fallback ──
-document.querySelectorAll('.team-card img').forEach(img => {
-  img.addEventListener('error', function() {
-    const card = this.closest('.team-card');
-    const name = card ? (card.querySelector('.team-name')?.textContent || 'Member') : 'Member';
-    const initials = name.trim().split(/\s+/).map(n => n[0]).join('').slice(0, 2).toUpperCase();
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="373" viewBox="0 0 280 373"><rect width="100%" height="100%" fill="%230d1225"/><rect x="20" y="20" width="240" height="333" rx="12" fill="%23141b36"/><circle cx="140" cy="160" r="56" fill="%231e2952"/><text x="140" y="172" fill="%234a7cff" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="32" font-weight="700" text-anchor="middle">${initials}</text></svg>`;
-    this.src = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
-  });
-});
-
