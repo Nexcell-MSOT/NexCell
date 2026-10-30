@@ -378,6 +378,38 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
   });
 }
 
+// ── Secret Admin Access (Keyboard Shortcut & Logo Tap) ──
+(function setupSecretAdminAccess() {
+  const adminUrl = 'admin/index.html';
+
+  // 1. Keyboard Shortcut: Ctrl + Shift + A or Cmd + Shift + A
+  window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+      e.preventDefault();
+      window.location.href = adminUrl;
+    }
+  });
+
+  // 2. Double-Click or Double-Tap on NexCell Logo in Navbar
+  const navLogo = document.querySelector('.nav-logo');
+  if (navLogo) {
+    navLogo.addEventListener('dblclick', (e) => {
+      e.preventDefault();
+      window.location.href = adminUrl;
+    });
+
+    let lastTap = 0;
+    navLogo.addEventListener('touchend', (e) => {
+      const now = Date.now();
+      if (now - lastTap < 400 && now - lastTap > 0) {
+        e.preventDefault();
+        window.location.href = adminUrl;
+      }
+      lastTap = now;
+    });
+  }
+})();
+
 // ── Team Card Image Loading & Fallback Resilience ──
 function initTeamImages() {
   const teamImages = document.querySelectorAll('.team-card img');

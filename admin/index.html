@@ -1,0 +1,2529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexCell Studio — Admin Portal & Form Builder</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="../images/Nex.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="../style.css?v=6">
+
+  <!-- Supabase CDN & NexCell Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/supabaseClient.js"></script>
+
+  <style>
+    :root {
+      --admin-gold: #f39c12;
+      --admin-bg: #070a14;
+      --admin-card: rgba(13, 18, 37, 0.88);
+      --admin-border: rgba(55, 75, 140, 0.35);
+      --admin-border-hover: rgba(74, 124, 255, 0.5);
+    }
+
+    body {
+      background-color: var(--admin-bg);
+      background-image: 
+        radial-gradient(circle at 10% 15%, rgba(74, 124, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(243, 156, 18, 0.06) 0%, transparent 45%);
+      min-height: 100vh;
+      color: #e8ecf4;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      body, a, button, input, select, textarea, .tab-btn, .btn-primary, .btn-secondary {
+        cursor: auto !important;
+      }
+      a, button, select, .tab-btn, .btn-primary, .btn-secondary, .btn-delete-field, .btn-new-form, .btn-signout, .btn-action-accept, .btn-action-reject {
+        cursor: pointer !important;
+      }
+      input, textarea {
+        cursor: text !important;
+      }
+    }
+
+    /* Admin Navigation */
+    .admin-navbar {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      background: rgba(10, 14, 26, 0.92);
+      border-bottom: 1px solid var(--admin-border);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.5px;
+    }
+
+    .admin-badge-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(243, 156, 18, 0.15);
+      color: var(--admin-gold);
+      border: 1px solid rgba(243, 156, 18, 0.35);
+    }
+
+    .admin-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .user-pill {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--admin-border);
+      padding: 0.4rem 0.9rem;
+      border-radius: 99px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .user-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+
+    .btn-signout {
+      background: transparent;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #f87171;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-signout:hover {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: #ef4444;
+    }
+
+    /* Main Container */
+    .admin-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Login Screen */
+    .auth-wrap {
+      max-width: 440px;
+      margin: 6rem auto 0;
+      background: var(--admin-card);
+      border: 1px solid var(--admin-border);
+      border-radius: 24px;
+      padding: 2.5rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(74, 124, 255, 0.1);
+      backdrop-filter: blur(20px);
+      text-align: center;
+    }
+
+    .auth-logo {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 1.25rem;
+    }
+
+    .auth-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+
+    .auth-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    /* Admin Login Submit Button & Alerts */
+    .btn-portal-submit {
+      width: 100%;
+      padding: 0.95rem 1.5rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #4a7cff 0%, #2f5edb 100%);
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      box-shadow: 0 8px 20px rgba(74, 124, 255, 0.35);
+      transition: all 0.25s ease;
+      margin-top: 1.25rem;
+      box-sizing: border-box;
+    }
+
+    .btn-portal-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(74, 124, 255, 0.5);
+      filter: brightness(1.08);
+    }
+
+    .btn-portal-submit:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 4px 12px rgba(74, 124, 255, 0.3);
+    }
+
+    .btn-portal-submit:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      box-sizing: border-box;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .portal-alert {
+      display: none;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+
+    .portal-alert.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #f87171;
+    }
+
+    .portal-alert.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+    }
+
+    @media (max-width: 640px) {
+      .admin-container {
+        padding: 1.5rem 1rem;
+      }
+      .auth-wrap {
+        margin: 2.5rem auto 0;
+        padding: 2rem 1.25rem;
+        border-radius: 20px;
+      }
+    }
+
+    /* Dashboard Header Tabs */
+    .admin-tabs {
+      display: flex;
+      gap: 0.75rem;
+      border-bottom: 1px solid var(--admin-border);
+      padding-bottom: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 0.6rem 1.4rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tab-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      background: rgba(74, 124, 255, 0.15);
+      border: 1px solid rgba(74, 124, 255, 0.35);
+      color: var(--accent-light-blue);
+    }
+
+    .tab-badge {
+      background: var(--admin-gold);
+      color: #000;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 0.15rem 0.5rem;
+      border-radius: 99px;
+    }
+
+    /* ── FORM CONTROLS & SLEEK DARK INPUTS ── */
+    .form-group {
+      margin-bottom: 1.15rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.15rem;
+    }
+
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.45rem;
+    }
+
+    .form-label .required {
+      color: #ef4444;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+      background: rgba(10, 14, 26, 0.85) !important;
+      border: 1px solid var(--admin-border) !important;
+      color: #ffffff !important;
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    input[type="datetime-local"] {
+      color-scheme: dark;
+    }
+
+    .form-input:hover,
+    .form-textarea:hover,
+    .form-select:hover {
+      border-color: rgba(74, 124, 255, 0.5) !important;
+      background: rgba(14, 20, 42, 0.95) !important;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--accent-blue) !important;
+      background: rgba(15, 22, 48, 1) !important;
+      box-shadow: 0 0 0 3px rgba(74, 124, 255, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    /* Custom Sleek Dark Select Element (Removes native OS white bevels) */
+    .form-select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      cursor: pointer;
+      padding-right: 2.5rem !important;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+      background-repeat: no-repeat !important;
+      background-position: right 0.85rem center !important;
+      background-size: 14px !important;
+    }
+
+    .form-select option {
+      background: #0d1226 !important;
+      color: #ffffff !important;
+      padding: 0.75rem !important;
+    }
+
+    /* + Create Blank Form Button */
+    .btn-new-form {
+      appearance: none;
+      -webkit-appearance: none;
+      background: rgba(74, 124, 255, 0.12);
+      border: 1px solid rgba(74, 124, 255, 0.35);
+      color: var(--accent-light-blue);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 0.65rem 1.1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-new-form:hover {
+      background: rgba(74, 124, 255, 0.25);
+      border-color: var(--accent-blue);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(74, 124, 255, 0.25);
+    }
+
+    .btn-new-form:active {
+      transform: translateY(0);
+    }
+
+    /* ── STUDIO LAYOUT WITH REAL-TIME LIVE PREVIEW ── */
+    .studio-control-bar {
+      background: var(--admin-card);
+      border: 1px solid var(--admin-border);
+      border-radius: 18px;
+      padding: 1.25rem 1.75rem;
+      margin-bottom: 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .studio-pickers-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .template-selector-pills {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .template-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--admin-gold);
+    }
+
+    .btn-template-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e2e8f0;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.35rem 0.85rem;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-template-pill:hover {
+      background: rgba(243, 156, 18, 0.15);
+      border-color: var(--admin-gold);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .studio-actions-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    /* Side-by-side Studio Grid */
+    .builder-studio-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1200px) {
+      .builder-studio-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Left: Visual Editor Column */
+    .studio-editor-column {
+      background: var(--admin-card);
+      border: 1px solid var(--admin-border);
+      border-radius: 24px;
+      padding: 2.25rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Right: Sticky Live Preview Column */
+    .studio-preview-column {
+      position: sticky;
+      top: 90px;
+    }
+
+    .live-preview-window {
+      background: #090d1c;
+      border: 1px solid rgba(243, 156, 18, 0.35);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 35px rgba(243, 156, 18, 0.1);
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 120px);
+    }
+
+    .preview-browser-chrome {
+      height: 48px;
+      background: #0d1226;
+      border-bottom: 1px solid var(--admin-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .preview-chrome-dots {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .p-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .p-dot.red { background: #ef4444; }
+    .p-dot.yellow { background: #f59e0b; }
+    .p-dot.green { background: #10b981; }
+
+    .preview-url-pill {
+      flex: 1;
+      max-width: 380px;
+      background: rgba(10, 14, 26, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 99px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.72rem;
+      color: #94a3b8;
+      font-family: monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+
+    .preview-device-toggles {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .btn-device-toggle {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-device-toggle.active {
+      background: rgba(74, 124, 255, 0.25);
+      border-color: var(--accent-blue);
+      color: #ffffff;
+    }
+
+    .preview-step-switcher {
+      display: flex;
+      background: #0d1226;
+      border-bottom: 1px solid var(--admin-border);
+      padding: 0.5rem 1rem;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .preview-step-switcher.mobile-view {
+      max-width: 375px;
+      margin: 0.6rem auto 0;
+      border: 1px solid var(--admin-border);
+      border-radius: 12px;
+      background: rgba(13, 18, 38, 0.95);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-preview-step-btn {
+      flex: 1;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.45rem 0.6rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .btn-preview-step-btn.active {
+      background: rgba(243, 156, 18, 0.15);
+      border: 1px solid rgba(243, 156, 18, 0.35);
+      color: var(--admin-gold);
+    }
+
+    .preview-scroll-body {
+      overflow-y: auto;
+      padding: 1.5rem;
+      flex: 1;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(74, 124, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(243, 156, 18, 0.06) 0%, transparent 45%),
+        #070a14;
+    }
+
+    .preview-device-canvas {
+      max-width: 100%;
+      margin: 0 auto;
+      transition: all 0.3s ease;
+    }
+
+    .preview-device-canvas.mobile-view {
+      max-width: 375px;
+      border: 10px solid #1a223e;
+      border-radius: 42px;
+      padding: 0.6rem 0.5rem 0.8rem;
+      background: #0a0e1a;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(74, 124, 255, 0.15);
+      position: relative;
+    }
+
+    .preview-device-canvas.mobile-view::before {
+      content: '';
+      display: block;
+      width: 68px;
+      height: 5px;
+      background: #252f50;
+      border-radius: 10px;
+      margin: 0.2rem auto 0.65rem;
+    }
+
+    /* Mock Card Interior */
+    .mock-card {
+      background: rgba(13, 18, 37, 0.95);
+      border: 1px solid rgba(55, 75, 140, 0.45);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    .preview-device-canvas.mobile-view .mock-card {
+      border-radius: 30px;
+      padding: 1.15rem 0.95rem;
+      border: 1px solid rgba(55, 75, 140, 0.35);
+      background: rgba(12, 17, 35, 0.98);
+    }
+
+    .mock-header h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.25rem;
+    }
+
+    .mock-header p {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin: 0 0 1rem;
+    }
+
+    .mock-banner-box {
+      background: rgba(18, 24, 48, 0.85);
+      border: 1px solid rgba(55, 75, 140, 0.35);
+      border-radius: 12px;
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .preview-device-canvas.mobile-view .mock-banner-box {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.85rem 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .mock-banner-info {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      width: 100%;
+    }
+
+    .mock-banner-title {
+      font-weight: 800;
+      color: #fff;
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    .preview-device-canvas.mobile-view .mock-banner-title {
+      font-size: 0.98rem;
+      line-height: 1.35;
+    }
+
+    .mock-fee-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .preview-device-canvas.mobile-view .mock-fee-badge {
+      font-size: 0.75rem;
+      padding: 0.32rem 0.7rem;
+    }
+
+    .preview-device-canvas.mobile-view #mockPreviewFeeBadgeWrap {
+      align-self: flex-start;
+    }
+
+    .mock-fee-badge.paid {
+      background: rgba(243, 156, 18, 0.15);
+      border: 1px solid rgba(243, 156, 18, 0.4);
+      color: var(--admin-gold);
+    }
+
+    .mock-fee-badge.free {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #10b981;
+    }
+
+    .mock-field-group {
+      margin-bottom: 0.9rem;
+    }
+
+    .mock-field-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.35rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .mock-field-input {
+      width: 100%;
+      background: rgba(10, 14, 26, 0.85);
+      border: 1px solid rgba(55, 75, 140, 0.35);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+
+    .mock-field-textarea {
+      width: 100%;
+      background: rgba(10, 14, 26, 0.85);
+      border: 1px solid rgba(55, 75, 140, 0.35);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.82rem;
+      color: #94a3b8;
+      resize: none;
+    }
+
+    .mock-dropzone {
+      border: 1.5px dashed rgba(74, 124, 255, 0.35);
+      border-radius: 12px;
+      padding: 1.25rem 1rem;
+      text-align: center;
+      background: rgba(10, 14, 26, 0.5);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .mock-submit-btn {
+      width: 100%;
+      padding: 0.85rem 1.5rem;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+      color: #070a14;
+      font-size: 0.9rem;
+      font-weight: 800;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .preview-footer-status {
+      height: 38px;
+      background: #0d1226;
+      border-top: 1px solid var(--admin-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .builder-section-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--admin-gold);
+      margin: 1.8rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .builder-section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(243, 156, 18, 0.2);
+    }
+
+    .editor-card {
+      background: rgba(10, 14, 26, 0.7);
+      border: 1px solid var(--admin-border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .editor-card:hover {
+      border-color: var(--admin-border-hover);
+    }
+
+    .field-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .field-order-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--accent-light-blue);
+      background: rgba(74, 124, 255, 0.15);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+    }
+
+    .btn-delete-field {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-delete-field:hover {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    .add-field-toolbar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+
+    .btn-add-tool {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px dashed var(--admin-border);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-add-tool:hover {
+      background: rgba(74, 124, 255, 0.15);
+      border-color: var(--accent-blue);
+      border-style: solid;
+      color: var(--accent-light-blue);
+    }
+
+    /* Submissions Inbox Table */
+    .inbox-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .data-table-wrap {
+      overflow-x: auto;
+      background: var(--admin-card);
+      border: 1px solid var(--admin-border);
+      border-radius: 18px;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .data-table th {
+      background: rgba(10, 14, 26, 0.9);
+      padding: 1rem 1.25rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--admin-border);
+    }
+
+    .data-table td {
+      padding: 1.1rem 1.25rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid rgba(55, 75, 140, 0.2);
+      color: var(--text-primary);
+    }
+
+    .data-table tr:hover td {
+      background: rgba(20, 28, 58, 0.4);
+    }
+
+    .status-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 0.3rem 0.7rem;
+      border-radius: 99px;
+      display: inline-block;
+    }
+
+    .status-badge.submitted { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+    .status-badge.accepted { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .status-badge.rejected { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+    /* Action Buttons in Modal / Review */
+    .btn-action-accept {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      font-weight: 800;
+      padding: 0.65rem 1.25rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .btn-action-accept:hover {
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn-action-reject {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #ef4444;
+      font-weight: 700;
+      padding: 0.65rem 1.25rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .btn-action-reject:hover {
+      background: rgba(239, 68, 68, 0.3);
+      border-color: #ef4444;
+      transform: translateY(-2px);
+    }
+
+    /* Modal Backdrop */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--admin-card);
+      border: 1px solid var(--admin-border);
+      border-radius: 20px;
+      max-width: 650px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2.25rem;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin: 1.5rem 0;
+    }
+
+    .detail-item-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .detail-item-value {
+      font-size: 0.95rem;
+      color: #fff;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══ ADMIN NAVBAR ═══ -->
+  <header class="admin-navbar">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <a href="../index.html" class="admin-brand">
+        <img src="../images/Nex.png" alt="NexCell" width="36" height="36">
+        <span>NexCell Studio</span>
+      </a>
+      <span class="admin-badge-tag">Admin Console</span>
+    </div>
+
+    <div class="admin-nav-actions" id="adminNavActions" style="display: none;">
+      <div class="user-pill">
+        <span class="user-dot"></span>
+        <span id="adminUserEmail">admin@nexcell.club</span>
+      </div>
+      <button class="btn-signout" id="btnSignOut">Sign Out</button>
+    </div>
+  </header>
+
+  <!-- ═══ MAIN CONTAINER ═══ -->
+  <main class="admin-container">
+
+    <!-- 1. LOGIN VIEW (Shown when unauthenticated) -->
+    <div id="authView" class="auth-wrap">
+      <img src="../images/Nex.png" alt="NexCell Logo" class="auth-logo">
+      <h2 class="auth-title">Admin Studio</h2>
+      <p class="auth-desc">Sign in with your authorized NexCell Supabase credentials.</p>
+
+      <form id="adminLoginForm">
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" id="loginEmail" placeholder="admin@nexcell.club" required>
+        </div>
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" id="loginPassword" placeholder="••••••••••••" required>
+        </div>
+
+        <div id="loginAlert" class="portal-alert" style="margin-bottom: 1.25rem;"></div>
+
+        <button type="submit" class="btn-portal-submit" id="btnLoginSubmit">
+          <span class="btn-spinner" id="loginSpinner"></span>
+          <span id="loginBtnText">Sign In as Admin →</span>
+        </button>
+      </form>
+
+      <div style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">
+        Need to add an admin? Go to your Supabase Dashboard → <strong>Authentication</strong> → <strong>Users</strong> → <strong>Add User</strong>.
+      </div>
+    </div>
+
+    <!-- 2. DASHBOARD VIEW (Shown when authenticated) -->
+    <div id="dashboardView" style="display: none;">
+
+      <!-- Navigation Tabs -->
+      <nav class="admin-tabs">
+        <button class="tab-btn active" data-tab="tab-builder">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 6px;">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+          </svg>
+          <span>Form Builder</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-inbox">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 6px;">
+            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+            <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+          </svg>
+          <span>Applications Inbox</span>
+          <span class="tab-badge" id="inboxCountBadge">0</span>
+        </button>
+      </nav>
+
+      <!-- ── TAB 1: FORM BUILDER STUDIO ── -->
+      <section id="tab-builder" class="tab-content">
+
+        <!-- Top Studio Control Bar -->
+        <div class="studio-control-bar">
+          <div class="studio-pickers-wrap">
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+              <label class="form-label" style="margin: 0; font-size: 0.8rem; white-space: nowrap;">Active Form:</label>
+              <select class="form-select" id="studioFormSelect" style="min-width: 250px;">
+                <option value="">— Select an Existing Form —</option>
+              </select>
+            </div>
+            <button type="button" class="btn-new-form" id="btnNewForm">+ Create Blank Form</button>
+
+            <!-- Quick Starter Templates -->
+            <div class="template-selector-pills">
+              <span class="template-label">Templates:</span>
+              <button type="button" class="btn-template-pill" data-template="ideathon" title="Pre-fills Ideathon format (Paid ₹150 + Pitch Deck)">
+                Ideathon (Paid ₹150)
+              </button>
+              <button type="button" class="btn-template-pill" data-template="meetup" title="Pre-fills Free Networking / Fireside RSVP">
+                Fireside Meetup (Free)
+              </button>
+              <button type="button" class="btn-template-pill" data-template="hackathon" title="Pre-fills Hackathon Team Registration">
+                24h Hackathon
+              </button>
+            </div>
+          </div>
+
+          <div class="studio-actions-wrap">
+            <a href="#" target="_blank" class="btn-secondary" id="btnPreviewPublicForm" style="font-size: 0.85rem; padding: 0.6rem 1.1rem;">Open Public Link ↗</a>
+            <button class="btn-primary" id="btnSaveForm" style="font-size: 0.85rem; padding: 0.6rem 1.4rem;">Save & Publish Live</button>
+          </div>
+        </div>
+
+        <!-- Side-by-side Studio Split -->
+        <div class="builder-studio-split">
+
+          <!-- Left Column: Visual Form Editor -->
+          <div class="studio-editor-column">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+              <h3 style="font-size: 1.35rem; font-weight: 800; color: #fff;" id="editorHeaderTitle">Form Configuration</h3>
+              <span class="admin-badge-tag" id="editorModeTag">Editing</span>
+            </div>
+
+            <!-- Section 1: Event & Page Metadata -->
+            <div class="builder-section-title">01. Event & Page Metadata</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Event / Form Title <span class="required">*</span></label>
+                <input class="form-input" type="text" id="formTitleInput" placeholder="e.g. Mirai 0→1 Flagship Ideathon">
+              </div>
+              <div class="form-group">
+                <label class="form-label">URL Slug (Unique Key) <span class="required">*</span></label>
+                <input class="form-input" type="text" id="formSlugInput" placeholder="e.g. mirai-ideathon-2026">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Event Date & Time</label>
+                <input class="form-input" type="datetime-local" id="formDateInput">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Venue / Location</label>
+                <input class="form-input" type="text" id="formVenueInput" placeholder="e.g. Auditorium, RIT Bangalore">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Event Description / Guidelines</label>
+              <textarea class="form-textarea" id="formDescInput" rows="2" placeholder="Tell applicants about the requirements, criteria, and perks..."></textarea>
+            </div>
+
+            <!-- Section 2: Registration Fee & UPI Payment -->
+            <div class="builder-section-title">02. Registration Fee & UPI Payment</div>
+            <div class="editor-card" style="display: flex; flex-direction: column; gap: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 600;">
+                <input type="checkbox" id="formIsPaidToggle" style="width: 18px; height: 18px; accent-color: var(--admin-gold);">
+                <span>Require Entry / Registration Fee (Paid Event with UPI QR + UTR Verification)</span>
+              </label>
+
+              <div id="paymentSettingsBox" style="display: none; padding-top: 0.75rem; border-top: 1px solid var(--admin-border);">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Fee Amount (INR ₹)</label>
+                    <input class="form-input" type="number" id="formFeeInput" placeholder="150" min="0">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Club UPI ID (Receiving VPA)</label>
+                    <input class="form-input" type="text" id="formUpiInput" placeholder="nexcell@upi">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Custom UPI QR Image URL (Optional)</label>
+                  <input class="form-input" type="url" id="formUpiQrInput" placeholder="https://... (Leave blank to generate dynamic QR)">
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 3: Dynamic Application Fields -->
+            <div class="builder-section-title">03. Dynamic Application Fields</div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+              Add custom fields you want applicants to fill out. Watch the live preview on the right update instantly!
+            </p>
+
+            <div id="fieldsContainer"></div>
+
+            <div class="add-field-toolbar">
+              <button type="button" class="btn-add-tool" data-add-type="text">+ Text Field</button>
+              <button type="button" class="btn-add-tool" data-add-type="email">+ Email Field</button>
+              <button type="button" class="btn-add-tool" data-add-type="phone">+ Phone / WhatsApp</button>
+              <button type="button" class="btn-add-tool" data-add-type="textarea">+ Long Paragraph</button>
+              <button type="button" class="btn-add-tool" data-add-type="select">+ Dropdown Selection</button>
+              <button type="button" class="btn-add-tool" data-add-type="file">+ File / Deck Upload</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Live Preview -->
+          <div class="studio-preview-column">
+            <div class="live-preview-window">
+
+              <!-- Browser Window Mock Chrome -->
+              <div class="preview-browser-chrome">
+                <div class="preview-chrome-dots">
+                  <span class="p-dot red"></span>
+                  <span class="p-dot yellow"></span>
+                  <span class="p-dot green"></span>
+                </div>
+                <div class="preview-url-pill">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 5px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><span id="previewUrlText">nexcell.club/events/apply.html</span>
+                </div>
+                <div class="preview-device-toggles">
+                  <button type="button" class="btn-device-toggle active" id="btnPreviewDesktop" title="Desktop View">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>Full
+                  </button>
+                  <button type="button" class="btn-device-toggle" id="btnPreviewMobile" title="Mobile View">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>Mobile
+                  </button>
+                </div>
+              </div>
+
+              <!-- Multi-step switcher (Shown when form is paid) -->
+              <div class="preview-step-switcher" id="previewStepSwitcher" style="display: none;">
+                <button type="button" class="btn-preview-step-btn active" id="btnPreviewStep1">
+                  1. Application Details
+                </button>
+                <button type="button" class="btn-preview-step-btn" id="btnPreviewStep2">
+                  2. UPI QR Payment (₹<span id="previewStep2Amount">150</span>)
+                </button>
+              </div>
+
+              <!-- Live Preview Body -->
+              <div class="preview-scroll-body" id="previewScrollBody">
+                <div class="preview-device-canvas" id="previewDeviceCanvas">
+                  <div class="mock-card">
+
+                    <!-- Live Event Banner -->
+                    <div class="mock-banner-box">
+                      <div class="mock-banner-info">
+                        <div class="mock-banner-title" id="mockPreviewBannerTitle">Mirai 0→1 Flagship Ideathon</div>
+                        <div>
+                          <span id="mockPreviewBannerDate">Nov 15, 2026</span> · 
+                          <span id="mockPreviewBannerVenue">Auditorium, RIT</span>
+                        </div>
+                      </div>
+                      <div id="mockPreviewFeeBadgeWrap">
+                        <span class="mock-fee-badge paid" id="mockPreviewFeeBadge">₹150 Registration Fee</span>
+                      </div>
+                    </div>
+
+                    <!-- Step 1 Mockup View -->
+                    <div id="mockStep1View">
+                      <div class="mock-header">
+                        <h3 id="mockPreviewHeroTitle">Application Submission</h3>
+                        <p id="mockPreviewHeroDesc">Pitch your startup prototype to angel investors and industry leaders.</p>
+                      </div>
+
+                      <div class="form-section-title" style="margin: 1rem 0 0.8rem; font-size: 0.7rem;">Application Questions</div>
+
+                      <!-- Standard Fields Mockup -->
+                      <div class="mock-field-group">
+                        <label class="mock-field-label">Lead Applicant Name <span style="color: #ef4444;">*</span></label>
+                        <input type="text" class="mock-field-input" placeholder="e.g. Alex Morgan" readonly>
+                      </div>
+
+                      <div class="mock-field-group">
+                        <label class="mock-field-label">Email Address <span style="color: #ef4444;">*</span></label>
+                        <input type="email" class="mock-field-input" placeholder="alex@college.edu" readonly>
+                      </div>
+
+                      <!-- Dynamic Custom Fields Mockup -->
+                      <div id="mockDynamicFieldsList"></div>
+
+                      <!-- Document Upload Mockup -->
+                      <div class="mock-field-group" style="margin-top: 1rem;">
+                        <label class="mock-field-label">Pitch Deck Presentation & Documents</label>
+                        <div class="mock-dropzone">
+                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--admin-gold); margin-bottom: 0.25rem;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                          <div>Drag & drop pitch decks (.pdf, .docx)</div>
+                        </div>
+                      </div>
+
+                      <!-- Next/Submit Button Mockup -->
+                      <button type="button" class="mock-submit-btn" id="mockSubmitBtn">
+                        <span id="mockSubmitBtnText">Continue to Payment (₹150) →</span>
+                      </button>
+                    </div>
+
+                    <!-- Step 2 Mockup View (UPI QR Payment) -->
+                    <div id="mockStep2View" style="display: none;">
+                      <div class="mock-header">
+                        <h3>Registration Fee Payment</h3>
+                        <p>Scan NexCell UPI QR code to complete registration fee.</p>
+                      </div>
+
+                      <div style="background: rgba(10, 14, 26, 0.8); border: 1px solid rgba(243, 156, 18, 0.3); border-radius: 14px; padding: 1.25rem; text-align: center; margin-bottom: 1rem;">
+                        <div style="background: #fff; padding: 10px; border-radius: 12px; display: inline-block; margin-bottom: 0.75rem;">
+                          <img id="mockUpiQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=nexcell@upi&pn=NexCell&am=150&cu=INR" alt="UPI QR" style="width: 140px; height: 140px; display: block; border-radius: 6px;">
+                        </div>
+                        <div style="font-size: 1.3rem; font-weight: 900; color: var(--admin-gold); margin-bottom: 0.25rem;" id="mockUpiAmountText">₹150.00</div>
+                        <div style="font-family: monospace; font-size: 0.85rem; color: #fff; background: rgba(255, 255, 255, 0.08); padding: 0.25rem 0.6rem; border-radius: 6px; display: inline-block; margin-bottom: 0.5rem;" id="mockUpiVpaText">nexcell@upi</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Scan with Google Pay, PhonePe, Paytm, or BHIM</div>
+                      </div>
+
+                      <div class="mock-field-group">
+                        <label class="mock-field-label">12-Digit UPI / UTR Reference Number <span style="color: #ef4444;">*</span></label>
+                        <input type="text" class="mock-field-input" placeholder="e.g. 428901234567" readonly>
+                      </div>
+
+                      <button type="button" class="mock-submit-btn">
+                        Verify & Submit Application
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <!-- Preview Status Footer -->
+              <div class="preview-footer-status">
+                <span style="color: #10b981;">● Real-time Live Sync Active</span>
+                <span id="previewFieldCounter">0 Custom Fields</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ── TAB 2: SUBMISSIONS INBOX ── -->
+      <section id="tab-inbox" class="tab-content" style="display: none;">
+        
+        <div class="inbox-controls">
+          <div class="filter-group">
+            <select class="form-select" id="inboxEventFilter" style="min-width: 240px;">
+              <option value="">All Events / Forms</option>
+            </select>
+            <select class="form-select" id="inboxStatusFilter">
+              <option value="all">All Statuses</option>
+              <option value="submitted">Pending Review</option>
+              <option value="accepted">Accepted / Confirmed</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem;">
+            <input class="form-input" type="text" id="inboxSearchInput" placeholder="Search applicant, email, team..." style="min-width: 260px;">
+            <button class="btn-secondary" id="btnRefreshInbox">Refresh ⟳</button>
+          </div>
+        </div>
+
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Applicant</th>
+                <th>Event Track</th>
+                <th>Team / Project</th>
+                <th>Payment Status</th>
+                <th>Files</th>
+                <th>Submission Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="submissionsTableBody">
+              <tr>
+                <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
+                  Loading submissions...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ═══ SUBMISSION REVIEW & DECISION MODAL ═══ -->
+  <div class="modal-backdrop" id="reviewModal">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+        <div>
+          <h3 style="font-size: 1.4rem; font-weight: 800; color: #fff;" id="modalApplicantName">Applicant Review</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);" id="modalSubmissionId">#NEX-SUBMISSION-ID</p>
+        </div>
+        <button type="button" class="btn-delete-field" id="btnCloseModal" style="font-size: 1.25rem;" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="detail-item-label">Email Address</div>
+          <div class="detail-item-value" id="modalEmail">-</div>
+        </div>
+        <div>
+          <div class="detail-item-label">Phone / WhatsApp</div>
+          <div class="detail-item-value" id="modalPhone">-</div>
+        </div>
+        <div>
+          <div class="detail-item-label">Event Track</div>
+          <div class="detail-item-value" id="modalEvent">-</div>
+        </div>
+        <div>
+          <div class="detail-item-label">Team Name</div>
+          <div class="detail-item-value" id="modalTeam">-</div>
+        </div>
+      </div>
+
+      <div class="editor-card" style="margin-bottom: 1.25rem;">
+        <div class="detail-item-label">Payment Information</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+          <div>
+            <span style="font-weight: 700; color: #fff;" id="modalPaymentStatus">Pending Verification</span>
+            <div style="font-size: 0.82rem; color: var(--text-muted); font-family: monospace;" id="modalPaymentUtr">UTR: Not Provided</div>
+          </div>
+          <div id="modalPaymentReceiptLink"></div>
+        </div>
+      </div>
+
+      <div class="editor-card" style="margin-bottom: 1.5rem;">
+        <div class="detail-item-label">Uploaded Documents & Pitch Decks</div>
+        <div id="modalFilesList" style="margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0.5rem;"></div>
+      </div>
+
+      <div class="editor-card" style="margin-bottom: 1.5rem;">
+        <div class="detail-item-label">Application Details & Summary</div>
+        <pre id="modalDetailsJson" style="font-size: 0.82rem; color: var(--text-secondary); white-space: pre-wrap; font-family: inherit; margin-top: 0.5rem; line-height: 1.5;"></pre>
+      </div>
+
+      <!-- Accept / Reject Actions -->
+      <div style="border-top: 1px solid var(--admin-border); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+        <div style="display: flex; gap: 0.75rem;">
+          <button type="button" class="btn-action-accept" id="btnModalAccept">
+            Accept & Issue QR Ticket
+          </button>
+          <button type="button" class="btn-action-reject" id="btnModalReject">
+            Reject Submission
+          </button>
+        </div>
+        <div id="modalStatusBadge"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ EMAIL DISPATCH / NOTIFICATION MODAL ═══ -->
+  <div class="modal-backdrop" id="emailDispatchModal">
+    <div class="modal-card" style="max-width: 650px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+        <div>
+          <h3 style="font-size: 1.35rem; font-weight: 800; color: #fff;" id="emailModalTitle">Dispatch Notification</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);" id="emailModalSubtitle">Notify applicant about their status</p>
+        </div>
+        <button type="button" class="btn-delete-field" id="btnCloseEmailModal" style="font-size: 1.25rem;" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Recipient Email</label>
+        <input class="form-input" type="email" id="emailRecipient" readonly>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Subject</label>
+        <input class="form-input" type="text" id="emailSubject">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email Message Body</label>
+        <textarea class="form-textarea" id="emailBody" rows="8" style="font-family: inherit; font-size: 0.88rem; line-height: 1.5;"></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+        <button type="button" class="btn-secondary" id="btnCopyEmailText">
+          Copy Email Text
+        </button>
+        <div style="display: flex; gap: 0.75rem;">
+          <button type="button" class="btn-secondary" id="btnDismissEmailModal">Done</button>
+          <a href="#" class="btn-primary" id="btnSendMailto" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+            Open Mail Client
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ REJECTION REASON MODAL ═══ -->
+  <div class="modal-backdrop" id="rejectReasonModal" style="z-index: 1100;">
+    <div class="modal-card" style="max-width: 520px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+        <div>
+          <h3 style="font-size: 1.3rem; font-weight: 800; color: #fff;">Reject Submission</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">Provide constructive feedback or a reason for rejection</p>
+        </div>
+        <button type="button" class="btn-delete-field" id="btnCloseRejectModal" style="font-size: 1.25rem;" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <label class="form-label">Feedback / Reason for Applicant</label>
+        <textarea class="form-input" id="rejectReasonInput" rows="3" style="resize: vertical; font-family: inherit;">Does not match track criteria / Capacity reached</textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+        <button type="button" class="btn-secondary" id="btnCancelRejectModal">Cancel</button>
+        <button type="button" class="btn-action-reject" id="btnConfirmReject">Confirm Rejection</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client-side Admin Logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const authView = document.getElementById('authView');
+      const dashboardView = document.getElementById('dashboardView');
+      const adminNavActions = document.getElementById('adminNavActions');
+      const adminUserEmail = document.getElementById('adminUserEmail');
+      const adminLoginForm = document.getElementById('adminLoginForm');
+      const loginAlert = document.getElementById('loginAlert');
+      const loginSpinner = document.getElementById('loginSpinner');
+      const loginBtnText = document.getElementById('loginBtnText');
+      const btnLoginSubmit = document.getElementById('btnLoginSubmit');
+      const btnSignOut = document.getElementById('btnSignOut');
+
+      // Tabs
+      const tabs = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          tabContents.forEach(c => c.style.display = 'none');
+          btn.classList.add('active');
+          const target = document.getElementById(btn.getAttribute('data-tab'));
+          if (target) target.style.display = 'block';
+        });
+      });
+
+      // 1. Check Authentication State
+      async function checkAuth() {
+        const { session } = await window.NexcellSupabase.getSession();
+        if (session && session.user) {
+          authView.style.display = 'none';
+          dashboardView.style.display = 'block';
+          adminNavActions.style.display = 'flex';
+          adminUserEmail.textContent = session.user.email;
+          initDashboard();
+        } else {
+          authView.style.display = 'block';
+          dashboardView.style.display = 'none';
+          adminNavActions.style.display = 'none';
+        }
+      }
+
+      adminLoginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loginAlert.style.display = 'none';
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        loginSpinner.style.display = 'inline-block';
+        loginBtnText.textContent = 'Authenticating...';
+        btnLoginSubmit.disabled = true;
+
+        const { user, error } = await window.NexcellSupabase.signInAdmin(email, password);
+
+        loginSpinner.style.display = 'none';
+        loginBtnText.textContent = 'Sign In as Admin →';
+        btnLoginSubmit.disabled = false;
+
+        if (error) {
+          loginAlert.textContent = error.message || 'Invalid login credentials.';
+          loginAlert.className = 'portal-alert error';
+          loginAlert.style.display = 'block';
+          return;
+        }
+
+        checkAuth();
+      });
+
+      btnSignOut.addEventListener('click', async () => {
+        await window.NexcellSupabase.signOutAdmin();
+        checkAuth();
+      });
+
+      // 2. Form Builder Studio State & Logic
+      let currentEditingForm = null;
+      let formFieldsList = [];
+      let allLoadedForms = [];
+
+      // 1-Click Starter Templates for Instant Clarity
+      const STARTER_TEMPLATES = {
+        ideathon: {
+          title: 'Mirai 0→1 Flagship Ideathon',
+          slug: 'mirai-ideathon-2026',
+          event_date: '2026-11-15T09:30',
+          venue: 'Auditorium, RIT Bangalore',
+          description: 'Pitch your startup prototype to angel investors and industry leaders. Cash prizes up to ₹50,000 + incubation mentorship.',
+          is_paid: true,
+          fee_amount: 150,
+          upi_id: 'nexcell@upi',
+          upi_qr_url: '',
+          fields: [
+            { id: 'track', label: 'Competition Track', type: 'select', required: true, placeholder: '', options: ['AI & Machine Learning', 'FinTech & Web3', 'Healthcare & Biotech', 'Open Innovation'] },
+            { id: 'startup_idea', label: 'Startup / Project Summary', type: 'textarea', required: true, placeholder: 'Briefly describe your solution, target market, and current traction.' },
+            { id: 'team_size', label: 'Team Size', type: 'select', required: true, placeholder: '', options: ['1 (Solo Founder)', '2 Members', '3 Members', '4 Members'] },
+            { id: 'pitch_deck', label: 'Pitch Deck (PDF / Presentation)', type: 'file', required: false, placeholder: '' }
+          ]
+        },
+        meetup: {
+          title: 'NexCell Founders Fireside & Networking',
+          slug: 'founders-fireside-nov',
+          event_date: '2026-11-20T17:00',
+          venue: 'NexCell Innovation Hub, 3rd Floor',
+          description: 'An evening of candid conversations with VC partners and unicorn operators. Free passes, snacks, and high-signal networking.',
+          is_paid: false,
+          fee_amount: 0,
+          upi_id: 'nexcell@upi',
+          upi_qr_url: '',
+          fields: [
+            { id: 'role', label: 'Current Role / Academic Major', type: 'text', required: true, placeholder: 'e.g. 3rd Year CS / Product Designer' },
+            { id: 'linkedin_url', label: 'LinkedIn Profile URL', type: 'text', required: false, placeholder: 'https://linkedin.com/in/username' },
+            { id: 'networking_goal', label: 'What do you hope to get out of this meetup?', type: 'textarea', required: false, placeholder: 'e.g. Finding technical co-founders or angel intros' }
+          ]
+        },
+        hackathon: {
+          title: 'CodeSprint 24-Hour Buildathon',
+          slug: 'codesprint-hackathon-2026',
+          event_date: '2026-12-05T09:00',
+          venue: 'CS Tech Labs, Campus North',
+          description: '24 hours of non-stop building, caffeine, and shipping. Build software or hardware that solves real problems.',
+          is_paid: true,
+          fee_amount: 200,
+          upi_id: 'nexcell@upi',
+          upi_qr_url: '',
+          fields: [
+            { id: 'team_name', label: 'Team Name', type: 'text', required: true, placeholder: 'e.g. Quantum Pioneers' },
+            { id: 'team_size', label: 'Number of Teammates', type: 'select', required: true, placeholder: '', options: ['2 Hackers', '3 Hackers', '4 Hackers'] },
+            { id: 'github_profile', label: 'GitHub / Portfolio URL', type: 'text', required: true, placeholder: 'https://github.com/username' },
+            { id: 'tech_stack', label: 'Preferred Tech Stack', type: 'text', required: false, placeholder: 'e.g. React, Python, Supabase, PyTorch' }
+          ]
+        }
+      };
+
+      // Editor Controls
+      const studioFormSelect = document.getElementById('studioFormSelect');
+      const btnNewForm = document.getElementById('btnNewForm');
+      const btnSaveForm = document.getElementById('btnSaveForm');
+      const btnPreviewPublicForm = document.getElementById('btnPreviewPublicForm');
+      const editorHeaderTitle = document.getElementById('editorHeaderTitle');
+      const editorModeTag = document.getElementById('editorModeTag');
+
+      const formTitleInput = document.getElementById('formTitleInput');
+      const formSlugInput = document.getElementById('formSlugInput');
+      const formDateInput = document.getElementById('formDateInput');
+      const formVenueInput = document.getElementById('formVenueInput');
+      const formDescInput = document.getElementById('formDescInput');
+      const formIsPaidToggle = document.getElementById('formIsPaidToggle');
+      const paymentSettingsBox = document.getElementById('paymentSettingsBox');
+      const formFeeInput = document.getElementById('formFeeInput');
+      const formUpiInput = document.getElementById('formUpiInput');
+      const formUpiQrInput = document.getElementById('formUpiQrInput');
+      const fieldsContainer = document.getElementById('fieldsContainer');
+
+      // Live Preview Elements
+      const previewUrlText = document.getElementById('previewUrlText');
+      const btnPreviewDesktop = document.getElementById('btnPreviewDesktop');
+      const btnPreviewMobile = document.getElementById('btnPreviewMobile');
+      const previewDeviceCanvas = document.getElementById('previewDeviceCanvas');
+      const previewStepSwitcher = document.getElementById('previewStepSwitcher');
+      const btnPreviewStep1 = document.getElementById('btnPreviewStep1');
+      const btnPreviewStep2 = document.getElementById('btnPreviewStep2');
+      const previewStep2Amount = document.getElementById('previewStep2Amount');
+      const mockStep1View = document.getElementById('mockStep1View');
+      const mockStep2View = document.getElementById('mockStep2View');
+      const mockPreviewBannerTitle = document.getElementById('mockPreviewBannerTitle');
+      const mockPreviewBannerDate = document.getElementById('mockPreviewBannerDate');
+      const mockPreviewBannerVenue = document.getElementById('mockPreviewBannerVenue');
+      const mockPreviewFeeBadge = document.getElementById('mockPreviewFeeBadge');
+      const mockPreviewHeroTitle = document.getElementById('mockPreviewHeroTitle');
+      const mockPreviewHeroDesc = document.getElementById('mockPreviewHeroDesc');
+      const mockDynamicFieldsList = document.getElementById('mockDynamicFieldsList');
+      const mockSubmitBtn = document.getElementById('mockSubmitBtn');
+      const mockSubmitBtnText = document.getElementById('mockSubmitBtnText');
+      const mockUpiQrImg = document.getElementById('mockUpiQrImg');
+      const mockUpiAmountText = document.getElementById('mockUpiAmountText');
+      const mockUpiVpaText = document.getElementById('mockUpiVpaText');
+      const previewFieldCounter = document.getElementById('previewFieldCounter');
+
+      // Device View Switcher
+      btnPreviewDesktop.addEventListener('click', () => {
+        btnPreviewDesktop.classList.add('active');
+        btnPreviewMobile.classList.remove('active');
+        previewDeviceCanvas.classList.remove('mobile-view');
+        previewStepSwitcher.classList.remove('mobile-view');
+      });
+
+      btnPreviewMobile.addEventListener('click', () => {
+        btnPreviewMobile.classList.add('active');
+        btnPreviewDesktop.classList.remove('active');
+        previewDeviceCanvas.classList.add('mobile-view');
+        previewStepSwitcher.classList.add('mobile-view');
+      });
+
+      // Preview Step Switcher (Step 1 Form vs Step 2 QR)
+      btnPreviewStep1.addEventListener('click', () => {
+        btnPreviewStep1.classList.add('active');
+        btnPreviewStep2.classList.remove('active');
+        mockStep1View.style.display = 'block';
+        mockStep2View.style.display = 'none';
+      });
+
+      btnPreviewStep2.addEventListener('click', () => {
+        btnPreviewStep2.classList.add('active');
+        btnPreviewStep1.classList.remove('active');
+        mockStep1View.style.display = 'none';
+        mockStep2View.style.display = 'block';
+      });
+
+      // Interactive click on Mock Submit button jumps to Step 2 if paid
+      mockSubmitBtn.addEventListener('click', () => {
+        if (formIsPaidToggle.checked) {
+          btnPreviewStep2.click();
+        }
+      });
+
+      // 1-Click Starter Template buttons
+      document.querySelectorAll('.btn-template-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tplKey = btn.getAttribute('data-template');
+          const tpl = STARTER_TEMPLATES[tplKey];
+          if (tpl) {
+            loadFormIntoEditor({ ...tpl, id: null });
+            if (studioFormSelect) studioFormSelect.value = '';
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => { btn.style.transform = ''; }, 150);
+          }
+        });
+      });
+
+      // Live slug auto-generation
+      formTitleInput.addEventListener('input', () => {
+        if (!currentEditingForm || !currentEditingForm.id) {
+          formSlugInput.value = formTitleInput.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        }
+      });
+
+      // Live preview listener on all metadata inputs
+      [formTitleInput, formSlugInput, formDateInput, formVenueInput, formDescInput, formFeeInput, formUpiInput, formUpiQrInput].forEach(el => {
+        if (el) {
+          el.addEventListener('input', updateLivePreview);
+          el.addEventListener('change', updateLivePreview);
+        }
+      });
+
+      formIsPaidToggle.addEventListener('change', () => {
+        paymentSettingsBox.style.display = formIsPaidToggle.checked ? 'block' : 'none';
+        updateLivePreview();
+      });
+
+      // ══ REAL-TIME LIVE PREVIEW RENDERER ══
+      function updateLivePreview() {
+        const title = formTitleInput.value.trim() || 'Untitled Event Form';
+        const slug = formSlugInput.value.trim();
+        const dateVal = formDateInput.value;
+        const venue = formVenueInput.value.trim() || 'Venue TBD';
+        const desc = formDescInput.value.trim() || 'Event guidelines and registration details will appear here.';
+        const isPaid = formIsPaidToggle.checked;
+        const fee = Number(formFeeInput.value) || 0;
+        const upi = formUpiInput.value.trim() || 'nexcell@upi';
+        const customQr = formUpiQrInput.value.trim();
+
+        // 1. Browser URL pill & external link
+        previewUrlText.textContent = 'nexcell.club/events/apply.html' + (slug ? `?event=${slug}` : '');
+        btnPreviewPublicForm.href = slug ? `../events/apply.html?event=${slug}` : '../events/apply.html';
+
+        // 2. Banner info
+        mockPreviewBannerTitle.textContent = title;
+        mockPreviewBannerVenue.textContent = venue;
+        if (dateVal) {
+          try {
+            const d = new Date(dateVal);
+            mockPreviewBannerDate.textContent = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+          } catch (e) {
+            mockPreviewBannerDate.textContent = dateVal;
+          }
+        } else {
+          mockPreviewBannerDate.textContent = 'Date TBD';
+        }
+
+        // 3. Fee badge & Paid step controls
+        if (isPaid) {
+          mockPreviewFeeBadge.className = 'mock-fee-badge paid';
+          mockPreviewFeeBadge.textContent = `₹${fee} Registration Fee`;
+          previewStepSwitcher.style.display = 'flex';
+          previewStep2Amount.textContent = fee;
+          mockUpiAmountText.textContent = `₹${fee.toFixed(2)}`;
+          mockUpiVpaText.textContent = upi;
+          mockSubmitBtnText.textContent = `Continue to Payment (₹${fee}) →`;
+
+          // Dynamic QR Code Generation
+          if (customQr) {
+            mockUpiQrImg.src = customQr;
+          } else {
+            const upiPayload = `upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent(title)}&am=${fee}&cu=INR`;
+            mockUpiQrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(upiPayload)}`;
+          }
+        } else {
+          mockPreviewFeeBadge.className = 'mock-fee-badge free';
+          mockPreviewFeeBadge.textContent = 'Free Entry';
+          previewStepSwitcher.style.display = 'none';
+          mockSubmitBtnText.textContent = 'Submit Free Application';
+          // Force back to Step 1
+          mockStep1View.style.display = 'block';
+          mockStep2View.style.display = 'none';
+          btnPreviewStep1.classList.add('active');
+          btnPreviewStep2.classList.remove('active');
+        }
+
+        // 4. Hero text
+        mockPreviewHeroTitle.textContent = 'Application Submission';
+        mockPreviewHeroDesc.textContent = desc;
+
+        // 5. Dynamic fields rendering in mockup
+        mockDynamicFieldsList.innerHTML = '';
+        formFieldsList.forEach(field => {
+          const group = document.createElement('div');
+          group.className = 'mock-field-group';
+
+          let fieldControlHtml = '';
+          if (field.type === 'textarea') {
+            fieldControlHtml = `<textarea class="mock-field-input" rows="2" placeholder="${field.placeholder || 'Applicant response...'}" readonly></textarea>`;
+          } else if (field.type === 'select') {
+            const opts = Array.isArray(field.options) && field.options.length > 0
+              ? field.options.map(o => `<option>${o}</option>`).join('')
+              : '<option>Select an option...</option>';
+            fieldControlHtml = `<select class="mock-field-input" disabled>${opts}</select>`;
+          } else if (field.type === 'file') {
+            fieldControlHtml = `
+              <div class="mock-dropzone" style="padding: 0.65rem 0.75rem;">
+                <div style="font-size: 0.95rem; font-weight: 600; color: #fff;">${field.label || 'Upload Document'}</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted);">PDF, PPTX, or ZIP files accepted</div>
+              </div>`;
+          } else {
+            fieldControlHtml = `<input type="${field.type || 'text'}" class="mock-field-input" placeholder="${field.placeholder || ''}" readonly>`;
+          }
+
+          group.innerHTML = `
+            <label class="mock-field-label">
+              ${field.label || 'Untitled Field'}
+              ${field.required ? '<span style="color: #ef4444;"> *</span>' : ''}
+            </label>
+            ${fieldControlHtml}
+          `;
+          mockDynamicFieldsList.appendChild(group);
+        });
+
+        // 6. Preview footer counter
+        previewFieldCounter.textContent = `${formFieldsList.length} Custom Field${formFieldsList.length === 1 ? '' : 's'}`;
+
+        // 7. Header mode tag
+        if (currentEditingForm && currentEditingForm.id) {
+          editorModeTag.textContent = 'Editing Existing';
+          editorModeTag.style.background = 'rgba(74, 124, 255, 0.15)';
+          editorModeTag.style.color = 'var(--accent-light-blue)';
+          editorHeaderTitle.textContent = `Form: ${title}`;
+        } else {
+          editorModeTag.textContent = 'New Form';
+          editorModeTag.style.background = 'rgba(16, 185, 129, 0.15)';
+          editorModeTag.style.color = '#10b981';
+          editorHeaderTitle.textContent = 'Create New Event Form';
+        }
+      }
+
+      // Populate forms dropdown and inbox selector
+      async function loadFormsList() {
+        const { data, error } = await window.NexcellSupabase.getForms(false);
+        allLoadedForms = data || [];
+
+        // 1. Populate Studio Form Select
+        if (studioFormSelect) {
+          studioFormSelect.innerHTML = '<option value="">— Select an Existing Form —</option>';
+          allLoadedForms.forEach(form => {
+            const opt = document.createElement('option');
+            opt.value = form.id;
+            opt.textContent = `${form.title} (${form.slug})${form.is_paid ? ' · ₹' + form.fee_amount : ' · Free'}`;
+            studioFormSelect.appendChild(opt);
+          });
+
+          if (currentEditingForm && currentEditingForm.id) {
+            studioFormSelect.value = currentEditingForm.id;
+          }
+        }
+
+        // 2. Populate Inbox Filter
+        const inboxEventFilter = document.getElementById('inboxEventFilter');
+        if (inboxEventFilter) {
+          inboxEventFilter.innerHTML = '<option value="">All Events / Forms</option>';
+          allLoadedForms.forEach(form => {
+            const opt = document.createElement('option');
+            opt.value = form.slug;
+            opt.textContent = form.title;
+            inboxEventFilter.appendChild(opt);
+          });
+        }
+
+        // 3. Auto-load the active form or the starter template so the studio is never empty
+        if (!currentEditingForm) {
+          if (allLoadedForms.length > 0) {
+            loadFormIntoEditor(allLoadedForms[0]);
+          } else {
+            // Preload Ideathon starter template by default
+            loadFormIntoEditor({ ...STARTER_TEMPLATES.ideathon, id: null });
+          }
+        }
+      }
+
+      // Switch form on dropdown change
+      studioFormSelect.addEventListener('change', () => {
+        const selectedId = studioFormSelect.value;
+        if (!selectedId) {
+          btnNewForm.click();
+          return;
+        }
+        const found = allLoadedForms.find(f => f.id === selectedId);
+        if (found) {
+          loadFormIntoEditor(found);
+        }
+      });
+
+      function loadFormIntoEditor(form) {
+        currentEditingForm = form;
+        formTitleInput.value = form.title || '';
+        formSlugInput.value = form.slug || '';
+        formDateInput.value = form.event_date ? form.event_date.substring(0, 16) : '';
+        formVenueInput.value = form.venue || '';
+        formDescInput.value = form.description || '';
+        formIsPaidToggle.checked = Boolean(form.is_paid);
+        paymentSettingsBox.style.display = form.is_paid ? 'block' : 'none';
+        formFeeInput.value = form.fee_amount || 0;
+        formUpiInput.value = form.upi_id || 'nexcell@upi';
+        formUpiQrInput.value = form.upi_qr_url || '';
+
+        formFieldsList = Array.isArray(form.fields) ? JSON.parse(JSON.stringify(form.fields)) : [];
+
+        if (studioFormSelect) {
+          studioFormSelect.value = form.id || '';
+        }
+
+        renderEditorFields();
+        updateLivePreview();
+      }
+
+      btnNewForm.addEventListener('click', () => {
+        currentEditingForm = { is_active: true, is_paid: false };
+        formTitleInput.value = '';
+        formSlugInput.value = '';
+        formDateInput.value = '';
+        formVenueInput.value = '';
+        formDescInput.value = '';
+        formIsPaidToggle.checked = false;
+        paymentSettingsBox.style.display = 'none';
+        formFeeInput.value = 0;
+        formUpiInput.value = 'nexcell@upi';
+        formUpiQrInput.value = '';
+        formFieldsList = [
+          { id: 'applicant_role', label: 'College / Year / Major', type: 'text', required: true, placeholder: 'e.g. 2nd Year Computer Science' },
+          { id: 'portfolio_link', label: 'Portfolio / GitHub / LinkedIn', type: 'text', required: false, placeholder: 'https://...' },
+          { id: 'interest_reason', label: 'Why do you want to participate?', type: 'textarea', required: true, placeholder: 'Share your background and what you wish to achieve.' }
+        ];
+
+        if (studioFormSelect) studioFormSelect.value = '';
+
+        renderEditorFields();
+        updateLivePreview();
+      });
+
+      // Add dynamic field buttons
+      document.querySelectorAll('[data-add-type]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const type = btn.getAttribute('data-add-type');
+          const fieldId = 'field_' + Math.random().toString(36).substring(2, 8);
+          formFieldsList.push({
+            id: fieldId,
+            label: type === 'file' ? 'Pitch Deck / Document' : 'New ' + type.charAt(0).toUpperCase() + type.slice(1) + ' Question',
+            type: type,
+            required: false,
+            placeholder: '',
+            options: type === 'select' ? ['Option 1', 'Option 2'] : []
+          });
+          renderEditorFields();
+          updateLivePreview();
+        });
+      });
+
+      function renderEditorFields() {
+        fieldsContainer.innerHTML = '';
+        if (formFieldsList.length === 0) {
+          fieldsContainer.innerHTML = '<div style="color: var(--text-muted); font-size: 0.9rem; padding: 1rem 0;">No custom questions added yet. Click one of the buttons below to add fields.</div>';
+          return;
+        }
+
+        formFieldsList.forEach((field, index) => {
+          const card = document.createElement('div');
+          card.className = 'editor-card';
+          card.innerHTML = `
+            <div class="field-card-header">
+              <span class="field-order-tag">#${index + 1} · ${field.type.toUpperCase()}</span>
+              <button type="button" class="btn-delete-field" data-delete-idx="${index}" title="Remove question" aria-label="Remove">&times;</button>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Question / Field Label</label>
+                <input class="form-input field-label-input" type="text" value="${field.label || ''}" placeholder="e.g. Roll Number">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Key Identifier (Unique)</label>
+                <input class="form-input field-id-input" type="text" value="${field.id || ''}" placeholder="e.g. roll_number">
+              </div>
+            </div>
+            <div class="form-row" style="align-items: center;">
+              <div class="form-group">
+                <label class="form-label">Placeholder Hint</label>
+                <input class="form-input field-placeholder-input" type="text" value="${field.placeholder || ''}" placeholder="e.g. Enter your answer here">
+              </div>
+              <div class="form-group" style="padding-top: 1.25rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem; font-weight: 600;">
+                  <input type="checkbox" class="field-required-input" ${field.required ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--admin-gold);">
+                  <span>Required Field</span>
+                </label>
+              </div>
+            </div>
+            ${field.type === 'select' ? `
+              <div class="form-group" style="margin-top: 0.5rem;">
+                <label class="form-label">Dropdown Options (Comma-separated)</label>
+                <input class="form-input field-options-input" type="text" value="${(field.options || []).join(', ')}" placeholder="Option 1, Option 2, Option 3">
+              </div>
+            ` : ''}
+          `;
+
+          // Event listeners for field edits with live preview synchronization
+          card.querySelector('.field-label-input').addEventListener('input', (e) => {
+            field.label = e.target.value;
+            updateLivePreview();
+          });
+          card.querySelector('.field-id-input').addEventListener('input', (e) => {
+            field.id = e.target.value;
+            updateLivePreview();
+          });
+          card.querySelector('.field-placeholder-input').addEventListener('input', (e) => {
+            field.placeholder = e.target.value;
+            updateLivePreview();
+          });
+          card.querySelector('.field-required-input').addEventListener('change', (e) => {
+            field.required = e.target.checked;
+            updateLivePreview();
+          });
+          if (field.type === 'select') {
+            card.querySelector('.field-options-input').addEventListener('input', (e) => {
+              field.options = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
+              updateLivePreview();
+            });
+          }
+          card.querySelector('.btn-delete-field').addEventListener('click', () => {
+            formFieldsList.splice(index, 1);
+            renderEditorFields();
+            updateLivePreview();
+          });
+
+          fieldsContainer.appendChild(card);
+        });
+      }
+
+      btnSaveForm.addEventListener('click', async () => {
+        const title = formTitleInput.value.trim();
+        const slug = formSlugInput.value.trim();
+
+        if (!title || !slug) {
+          alert('Form Title and Slug are required.');
+          return;
+        }
+
+        btnSaveForm.disabled = true;
+        btnSaveForm.textContent = 'Saving...';
+
+        const payload = {
+          id: currentEditingForm && currentEditingForm.id ? currentEditingForm.id : undefined,
+          title,
+          slug,
+          event_date: formDateInput.value ? new Date(formDateInput.value).toISOString() : null,
+          venue: formVenueInput.value.trim(),
+          description: formDescInput.value.trim(),
+          is_paid: formIsPaidToggle.checked,
+          fee_amount: Number(formFeeInput.value) || 0,
+          upi_id: formUpiInput.value.trim() || 'nexcell@upi',
+          upi_qr_url: formUpiQrInput.value.trim() || null,
+          fields: formFieldsList,
+          is_active: true
+        };
+
+        const res = await window.NexcellSupabase.saveForm(payload);
+        btnSaveForm.disabled = false;
+        btnSaveForm.textContent = 'Save & Publish Live';
+
+        if (!res.success) {
+          alert('Error saving form: ' + res.error);
+          return;
+        }
+
+        alert('Form published successfully! Tested live at events/apply.html?event=' + res.data.slug);
+        currentEditingForm = res.data;
+        loadFormsList();
+      });
+
+      // 3. Submissions Inbox State & Logic
+      let allSubmissions = [];
+      let currentViewingSubmission = null;
+
+      const submissionsTableBody = document.getElementById('submissionsTableBody');
+      const inboxCountBadge = document.getElementById('inboxCountBadge');
+      const inboxEventFilter = document.getElementById('inboxEventFilter');
+      const inboxStatusFilter = document.getElementById('inboxStatusFilter');
+      const inboxSearchInput = document.getElementById('inboxSearchInput');
+      const btnRefreshInbox = document.getElementById('btnRefreshInbox');
+
+      // Modal elements
+      const reviewModal = document.getElementById('reviewModal');
+      const btnCloseModal = document.getElementById('btnCloseModal');
+      const modalApplicantName = document.getElementById('modalApplicantName');
+      const modalSubmissionId = document.getElementById('modalSubmissionId');
+      const modalEmail = document.getElementById('modalEmail');
+      const modalPhone = document.getElementById('modalPhone');
+      const modalEvent = document.getElementById('modalEvent');
+      const modalTeam = document.getElementById('modalTeam');
+      const modalPaymentStatus = document.getElementById('modalPaymentStatus');
+      const modalPaymentUtr = document.getElementById('modalPaymentUtr');
+      const modalPaymentReceiptLink = document.getElementById('modalPaymentReceiptLink');
+      const modalFilesList = document.getElementById('modalFilesList');
+      const modalDetailsJson = document.getElementById('modalDetailsJson');
+      const btnModalAccept = document.getElementById('btnModalAccept');
+      const btnModalReject = document.getElementById('btnModalReject');
+      const modalStatusBadge = document.getElementById('modalStatusBadge');
+
+      btnCloseModal.addEventListener('click', () => reviewModal.classList.remove('open'));
+
+      async function loadSubmissions() {
+        submissionsTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading applications...</td></tr>';
+        
+        const filters = {
+          eventSlug: inboxEventFilter.value || undefined,
+          status: inboxStatusFilter.value !== 'all' ? inboxStatusFilter.value : undefined
+        };
+
+        const { data, error } = await window.NexcellSupabase.getSubmissions(filters);
+        if (error) {
+          submissionsTableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #ef4444; padding: 2rem;">Error: ${error.message}</td></tr>`;
+          return;
+        }
+
+        allSubmissions = data || [];
+        inboxCountBadge.textContent = allSubmissions.filter(s => s.status === 'submitted').length;
+        renderSubmissionsTable();
+      }
+
+      function renderSubmissionsTable() {
+        const query = inboxSearchInput.value.toLowerCase().trim();
+        const filtered = allSubmissions.filter(s => {
+          if (!query) return true;
+          return (
+            (s.applicant_name && s.applicant_name.toLowerCase().includes(query)) ||
+            (s.applicant_email && s.applicant_email.toLowerCase().includes(query)) ||
+            (s.team_name && s.team_name.toLowerCase().includes(query)) ||
+            (s.event_slug && s.event_slug.toLowerCase().includes(query))
+          );
+        });
+
+        submissionsTableBody.innerHTML = '';
+        if (filtered.length === 0) {
+          submissionsTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">No applications found matching criteria.</td></tr>';
+          return;
+        }
+
+        filtered.forEach(sub => {
+          const tr = document.createElement('tr');
+          const filesCount = Array.isArray(sub.uploaded_files) ? sub.uploaded_files.length : 0;
+          
+          tr.innerHTML = `
+            <td>
+              <div style="font-weight: 700; color: #fff;">${sub.applicant_name}</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">${sub.applicant_email}</div>
+            </td>
+            <td><span style="font-family: monospace; font-size: 0.85rem;">${sub.event_slug}</span></td>
+            <td>${sub.team_name || 'Solo'}</td>
+            <td>
+              <span class="status-badge ${sub.payment_status === 'verified' ? 'accepted' : sub.payment_status === 'pending_verification' ? 'submitted' : 'free'}">
+                ${sub.payment_status || 'free'}
+              </span>
+              ${sub.payment_utr ? `<div style="font-size: 0.75rem; color: var(--text-muted); font-family: monospace;">UTR: ${sub.payment_utr}</div>` : ''}
+            </td>
+            <td>${filesCount > 0 ? `${filesCount} file(s)` : 'None'}</td>
+            <td>
+              <span class="status-badge ${sub.status}">${sub.status}</span>
+              ${sub.ticket_code ? `<div style="font-size: 0.75rem; color: var(--admin-gold); font-family: monospace;">${sub.ticket_code}</div>` : ''}
+            </td>
+            <td>
+              <button class="btn-secondary btn-review-sub" data-sub-id="${sub.id}" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;">Review →</button>
+            </td>
+          `;
+
+          tr.querySelector('.btn-review-sub').addEventListener('click', () => openReviewModal(sub));
+          submissionsTableBody.appendChild(tr);
+        });
+      }
+
+      function openReviewModal(sub) {
+        currentViewingSubmission = sub;
+        modalApplicantName.textContent = sub.applicant_name;
+        modalSubmissionId.textContent = `#${sub.id.substring(0, 12)} · Submitted on ${new Date(sub.created_at).toLocaleDateString()}`;
+        modalEmail.textContent = sub.applicant_email;
+        modalPhone.textContent = sub.applicant_phone || 'Not provided';
+        modalEvent.textContent = sub.event_slug;
+        modalTeam.textContent = sub.team_name || 'Solo';
+
+        modalPaymentStatus.textContent = sub.payment_status ? sub.payment_status.toUpperCase() : 'FREE';
+        modalPaymentUtr.textContent = sub.payment_utr ? `UTR / Ref: ${sub.payment_utr}` : 'No transaction UTR recorded';
+
+        modalPaymentReceiptLink.innerHTML = sub.payment_screenshot_url 
+          ? `<a href="${sub.payment_screenshot_url}" target="_blank" class="btn-secondary" style="font-size: 0.8rem; padding: 0.3rem 0.6rem;">View Receipt ↗</a>` 
+          : '';
+
+        modalFilesList.innerHTML = '';
+        if (Array.isArray(sub.uploaded_files) && sub.uploaded_files.length > 0) {
+          sub.uploaded_files.forEach(f => {
+            const item = document.createElement('div');
+            item.style.display = 'flex';
+            item.style.justifyContent = 'space-between';
+            item.style.fontSize = '0.88rem';
+            item.innerHTML = `
+              <span>${f.fileName}</span>
+              <span style="color: var(--text-muted); font-size: 0.8rem;">${(f.sizeBytes / (1024*1024)).toFixed(2)} MB</span>
+            `;
+            modalFilesList.appendChild(item);
+          });
+        } else {
+          modalFilesList.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem;">No files uploaded with this submission.</span>';
+        }
+
+        modalDetailsJson.textContent = JSON.stringify(sub.details || {}, null, 2);
+        modalStatusBadge.innerHTML = `<span class="status-badge ${sub.status}">${sub.status}</span>`;
+
+        // Configure Accept/Reject button states
+        btnModalAccept.disabled = false;
+        btnModalAccept.textContent = 'Accept & Issue QR Ticket';
+        btnModalReject.disabled = false;
+        btnModalReject.textContent = 'Reject Submission';
+
+        if (sub.status === 'accepted') {
+          btnModalAccept.disabled = true;
+          btnModalAccept.textContent = `Accepted (${sub.ticket_code || 'Issued'})`;
+        } else if (sub.status === 'rejected') {
+          btnModalReject.disabled = true;
+          btnModalReject.textContent = 'Rejected';
+        }
+
+        reviewModal.classList.add('open');
+      }
+
+      // Reject Modal Elements
+      const rejectReasonModal = document.getElementById('rejectReasonModal');
+      const rejectReasonInput = document.getElementById('rejectReasonInput');
+      const btnCloseRejectModal = document.getElementById('btnCloseRejectModal');
+      const btnCancelRejectModal = document.getElementById('btnCancelRejectModal');
+      const btnConfirmReject = document.getElementById('btnConfirmReject');
+
+      function closeRejectModal() {
+        rejectReasonModal.classList.remove('open');
+      }
+
+      btnCloseRejectModal.addEventListener('click', closeRejectModal);
+      btnCancelRejectModal.addEventListener('click', closeRejectModal);
+
+      // Email Dispatch Modal Elements
+      const emailDispatchModal = document.getElementById('emailDispatchModal');
+      const emailModalTitle = document.getElementById('emailModalTitle');
+      const emailModalSubtitle = document.getElementById('emailModalSubtitle');
+      const emailRecipient = document.getElementById('emailRecipient');
+      const emailSubject = document.getElementById('emailSubject');
+      const emailBody = document.getElementById('emailBody');
+      const btnCloseEmailModal = document.getElementById('btnCloseEmailModal');
+      const btnDismissEmailModal = document.getElementById('btnDismissEmailModal');
+      const btnCopyEmailText = document.getElementById('btnCopyEmailText');
+      const btnSendMailto = document.getElementById('btnSendMailto');
+
+      function closeEmailModal() {
+        emailDispatchModal.classList.remove('open');
+      }
+
+      btnCloseEmailModal.addEventListener('click', closeEmailModal);
+      btnDismissEmailModal.addEventListener('click', closeEmailModal);
+
+      btnCopyEmailText.addEventListener('click', async () => {
+        const fullText = `To: ${emailRecipient.value}\nSubject: ${emailSubject.value}\n\n${emailBody.value}`;
+        try {
+          await navigator.clipboard.writeText(fullText);
+          btnCopyEmailText.textContent = 'Copied to Clipboard!';
+          setTimeout(() => btnCopyEmailText.textContent = 'Copy Email Text', 2000);
+        } catch (e) {
+          emailBody.select();
+          document.execCommand('copy');
+          btnCopyEmailText.textContent = 'Copied to Clipboard!';
+          setTimeout(() => btnCopyEmailText.textContent = 'Copy Email Text', 2000);
+        }
+      });
+
+      function updateMailtoLink() {
+        const to = emailRecipient.value;
+        const subj = encodeURIComponent(emailSubject.value);
+        const b = encodeURIComponent(emailBody.value);
+        btnSendMailto.href = `mailto:${to}?subject=${subj}&body=${b}`;
+      }
+
+      emailSubject.addEventListener('input', updateMailtoLink);
+      emailBody.addEventListener('input', updateMailtoLink);
+
+      // Action 1: Accept Submission & Dispatch Ticket Pass Email
+      btnModalAccept.addEventListener('click', async () => {
+        if (!currentViewingSubmission) return;
+
+        btnModalAccept.disabled = true;
+        btnModalAccept.textContent = 'Generating Ticket & Confirming...';
+
+        const res = await window.NexcellSupabase.acceptSubmission(currentViewingSubmission.id);
+        if (!res.success) {
+          alert('Error accepting submission: ' + res.error);
+          btnModalAccept.disabled = false;
+          btnModalAccept.textContent = 'Accept & Issue QR Ticket';
+          return;
+        }
+
+        btnModalAccept.disabled = false;
+        btnModalAccept.textContent = 'Accept & Issue QR Ticket';
+        reviewModal.classList.remove('open');
+        loadSubmissions();
+
+        // Populate and open Email Dispatch Modal
+        emailModalTitle.textContent = 'Application Accepted — Dispatch Ticket Pass';
+        emailModalSubtitle.textContent = `Ticket ${res.ticketCode} generated for ${currentViewingSubmission.applicant_name}`;
+        emailRecipient.value = currentViewingSubmission.applicant_email;
+        emailSubject.value = `Congratulations! Your NexCell Admission Pass — ${currentViewingSubmission.event_slug}`;
+        
+        emailBody.value = 
+`Dear ${currentViewingSubmission.applicant_name},
+
+Congratulations! We are thrilled to inform you that your application for "${currentViewingSubmission.event_slug}" has been officially ACCEPTED by the NexCell Entrepreneurship Club.
+
+Admission Ticket Code: ${res.ticketCode}
+View & Download your Digital QR Pass here:
+${res.ticketUrl}
+
+Important Instructions:
+1. Open the ticket URL above on your smartphone or click "Print / Save Pass (PDF)".
+2. Gate security and volunteers will scan your dynamic QR badge upon entrance.
+3. Please carry your student / college identification card for verification.
+
+We look forward to seeing your pitch and prototype in action!
+
+Best regards,
+NexCell Tech & Organizing Team
+Mirai School of Technology · Rathinam Campus, Bangalore
+https://nexcell.club`;
+
+        updateMailtoLink();
+        emailDispatchModal.classList.add('open');
+      });
+
+      // Action 2: Reject Submission & Dispatch Constructive Notice
+      btnModalReject.addEventListener('click', () => {
+        if (!currentViewingSubmission) return;
+        rejectReasonInput.value = 'Does not match track criteria / Capacity reached';
+        rejectReasonModal.classList.add('open');
+      });
+
+      btnConfirmReject.addEventListener('click', async () => {
+        if (!currentViewingSubmission) return;
+
+        const reason = rejectReasonInput.value.trim() || 'Does not match track criteria / Capacity reached';
+
+        btnConfirmReject.disabled = true;
+        btnConfirmReject.textContent = 'Rejecting...';
+
+        const res = await window.NexcellSupabase.rejectSubmission(currentViewingSubmission.id, reason);
+        if (!res.success) {
+          alert('Error rejecting submission: ' + res.error);
+          btnConfirmReject.disabled = false;
+          btnConfirmReject.textContent = 'Confirm Rejection';
+          return;
+        }
+
+        btnConfirmReject.disabled = false;
+        btnConfirmReject.textContent = 'Confirm Rejection';
+        closeRejectModal();
+        reviewModal.classList.remove('open');
+        btnModalReject.disabled = false;
+        btnModalReject.textContent = 'Reject Submission';
+        loadSubmissions();
+
+        // Populate and open Email Dispatch Modal
+        emailModalTitle.textContent = 'Application Update — Rejection Notice';
+        emailModalSubtitle.textContent = `Constructive feedback for ${currentViewingSubmission.applicant_name}`;
+        emailRecipient.value = currentViewingSubmission.applicant_email;
+        emailSubject.value = `Update regarding your NexCell Application — ${currentViewingSubmission.event_slug}`;
+        
+        emailBody.value = 
+`Dear ${currentViewingSubmission.applicant_name},
+
+Thank you for your interest and for submitting your application for "${currentViewingSubmission.event_slug}" at NexCell.
+
+After a thorough evaluation by our screening committee, we regret to inform you that we are unable to accept your submission for this cohort.
+
+Evaluation Notes & Feedback:
+${reason}
+
+We truly appreciate the time and effort you put into your application. We encourage you to continue refining your ideas, attend our open masterclasses, and apply again in our upcoming initiatives.
+
+Best regards,
+NexCell Admissions Team
+Mirai School of Technology · Rathinam Campus, Bangalore
+https://nexcell.club`;
+
+        updateMailtoLink();
+        emailDispatchModal.classList.add('open');
+      });
+
+      inboxEventFilter.addEventListener('change', loadSubmissions);
+      inboxStatusFilter.addEventListener('change', loadSubmissions);
+      inboxSearchInput.addEventListener('input', renderSubmissionsTable);
+      btnRefreshInbox.addEventListener('click', loadSubmissions);
+
+      function initDashboard() {
+        loadFormsList();
+        loadSubmissions();
+      }
+
+      // Check auth on page load
+      checkAuth();
+    });
+  </script>
+</body>
+
+</html>

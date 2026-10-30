@@ -1,0 +1,2118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply for Events & Pitch Your Idea — NexCell Club</title>
+  <meta name="description"
+    content="Register for NexCell Ideathons, workshops, and startup pitching competitions. Upload pitch decks, documents, and join our entrepreneurship community.">
+  <meta name="keywords" content="NexCell, Application Form, Ideathon, Pitch Deck, Entrepreneurship, Rathinam Institute of Technology, Bangalore">
+  <meta name="author" content="NexCell Tech Team">
+  <link rel="canonical" href="https://nexcell.club/events/apply.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nexcell.club/events/apply.html">
+  <meta property="og:title" content="Apply for Events & Pitch Your Idea — NexCell">
+  <meta property="og:description" content="Submit your startup deck, register for hackathons, or pitch your idea to the NexCell Entrepreneurship Club.">
+  <meta property="og:image" content="../images/Nex.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="../style.css?v=6">
+  <link rel="icon" type="image/png" href="../images/Nex.png">
+
+  <!-- Supabase CDN (UMD Global) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <!-- NexCell Client -->
+  <script src="../js/supabaseClient.js"></script>
+
+  <style>
+    /* ── APPLICATION PORTAL SPECIFIC STYLING ── */
+    :root {
+      --portal-gold: #f39c12;
+      --portal-gold-glow: rgba(243, 156, 18, 0.25);
+      --portal-card-bg: rgba(13, 18, 37, 0.82);
+      --portal-border: rgba(55, 75, 140, 0.35);
+      --portal-border-hover: rgba(74, 124, 255, 0.6);
+    }
+
+    body {
+      background-color: #0a0e1a;
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(74, 124, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 65%, rgba(243, 156, 18, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(56, 189, 248, 0.05) 0%, transparent 50%);
+      background-attachment: fixed;
+      min-height: 100vh;
+    }
+
+    /* Form & Input Cursor Handling */
+    @media (hover: hover) and (pointer: fine) {
+      input, textarea {
+        cursor: text !important;
+      }
+      select, button, a, .drop-zone, .btn-portal-submit, .btn-copy-vpa, .file-remove-btn, .stepper-item, .hamburger {
+        cursor: pointer !important;
+      }
+      .cursor-dot, .cursor-outline {
+        pointer-events: none !important;
+      }
+    }
+
+    .portal-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: calc(var(--nav-height) + 2.5rem) 1.5rem 5rem;
+    }
+
+    /* Hero Banner */
+    .portal-hero {
+      text-align: center;
+      max-width: 820px;
+      margin: 0 auto 3rem;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      background: rgba(30, 42, 80, 0.7);
+      border: 1px solid rgba(74, 124, 255, 0.3);
+      color: var(--accent-light-blue);
+      margin-bottom: 1.25rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .badge-pill .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulseGreen 2s infinite;
+    }
+
+    @keyframes pulseGreen {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .portal-title {
+      font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
+      color: #ffffff;
+    }
+
+    .portal-title .gold-accent {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--portal-gold);
+      background: linear-gradient(135deg, #fce07a 0%, #f39c12 50%, #e67e22 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .portal-desc {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* Config Alert Bar */
+    .config-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background: rgba(243, 156, 18, 0.12);
+      border: 1px solid rgba(243, 156, 18, 0.35);
+      border-radius: 12px;
+      padding: 0.9rem 1.4rem;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: #fce07a;
+    }
+
+    .config-banner.active {
+      display: flex;
+    }
+
+    .config-banner a {
+      color: #ffffff;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+
+    /* Grid Layout */
+    .portal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.65fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 960px) {
+      .portal-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Sidebar Perks & Guidelines */
+    .portal-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .portal-side-card {
+      background: var(--portal-card-bg);
+      border: 1px solid var(--portal-border);
+      border-radius: 20px;
+      padding: 1.75rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .side-card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .side-card-title svg {
+      color: var(--accent-cyan);
+    }
+
+    .perk-checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .perk-checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .perk-checklist .check-icon {
+      color: #10b981;
+      font-size: 1rem;
+      line-height: 1.2;
+      flex-shrink: 0;
+    }
+
+    .timeline-steps {
+      list-style: none;
+      position: relative;
+      padding-left: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .timeline-steps::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: rgba(74, 124, 255, 0.25);
+    }
+
+    .timeline-step {
+      position: relative;
+    }
+
+    .timeline-step::before {
+      content: '';
+      position: absolute;
+      left: -1.5rem;
+      top: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #0a0e1a;
+      border: 2px solid var(--accent-blue);
+    }
+
+    .timeline-step h5 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-step p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Main Form Card */
+    .portal-form-card {
+      background: var(--portal-card-bg);
+      border: 1px solid var(--portal-border);
+      border-radius: 24px;
+      padding: clamp(1.75rem, 4vw, 2.75rem);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(74, 124, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .portal-form-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(74, 124, 255, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Multi-Step Stepper Bar */
+    .form-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--portal-border);
+      position: relative;
+    }
+
+    .stepper-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+    }
+
+    .stepper-item.active {
+      color: #ffffff;
+    }
+
+    .stepper-item.active .stepper-circle {
+      background: var(--portal-gold);
+      color: #000;
+      box-shadow: 0 0 12px var(--portal-gold-glow);
+    }
+
+    .stepper-item.completed .stepper-circle {
+      background: #10b981;
+      color: #fff;
+    }
+
+    .stepper-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .stepper-line {
+      flex: 1;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 0 1rem;
+    }
+
+    /* Event Meta Live Banner */
+    .event-info-box {
+      background: rgba(18, 24, 48, 0.8);
+      border: 1px solid var(--portal-border);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .event-info-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.25rem;
+    }
+
+    .event-info-meta {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .fee-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+
+    .fee-badge.paid {
+      background: rgba(243, 156, 18, 0.15);
+      border: 1px solid rgba(243, 156, 18, 0.4);
+      color: var(--portal-gold);
+    }
+
+    .fee-badge.free {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #10b981;
+    }
+
+    .form-header {
+      margin-bottom: 2rem;
+    }
+
+    .form-header h3 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .form-header p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    .form-section-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--portal-gold);
+      margin: 2rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(243, 156, 18, 0.2);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 640px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1.35rem;
+    }
+
+    .form-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-label .required {
+      color: #ef4444;
+    }
+
+    .form-label .optional {
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 0.95rem 1.15rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-card);
+      background: rgba(10, 14, 26, 0.85);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.25s ease;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+      background: rgba(15, 20, 40, 1);
+      box-shadow: 0 0 15px rgba(74, 124, 255, 0.2);
+    }
+
+    .form-input.is-invalid,
+    .form-select.is-invalid {
+      border-color: #ef4444 !important;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
+    }
+
+    .field-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    .field-error {
+      font-size: 0.78rem;
+      color: #ef4444;
+      margin-top: 0.35rem;
+      display: none;
+    }
+
+    .field-error.visible {
+      display: block;
+    }
+
+    /* Drag & Drop Upload Zone */
+    .drop-zone {
+      border: 2px dashed rgba(74, 124, 255, 0.35);
+      border-radius: 16px;
+      padding: 2.2rem 1.5rem;
+      text-align: center;
+      background: rgba(10, 14, 26, 0.5);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      position: relative;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.dragover {
+      border-color: var(--portal-gold);
+      background: rgba(243, 156, 18, 0.05);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(243, 156, 18, 0.1);
+    }
+
+    .drop-zone.dragover {
+      border-style: solid;
+      border-color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    .drop-icon-wrap {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
+      background: rgba(74, 124, 255, 0.12);
+      border: 1px solid rgba(74, 124, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-light-blue);
+      transition: transform 0.3s ease;
+    }
+
+    .drop-zone:hover .drop-icon-wrap {
+      transform: scale(1.1);
+      color: var(--portal-gold);
+      border-color: var(--portal-gold);
+    }
+
+    .drop-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.35rem;
+    }
+
+    .drop-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .drop-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 0.3rem 0.8rem;
+      border-radius: 99px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    /* Selected Files Container */
+    .files-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+
+    .file-chip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background: rgba(18, 24, 48, 0.7);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      animation: fileChipFade 0.3s ease;
+    }
+
+    @keyframes fileChipFade {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      overflow: hidden;
+    }
+
+    .file-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(74, 124, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-light-blue);
+      flex-shrink: 0;
+    }
+
+    .file-icon.pdf { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .file-icon.doc { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .file-icon.img { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+
+    .file-details {
+      overflow: hidden;
+    }
+
+    .file-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 280px;
+    }
+
+    .file-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .file-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .file-remove-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-secondary);
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .file-remove-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+
+    /* UPI Payment Step Screen */
+    .payment-step-card {
+      background: rgba(14, 19, 39, 0.95);
+      border: 1px solid var(--portal-border);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .upi-grid {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 700px) {
+      .upi-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+    }
+
+    .upi-qr-box {
+      background: #ffffff;
+      padding: 14px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .upi-qr-box img {
+      width: 100%;
+      max-width: 200px;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .upi-qr-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #0a0e1a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 0.5rem;
+    }
+
+    .upi-info-details h4 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+    }
+
+    .amount-highlight {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--portal-gold);
+      margin-bottom: 1rem;
+    }
+
+    .vpa-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 0.5rem 1rem;
+      font-family: monospace;
+      font-size: 0.95rem;
+      color: #fff;
+      margin-bottom: 1.25rem;
+    }
+
+    .btn-copy-vpa {
+      background: var(--portal-gold);
+      color: #000;
+      border: none;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .upi-steps-list {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      list-style-position: inside;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Progress & Status */
+    .upload-progress-wrap {
+      display: none;
+      margin-top: 1.25rem;
+    }
+
+    .upload-progress-wrap.active {
+      display: block;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-blue), var(--portal-gold));
+      transition: width 0.3s ease;
+    }
+
+    .progress-status-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Alert Box */
+    .portal-alert {
+      display: none;
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      margin-top: 1.5rem;
+    }
+
+    .portal-alert.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #f87171;
+    }
+
+    .portal-alert.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+    }
+
+    /* Submit Button */
+    .btn-portal-submit {
+      width: 100%;
+      padding: 1.1rem 2rem;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+      color: #070a14;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      box-shadow: 0 10px 25px rgba(243, 156, 18, 0.3);
+      transition: all 0.3s ease;
+      margin-top: 2rem;
+    }
+
+    .btn-portal-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(243, 156, 18, 0.45);
+      filter: brightness(1.08);
+    }
+
+    .btn-portal-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(0, 0, 0, 0.2);
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Success Overlay */
+    .success-overlay {
+      display: none;
+      text-align: center;
+      padding: 3rem 1.5rem;
+    }
+
+    .success-overlay.visible {
+      display: block;
+      animation: successPop 0.4s ease;
+    }
+
+    @keyframes successPop {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .success-emblem {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 1.5rem;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      border: 2px solid #10b981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #10b981;
+      font-size: 2.2rem;
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+    }
+
+    .success-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.75rem;
+    }
+
+    .submission-id-box {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 0.6rem 1.2rem;
+      font-family: monospace;
+      font-size: 0.95rem;
+      color: var(--accent-light-blue);
+      margin: 1rem 0 1.5rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══ NAVBAR ═══ -->
+  <nav class="navbar" id="navbar">
+    <a href="../index.html" class="nav-logo" aria-label="NexCell Home">
+      <div class="nav-logo-icon">
+        <img src="../images/Nex.png" alt="NexCell Logo" class="logo-img" width="42" height="42">
+      </div>
+      <div class="nav-logo-text">NexCell<span>.</span></div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li class="nav-dropdown">
+        <a href="javascript:void(0)" class="dropdown-trigger">Events <span class="dropdown-icon">▾</span></a>
+        <ul class="dropdown-menu">
+          <li><a href="../index.html#upcoming-events">Upcoming Events</a></li>
+          <li><a href="../index.html#events">Past Events</a></li>
+          <li><a href="apply.html" style="color: var(--portal-gold);">Apply / Register</a></li>
+          <li><a href="ticket.html">View Ticket</a></li>
+        </ul>
+      </li>
+      <li><a href="../index.html#team">Team</a></li>
+      <li><a href="../index.html#reviews">Reviews</a></li>
+      <li class="mobile-cta-li"><a href="../index.html" class="mobile-nav-cta">← Back to Site</a></li>
+    </ul>
+    <a href="../index.html" class="nav-cta">← Back to Home</a>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ═══ PORTAL MAIN ═══ -->
+  <main class="portal-container">
+
+    <!-- Hero Header -->
+    <header class="portal-hero">
+      <h1 class="portal-title">
+        Bring Your Ideas into <span class="gold-accent">Reality.</span>
+      </h1>
+      <p class="portal-desc">
+        Pitch your early-stage startup, register for upcoming ideathons, or submit your documents securely to the NexCell Entrepreneurship Club.
+      </p>
+      <div style="margin-top: 1.25rem;">
+        <a href="ticket.html" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.25rem; border-radius: 999px; background: rgba(243, 156, 18, 0.12); border: 1px solid rgba(243, 156, 18, 0.4); color: #fce07a; font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: all 0.25s; box-shadow: 0 4px 15px rgba(243, 156, 18, 0.15);">
+          <span>Already Registered? <strong>View Your Ticket Pass →</strong></span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Supabase Demo Notice Banner (Shown if credentials are not configured) -->
+    <div id="configNotice" class="config-banner">
+      <div>
+        <strong>Admin Notice:</strong> Running in Preview/Demo mode. Submissions are validated client-side and simulated safely.
+      </div>
+      <div>
+        <a href="../SUPABASE_SETUP.md" target="_blank">View Setup Guide →</a>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="portal-grid">
+
+      <!-- Left Column: Guidelines & Timeline -->
+      <aside class="portal-sidebar">
+        
+        <div class="portal-side-card">
+          <h4 class="side-card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            Security & Storage
+          </h4>
+          <ul class="perk-checklist">
+            <li>
+              <span class="check-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+              <span><strong>Private Storage:</strong> Submissions and pitch decks are stored in isolated, access-controlled buckets.</span>
+            </li>
+            <li>
+              <span class="check-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+              <span><strong>Supported Files:</strong> PDF presentations, Word documents (.docx), and high-res images (.png, .jpg).</span>
+            </li>
+            <li>
+              <span class="check-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+              <span><strong>Size Limit:</strong> Max 15MB per uploaded file. Up to 5 files per application.</span>
+            </li>
+            <li>
+              <span class="check-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+              <span><strong>Row Level Security:</strong> Submissions are readable only by authorized club mentors and administrators.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="portal-side-card">
+          <h4 class="side-card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Review Process
+          </h4>
+          <ol class="timeline-steps">
+            <li class="timeline-step">
+              <h5>1. Submission Received</h5>
+              <p>You'll receive an instant confirmation reference ID.</p>
+            </li>
+            <li class="timeline-step">
+              <h5>2. Committee Verification</h5>
+              <p>Payment UTR is verified & mentors review project materials.</p>
+            </li>
+            <li class="timeline-step">
+              <h5>3. QR Ticket Pass Issued</h5>
+              <p>Accepted attendees receive a dynamic QR Admission Pass.</p>
+            </li>
+          </ol>
+        </div>
+
+        <div class="portal-side-card" style="border-color: rgba(243, 156, 18, 0.3);">
+          <h4 class="side-card-title" style="color: var(--portal-gold);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"></path>
+              <line x1="9" y1="21" x2="15" y2="21"></line>
+            </svg>
+            Pitch Tip
+          </h4>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
+            Focus on the problem you are solving, your target market, and why your team has the unfair advantage to build it. A 5-slide deck is better than a 30-page essay.
+          </p>
+        </div>
+
+      </aside>
+
+      <!-- Right Column: Interactive Form -->
+      <section class="portal-form-card" id="formContainer">
+
+        <!-- Stepper (Visible for Paid Events) -->
+        <div class="form-stepper" id="formStepper" style="display: none;">
+          <div class="stepper-item active" id="step1Indicator">
+            <span class="stepper-circle">1</span>
+            <span>Application Details</span>
+          </div>
+          <div class="stepper-line"></div>
+          <div class="stepper-item" id="step2Indicator">
+            <span class="stepper-circle">2</span>
+            <span>UPI Payment</span>
+          </div>
+        </div>
+
+        <!-- Live Event Banner -->
+        <div class="event-info-box" id="eventInfoBox" style="display: none;">
+          <div>
+            <div class="event-info-title" id="eventInfoTitle">Selected Event</div>
+            <div class="event-info-meta">
+              <span id="eventInfoDate">Date TBD</span>
+              <span id="eventInfoVenue">Venue TBD</span>
+            </div>
+          </div>
+          <div id="eventInfoFeeBadge">
+            <span class="fee-badge free">Free Entry</span>
+          </div>
+        </div>
+
+        <!-- Form Elements -->
+        <form id="eventApplicationForm" novalidate>
+
+          <!-- ── STEP 1: FORM DETAILS ── -->
+          <div id="step1Container">
+            <div class="form-header">
+              <h3 id="formHeadingText">Event & Pitch Submission</h3>
+              <p id="formSubheadingText">Fill in the required details and upload your deck to get started.</p>
+            </div>
+
+            <!-- Section 1: Event Selection -->
+            <div class="form-section-title">01. Target Event / Category</div>
+            <div class="form-group">
+              <label class="form-label" for="eventSlug">
+                Select Event / Track <span class="required">*</span>
+              </label>
+              <select class="form-select" id="eventSlug" name="event_slug" required>
+                <option value="" disabled selected>— Loading available events —</option>
+              </select>
+              <div class="field-error" id="eventSlugError">Please select an event.</div>
+            </div>
+
+            <!-- Section 2: Standard Applicant Information -->
+            <div class="form-section-title">02. Lead Applicant Information</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="applicantName">
+                  Full Name <span class="required">*</span>
+                </label>
+                <input class="form-input" type="text" id="applicantName" name="applicant_name" placeholder="e.g. Alex Morgan" required>
+                <div class="field-error" id="applicantNameError">Full name is required.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="applicantEmail">
+                  Email Address <span class="required">*</span>
+                </label>
+                <input class="form-input" type="email" id="applicantEmail" name="applicant_email" placeholder="alex@college.edu" required>
+                <div class="field-error" id="applicantEmailError">Please enter a valid email address.</div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="applicantPhone">
+                  Phone / WhatsApp <span class="optional">(Recommended)</span>
+                </label>
+                <input class="form-input" type="tel" id="applicantPhone" name="applicant_phone" placeholder="+91 98765 43210">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="teamName">
+                  Team / Startup Name <span class="optional">(Solo if blank)</span>
+                </label>
+                <input class="form-input" type="text" id="teamName" name="team_name" placeholder="e.g. Team Hyperion">
+              </div>
+            </div>
+
+            <!-- Section 3: Dynamic Custom Fields from Form Builder -->
+            <div id="dynamicFieldsContainer"></div>
+
+            <!-- Section 4: File Uploader -->
+            <div class="form-section-title">04. Document & Pitch Deck Uploads</div>
+            <div class="form-group">
+              <label class="form-label">
+                Upload Files <span class="optional">(PDF, DOCX, PNG, JPG — Max 15MB each)</span>
+              </label>
+
+              <!-- Drag and Drop Target -->
+              <div class="drop-zone" id="dropZone" role="button" tabindex="0" aria-label="Drop files here or click to select">
+                <div class="drop-icon-wrap">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                </div>
+                <div class="drop-title">Drag & drop your files here</div>
+                <div class="drop-subtitle">or <span style="color: var(--accent-light-blue); text-decoration: underline;">browse computer</span> to choose files</div>
+                <div class="drop-badge">PDF · DOCX · PNG · JPG (Max 15MB)</div>
+                <input type="file" id="fileInput" multiple accept=".pdf,.docx,.doc,.png,.jpg,.jpeg,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/png,image/jpeg" style="display: none;">
+              </div>
+
+              <!-- Selected Files List Container -->
+              <div class="files-list" id="filesList"></div>
+              <div class="field-error" id="fileUploadError"></div>
+            </div>
+
+            <!-- Next Step / Submit Button for Step 1 -->
+            <button type="button" class="btn-portal-submit" id="btnStep1Proceed">
+              <span id="btnStep1Text">Submit Application</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <!-- ── STEP 2: UPI PAYMENT (FOR PAID EVENTS) ── -->
+          <div id="step2Container" style="display: none;">
+            <div class="form-header">
+              <h3>Complete Registration Fee</h3>
+              <p>Scan the official NexCell UPI QR code to complete payment and enter your transaction UTR.</p>
+            </div>
+
+            <div class="payment-step-card">
+              <div class="upi-grid">
+                <div class="upi-qr-box">
+                  <img id="upiQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=nexcell@upi&pn=NexCell&am=150&cu=INR" alt="NexCell UPI QR Code">
+                  <span class="upi-qr-label">Scan with Any UPI App</span>
+                </div>
+                <div class="upi-info-details">
+                  <h4>Registration Amount</h4>
+                  <div class="amount-highlight" id="upiDisplayAmount">₹150.00</div>
+                  <div>
+                    <label class="form-label" style="margin-bottom: 0.3rem;">Official NexCell UPI VPA:</label>
+                    <div class="vpa-pill">
+                      <span id="upiDisplayVpa">nexcell@upi</span>
+                      <button type="button" class="btn-copy-vpa" id="btnCopyVpa">Copy VPA</button>
+                    </div>
+                  </div>
+                  <ol class="upi-steps-list">
+                    <li>Open <strong>GPay, PhonePe, Paytm, or BHIM</strong>.</li>
+                    <li>Scan the QR code or transfer directly to the UPI ID.</li>
+                    <li>Copy the <strong>12-digit UTR / Reference No.</strong> and paste below.</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="paymentUtr">
+                  12-Digit UPI / UTR Transaction Reference Number <span class="required">*</span>
+                </label>
+                <input class="form-input" type="text" id="paymentUtr" name="payment_utr" placeholder="e.g. 428901234567" maxlength="20">
+                <div class="field-hint">Found under payment details in your UPI app (UTR / UPI Ref ID).</div>
+                <div class="field-error" id="paymentUtrError">Please enter a valid 12-digit transaction reference number.</div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="paymentReceiptFile">
+                  Payment Receipt Screenshot <span class="optional">(Optional but speeds up verification)</span>
+                </label>
+                <input class="form-input" type="file" id="paymentReceiptFile" accept="image/*,.pdf">
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <button type="button" class="btn-secondary" id="btnBackToStep1" style="flex: 1; padding: 1rem 1.5rem;">
+                ← Back to Application
+              </button>
+              <button type="submit" class="btn-portal-submit" id="submitBtn" style="flex: 2; margin-top: 0;">
+                <span class="btn-spinner" id="btnSpinner"></span>
+                <span class="btn-text" id="btnText">Verify & Submit Application</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Upload Progress Bar -->
+          <div class="upload-progress-wrap" id="uploadProgressWrap">
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+            <div class="progress-status-text">
+              <span id="progressStatusLabel">Uploading documents...</span>
+              <span id="progressPercentage">0%</span>
+            </div>
+          </div>
+
+          <!-- Alert Status Box -->
+          <div class="portal-alert" id="portalAlert"></div>
+
+        </form>
+
+        <!-- Success Confirmation State (Replaces form upon completion) -->
+        <div class="success-overlay" id="successOverlay">
+          <div class="success-emblem">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <h2 class="success-title">Application Submitted!</h2>
+          <p style="color: var(--text-secondary); max-width: 520px; margin: 0 auto 1.5rem;" id="successDescText">
+            Thank you for applying to NexCell. Your details and documents have been secured in our PostgreSQL database.
+          </p>
+          <div>
+            <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); display: block;">Submission Reference</span>
+            <div class="submission-id-box" id="displaySubmissionId">#NEX-PENDING</div>
+          </div>
+          <div id="ticketInstructionsBox" style="margin-bottom: 2rem; font-size: 0.9rem; color: #fce07a; background: rgba(243, 156, 18, 0.1); border: 1px solid rgba(243, 156, 18, 0.3); border-radius: 12px; padding: 1rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+            <strong>Admission Pass:</strong> Once your application is reviewed and accepted by organizers, your verified digital QR ticket will be accessible at <a href="ticket.html" style="color: #f39c12; font-weight: 700; text-decoration: underline;">events/ticket.html</a>.
+          </div>
+          <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+            <a href="ticket.html" class="btn-primary" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+              <span>View Ticket Pass</span>
+            </a>
+            <button type="button" class="btn-secondary" id="btnResetForm">Submit Another Application</button>
+            <a href="../index.html" class="btn-secondary">Return to NexCell Home</a>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="../images/Nex.png" alt="NexCell Logo" width="36" height="36">
+            <span class="footer-logo-text">NexCell<span>.</span></span>
+          </div>
+          <p class="footer-tagline">
+            Empowering students to transform ideas into viable startups. Rathinam Institute of Technology, Bangalore.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="../index.html#about">About NexCell</a></li>
+            <li><a href="../index.html#upcoming-events">Upcoming Events</a></li>
+            <li><a href="../index.html#events">Past Events</a></li>
+            <li><a href="apply.html">Apply for Events</a></li>
+            <li><a href="ticket.html">Check Ticket Pass</a></li>
+            <li><a href="../index.html#reviews">Reviews</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-bottom-inner">
+          <p class="copyright">© 2026 NexCell — Mirai School of Technology. All rights reserved.</p>
+          <p class="credits">Built by the <span class="highlight">NexCell Tech Team</span></p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot"></div>
+  <div class="cursor-outline"></div>
+
+  <!-- Interactive Client-side Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Check Configuration Status
+      const configNotice = document.getElementById('configNotice');
+      if (window.NexcellSupabase && !window.NexcellSupabase.isConfigured()) {
+        configNotice.classList.add('active');
+      }
+
+      // State
+      let allForms = [];
+      let currentForm = null;
+      const selectedFiles = [];
+
+      // Elements
+      const formContainer = document.getElementById('formContainer');
+      const eventSlug = document.getElementById('eventSlug');
+      const eventSlugError = document.getElementById('eventSlugError');
+      const eventInfoBox = document.getElementById('eventInfoBox');
+      const eventInfoTitle = document.getElementById('eventInfoTitle');
+      const eventInfoDate = document.getElementById('eventInfoDate');
+      const eventInfoVenue = document.getElementById('eventInfoVenue');
+      const eventInfoFeeBadge = document.getElementById('eventInfoFeeBadge');
+
+      const formStepper = document.getElementById('formStepper');
+      const step1Indicator = document.getElementById('step1Indicator');
+      const step2Indicator = document.getElementById('step2Indicator');
+      const step1Container = document.getElementById('step1Container');
+      const step2Container = document.getElementById('step2Container');
+      const btnStep1Proceed = document.getElementById('btnStep1Proceed');
+      const btnStep1Text = document.getElementById('btnStep1Text');
+      const btnBackToStep1 = document.getElementById('btnBackToStep1');
+
+      const dynamicFieldsContainer = document.getElementById('dynamicFieldsContainer');
+
+      const applicantName = document.getElementById('applicantName');
+      const applicantEmail = document.getElementById('applicantEmail');
+      const applicantPhone = document.getElementById('applicantPhone');
+      const teamName = document.getElementById('teamName');
+
+      const applicantNameError = document.getElementById('applicantNameError');
+      const applicantEmailError = document.getElementById('applicantEmailError');
+
+      // UPI Elements
+      const upiQrImage = document.getElementById('upiQrImage');
+      const upiDisplayAmount = document.getElementById('upiDisplayAmount');
+      const upiDisplayVpa = document.getElementById('upiDisplayVpa');
+      const btnCopyVpa = document.getElementById('btnCopyVpa');
+      const paymentUtr = document.getElementById('paymentUtr');
+      const paymentUtrError = document.getElementById('paymentUtrError');
+      const paymentReceiptFile = document.getElementById('paymentReceiptFile');
+
+      // File Upload Elements
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('fileInput');
+      const filesList = document.getElementById('filesList');
+      const fileUploadError = document.getElementById('fileUploadError');
+
+      // Submission Elements
+      const form = document.getElementById('eventApplicationForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const btnSpinner = document.getElementById('btnSpinner');
+      const btnText = document.getElementById('btnText');
+      const portalAlert = document.getElementById('portalAlert');
+      const uploadProgressWrap = document.getElementById('uploadProgressWrap');
+      const progressBarFill = document.getElementById('progressBarFill');
+      const progressStatusLabel = document.getElementById('progressStatusLabel');
+      const progressPercentage = document.getElementById('progressPercentage');
+      const successOverlay = document.getElementById('successOverlay');
+      const displaySubmissionId = document.getElementById('displaySubmissionId');
+      const btnResetForm = document.getElementById('btnResetForm');
+
+      // 2. Fetch and initialize forms from Supabase
+      async function initForms() {
+        const { data } = await window.NexcellSupabase.getForms(true);
+        allForms = data || [];
+
+        eventSlug.innerHTML = '<option value="" disabled selected>— Choose an upcoming initiative or track —</option>';
+        allForms.forEach(f => {
+          const opt = document.createElement('option');
+          opt.value = f.slug;
+          opt.textContent = `${f.title} ${f.is_paid ? `(₹${f.fee_amount})` : '(Free)'}`;
+          eventSlug.appendChild(opt);
+        });
+
+        // Check URL query param ?event=slug
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventParam = urlParams.get('event');
+
+        if (eventParam) {
+          const match = allForms.find(f => f.slug === eventParam);
+          if (match) {
+            eventSlug.value = match.slug;
+            selectForm(match);
+          } else {
+            // Fetch directly by slug in case not in active list
+            const single = await window.NexcellSupabase.getFormBySlug(eventParam);
+            if (single && single.data) {
+              const opt = document.createElement('option');
+              opt.value = single.data.slug;
+              opt.textContent = single.data.title;
+              eventSlug.appendChild(opt);
+              eventSlug.value = single.data.slug;
+              selectForm(single.data);
+            }
+          }
+        }
+      }
+
+      eventSlug.addEventListener('change', () => {
+        const selected = allForms.find(f => f.slug === eventSlug.value);
+        if (selected) {
+          selectForm(selected);
+        }
+        eventSlug.classList.remove('is-invalid');
+        eventSlugError.classList.remove('visible');
+      });
+
+      function selectForm(formData) {
+        currentForm = formData;
+
+        // Render Banner
+        eventInfoTitle.textContent = formData.title;
+        eventInfoDate.textContent = formData.event_date 
+          ? new Date(formData.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+          : 'Date Announced Soon';
+        eventInfoVenue.textContent = formData.venue ? formData.venue : 'Rathinam Campus, Bangalore';
+
+        if (formData.is_paid) {
+          eventInfoFeeBadge.innerHTML = `<span class="fee-badge paid">₹${formData.fee_amount || 0} Registration Fee</span>`;
+          formStepper.style.display = 'flex';
+          btnStep1Text.textContent = `Continue to Payment (₹${formData.fee_amount || 0}) →`;
+
+          // Configure UPI QR
+          const vpa = formData.upi_id || 'nexcell@upi';
+          const amount = formData.fee_amount || 0;
+          upiDisplayVpa.textContent = vpa;
+          upiDisplayAmount.textContent = `₹${amount}.00`;
+
+          if (formData.upi_qr_url) {
+            upiQrImage.src = formData.upi_qr_url;
+          } else {
+            const upiUri = `upi://pay?pa=${encodeURIComponent(vpa)}&pn=NexCell%20Club&am=${encodeURIComponent(amount)}&cu=INR`;
+            upiQrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUri)}`;
+          }
+        } else {
+          eventInfoFeeBadge.innerHTML = `<span class="fee-badge free">Free Entry</span>`;
+          formStepper.style.display = 'none';
+          btnStep1Text.textContent = 'Submit Application';
+        }
+
+        eventInfoBox.style.display = 'flex';
+
+        // Render Dynamic Fields
+        renderDynamicFields(formData.fields || []);
+      }
+
+      function renderDynamicFields(fields) {
+        dynamicFieldsContainer.innerHTML = '';
+        if (!fields || !fields.length) return;
+
+        // Standard IDs already in form
+        const standardIds = ['applicant_name', 'applicant_email', 'applicant_phone', 'team_name'];
+        const customFields = fields.filter(f => !standardIds.includes(f.id));
+
+        if (!customFields.length) return;
+
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'form-section-title';
+        titleDiv.textContent = '03. Event Specific Details';
+        dynamicFieldsContainer.appendChild(titleDiv);
+
+        customFields.forEach(f => {
+          if (f.type === 'file') return; // Handled by global dropzone
+
+          const group = document.createElement('div');
+          group.className = 'form-group';
+
+          const label = document.createElement('label');
+          label.className = 'form-label';
+          label.setAttribute('for', `custom_${f.id}`);
+          label.innerHTML = `
+            ${f.label} ${f.required ? '<span class="required">*</span>' : '<span class="optional">(Optional)</span>'}
+          `;
+          group.appendChild(label);
+
+          let inputEl;
+          if (f.type === 'textarea') {
+            inputEl = document.createElement('textarea');
+            inputEl.rows = 3;
+            inputEl.className = 'form-textarea';
+          } else if (f.type === 'select') {
+            inputEl = document.createElement('select');
+            inputEl.className = 'form-select';
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = '';
+            defaultOpt.textContent = `— Select ${f.label} —`;
+            inputEl.appendChild(defaultOpt);
+            if (Array.isArray(f.options)) {
+              f.options.forEach(opt => {
+                const o = document.createElement('option');
+                o.value = opt;
+                o.textContent = opt;
+                inputEl.appendChild(o);
+              });
+            }
+          } else {
+            inputEl = document.createElement('input');
+            inputEl.type = f.type || 'text';
+            inputEl.className = 'form-input';
+          }
+
+          inputEl.id = `custom_${f.id}`;
+          inputEl.name = `custom_${f.id}`;
+          inputEl.placeholder = f.placeholder || '';
+          if (f.required) inputEl.required = true;
+
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'field-error';
+          errorDiv.id = `error_custom_${f.id}`;
+          errorDiv.textContent = `${f.label} is required.`;
+
+          group.appendChild(inputEl);
+          group.appendChild(errorDiv);
+          dynamicFieldsContainer.appendChild(group);
+
+          // Clear error on input
+          inputEl.addEventListener('input', () => {
+            inputEl.classList.remove('is-invalid');
+            errorDiv.classList.remove('visible');
+          });
+        });
+      }
+
+      // Copy VPA Button
+      btnCopyVpa.addEventListener('click', async () => {
+        const vpa = upiDisplayVpa.textContent;
+        try {
+          await navigator.clipboard.writeText(vpa);
+          btnCopyVpa.textContent = 'Copied!';
+          setTimeout(() => btnCopyVpa.textContent = 'Copy VPA', 2000);
+        } catch (e) {
+          prompt('Copy UPI ID:', vpa);
+        }
+      });
+
+      // 3. File Management State
+      dropZone.addEventListener('click', () => fileInput.click());
+      dropZone.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          fileInput.click();
+        }
+      });
+
+      ['dragenter', 'dragover'].forEach(name => {
+        dropZone.addEventListener(name, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.add('dragover');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(name => {
+        dropZone.addEventListener(name, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.remove('dragover');
+        });
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        if (dt && dt.files && dt.files.length) {
+          handleIncomingFiles(dt.files);
+        }
+      });
+
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files && fileInput.files.length) {
+          handleIncomingFiles(fileInput.files);
+          fileInput.value = '';
+        }
+      });
+
+      function handleIncomingFiles(files) {
+        fileUploadError.classList.remove('visible');
+        fileUploadError.textContent = '';
+
+        if (selectedFiles.length + files.length > 5) {
+          showFileError('You can upload a maximum of 5 files per application.');
+          return;
+        }
+
+        for (const file of Array.from(files)) {
+          if (selectedFiles.some(f => f.name === file.name && f.size === file.size)) continue;
+
+          const validation = window.NexcellSupabase
+            ? window.NexcellSupabase.validateFile(file)
+            : { valid: true };
+
+          if (!validation.valid) {
+            showFileError(validation.error);
+            return;
+          }
+
+          selectedFiles.push(file);
+        }
+
+        renderFilesList();
+      }
+
+      function showFileError(msg) {
+        fileUploadError.textContent = msg;
+        fileUploadError.classList.add('visible');
+      }
+
+      function formatBytes(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      }
+
+      function getFileClass(filename) {
+        const lower = filename.toLowerCase();
+        if (lower.endsWith('.pdf')) return { cls: 'pdf', label: 'PDF' };
+        if (lower.endsWith('.docx') || lower.endsWith('.doc')) return { cls: 'doc', label: 'DOC' };
+        return { cls: 'img', label: 'IMG' };
+      }
+
+      function renderFilesList() {
+        filesList.innerHTML = '';
+        if (selectedFiles.length === 0) return;
+
+        selectedFiles.forEach((file, index) => {
+          const typeInfo = getFileClass(file.name);
+          const chip = document.createElement('div');
+          chip.className = 'file-chip';
+          chip.innerHTML = `
+            <div class="file-info">
+              <div class="file-icon ${typeInfo.cls}">${typeInfo.label}</div>
+              <div class="file-details">
+                <div class="file-name" title="${file.name}">${file.name}</div>
+                <div class="file-meta">${formatBytes(file.size)} · Validated</div>
+              </div>
+            </div>
+            <div class="file-actions">
+              <button type="button" class="file-remove-btn" data-index="${index}" title="Remove file" aria-label="Remove file">&times;</button>
+            </div>
+          `;
+          filesList.appendChild(chip);
+        });
+
+        filesList.querySelectorAll('.file-remove-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-index'), 10);
+            selectedFiles.splice(idx, 1);
+            renderFilesList();
+          });
+        });
+      }
+
+      // 4. Step 1 Validation & Flow
+      function validateStep1() {
+        let isValid = true;
+        let firstInvalid = null;
+
+        [eventSlug, applicantName, applicantEmail].forEach(el => el.classList.remove('is-invalid'));
+        [eventSlugError, applicantNameError, applicantEmailError].forEach(el => el.classList.remove('visible'));
+
+        if (!eventSlug.value.trim()) {
+          eventSlug.classList.add('is-invalid');
+          eventSlugError.classList.add('visible');
+          isValid = false;
+          firstInvalid = firstInvalid || eventSlug;
+        }
+
+        if (!applicantName.value.trim()) {
+          applicantName.classList.add('is-invalid');
+          applicantNameError.classList.add('visible');
+          isValid = false;
+          firstInvalid = firstInvalid || applicantName;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!applicantEmail.value.trim() || !emailRegex.test(applicantEmail.value.trim())) {
+          applicantEmail.classList.add('is-invalid');
+          applicantEmailError.classList.add('visible');
+          isValid = false;
+          firstInvalid = firstInvalid || applicantEmail;
+        }
+
+        // Validate any required custom fields
+        if (currentForm && currentForm.fields) {
+          currentForm.fields.forEach(f => {
+            if (f.required && !['applicant_name', 'applicant_email', 'applicant_phone', 'team_name'].includes(f.id)) {
+              const el = document.getElementById(`custom_${f.id}`);
+              const err = document.getElementById(`error_custom_${f.id}`);
+              if (el && !el.value.trim()) {
+                el.classList.add('is-invalid');
+                if (err) err.classList.add('visible');
+                isValid = false;
+                firstInvalid = firstInvalid || el;
+              }
+            }
+          });
+        }
+
+        if (!isValid && firstInvalid) {
+          firstInvalid.focus();
+        }
+
+        return isValid;
+      }
+
+      // Step 1 Proceed Button Click
+      btnStep1Proceed.addEventListener('click', () => {
+        if (!validateStep1()) return;
+
+        if (currentForm && currentForm.is_paid) {
+          // Switch to Step 2: Payment
+          step1Container.style.display = 'none';
+          step2Container.style.display = 'block';
+          step1Indicator.classList.remove('active');
+          step1Indicator.classList.add('completed');
+          step2Indicator.classList.add('active');
+          window.scrollTo({ top: formContainer.offsetTop - 100, behavior: 'smooth' });
+        } else {
+          // Free event: trigger direct submission
+          triggerSubmission();
+        }
+      });
+
+      btnBackToStep1.addEventListener('click', () => {
+        step2Container.style.display = 'none';
+        step1Container.style.display = 'block';
+        step2Indicator.classList.remove('active');
+        step1Indicator.classList.remove('completed');
+        step1Indicator.classList.add('active');
+      });
+
+      // Step 2 Form Submit Event
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (currentForm && currentForm.is_paid) {
+          const utrVal = paymentUtr.value.trim();
+          if (!utrVal || utrVal.length < 6) {
+            paymentUtr.classList.add('is-invalid');
+            paymentUtrError.classList.add('visible');
+            paymentUtr.focus();
+            return;
+          }
+          paymentUtr.classList.remove('is-invalid');
+          paymentUtrError.classList.remove('visible');
+        }
+        triggerSubmission();
+      });
+
+      // 5. Final Submission Handler
+      async function triggerSubmission() {
+        portalAlert.className = 'portal-alert';
+        portalAlert.style.display = 'none';
+
+        // Extract custom answers
+        const customDetails = {};
+        if (currentForm && currentForm.fields) {
+          currentForm.fields.forEach(f => {
+            const el = document.getElementById(`custom_${f.id}`);
+            if (el) {
+              customDetails[f.id] = el.value ? el.value.trim() : null;
+            }
+          });
+        }
+
+        const formData = {
+          form_id: currentForm ? currentForm.id : null,
+          event_slug: eventSlug.value.trim(),
+          applicant_name: applicantName.value.trim(),
+          applicant_email: applicantEmail.value.trim(),
+          applicant_phone: applicantPhone.value.trim() || null,
+          team_name: teamName.value.trim() || null,
+          details: {
+            ...customDetails,
+            submitted_from_url: window.location.href,
+          },
+          payment_status: currentForm && currentForm.is_paid ? 'pending_verification' : 'free',
+          payment_utr: currentForm && currentForm.is_paid ? paymentUtr.value.trim() : null,
+        };
+
+        // If a receipt screenshot was uploaded in Step 2, append to files
+        const allUploads = [...selectedFiles];
+        if (paymentReceiptFile && paymentReceiptFile.files && paymentReceiptFile.files[0]) {
+          const receiptFile = paymentReceiptFile.files[0];
+          // Prepend tag to indicate it's payment proof
+          allUploads.push(new File([receiptFile], `RECEIPT_${receiptFile.name}`, { type: receiptFile.type }));
+        }
+
+        setLoadingState(true);
+
+        try {
+          uploadProgressWrap.classList.add('active');
+          progressBarFill.style.width = '15%';
+          progressPercentage.textContent = '15%';
+          progressStatusLabel.textContent = allUploads.length > 0 ? 'Uploading documents...' : 'Registering application...';
+
+          const result = await window.NexcellSupabase.submitEventApplication(
+            formData,
+            allUploads,
+            {
+              onFileProgress: (current, total, fileName) => {
+                const percent = Math.round((current / total) * 80);
+                progressBarFill.style.width = `${percent}%`;
+                progressPercentage.textContent = `${percent}%`;
+                progressStatusLabel.textContent = `Uploading ${fileName} (${current}/${total})...`;
+              }
+            }
+          );
+
+          if (!result.success) {
+            throw new Error(result.error || 'Failed to submit application.');
+          }
+
+          progressBarFill.style.width = '100%';
+          progressPercentage.textContent = '100%';
+          progressStatusLabel.textContent = 'Application confirmed!';
+
+          setTimeout(() => {
+            form.style.display = 'none';
+            formStepper.style.display = 'none';
+            eventInfoBox.style.display = 'none';
+            successOverlay.classList.add('visible');
+            displaySubmissionId.textContent = `#${result.submissionId.substring(0, 12).toUpperCase()}`;
+            if (result.isDemo) {
+              displaySubmissionId.textContent += ' (DEMO MODE)';
+            }
+          }, 400);
+
+        } catch (err) {
+          showAlert(err.message || 'An unexpected error occurred. Please try again.', 'error');
+          uploadProgressWrap.classList.remove('active');
+        } finally {
+          setLoadingState(false);
+        }
+      }
+
+      function setLoadingState(loading) {
+        if (loading) {
+          submitBtn.disabled = true;
+          btnStep1Proceed.disabled = true;
+          btnSpinner.style.display = 'inline-block';
+          btnText.textContent = 'Processing Application...';
+        } else {
+          submitBtn.disabled = false;
+          btnStep1Proceed.disabled = false;
+          btnSpinner.style.display = 'none';
+          btnText.textContent = 'Verify & Submit Application';
+        }
+      }
+
+      function showAlert(message, type) {
+        portalAlert.textContent = message;
+        portalAlert.className = `portal-alert ${type}`;
+        portalAlert.style.display = 'block';
+      }
+
+      // Reset Form on Success
+      btnResetForm.addEventListener('click', () => {
+        form.reset();
+        selectedFiles.length = 0;
+        renderFilesList();
+        uploadProgressWrap.classList.remove('active');
+        progressBarFill.style.width = '0%';
+        portalAlert.style.display = 'none';
+        step2Container.style.display = 'none';
+        step1Container.style.display = 'block';
+        if (currentForm && currentForm.is_paid) {
+          formStepper.style.display = 'flex';
+          step1Indicator.classList.add('active');
+          step1Indicator.classList.remove('completed');
+          step2Indicator.classList.remove('active');
+        }
+        form.style.display = 'block';
+        eventInfoBox.style.display = 'flex';
+        successOverlay.classList.remove('visible');
+      });
+
+      // Mobile Menu
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('navLinks');
+
+      function closeMobileMenu() {
+        if (!navLinks) return;
+        navLinks.classList.remove('open');
+        document.body.classList.remove('nav-open');
+        if (hamburger) {
+          hamburger.setAttribute('aria-expanded', 'false');
+          const spans = hamburger.querySelectorAll('span');
+          spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+        }
+      }
+
+      function openMobileMenu() {
+        if (!navLinks) return;
+        navLinks.classList.add('open');
+        document.body.classList.add('nav-open');
+        if (hamburger) {
+          hamburger.setAttribute('aria-expanded', 'true');
+          const spans = hamburger.querySelectorAll('span');
+          if (spans.length >= 3) {
+            spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+            spans[1].style.opacity = '0';
+            spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+          }
+        }
+      }
+
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (navLinks.classList.contains('open')) closeMobileMenu();
+          else openMobileMenu();
+        });
+
+        navLinks.querySelectorAll('a').forEach(a => {
+          a.addEventListener('click', (e) => {
+            if (a.classList.contains('dropdown-trigger')) {
+              if (window.innerWidth <= 1024) {
+                e.preventDefault();
+                const parent = a.parentElement;
+                const menu = parent ? parent.querySelector('.dropdown-menu') : null;
+                if (parent) parent.classList.toggle('active');
+                if (menu) menu.classList.toggle('open');
+              }
+              return;
+            }
+            closeMobileMenu();
+          });
+        });
+
+        document.addEventListener('click', (e) => {
+          if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && !hamburger.contains(e.target)) {
+            closeMobileMenu();
+          }
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && navLinks.classList.contains('open')) closeMobileMenu();
+        });
+      }
+
+      // Custom Cursor Tracking Loop
+      if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        if (cursorDot && cursorOutline) {
+          let mouseX = -100, mouseY = -100;
+          let outlineX = -100, outlineY = -100;
+          let isFirstMove = true;
+          let cursorActive = false;
+
+          function runCursorLoop() {
+            if (cursorActive) return;
+            cursorActive = true;
+            requestAnimationFrame(function update() {
+              const lerp = 0.22;
+              const dx = mouseX - outlineX;
+              const dy = mouseY - outlineY;
+              outlineX += dx * lerp;
+              outlineY += dy * lerp;
+
+              cursorOutline.style.left = `${outlineX}px`;
+              cursorOutline.style.top = `${outlineY}px`;
+
+              if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
+                requestAnimationFrame(update);
+              } else {
+                cursorActive = false;
+              }
+            });
+          }
+
+          window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            if (isFirstMove) {
+              isFirstMove = false;
+              cursorDot.style.opacity = '1';
+              cursorOutline.style.opacity = '1';
+              outlineX = mouseX;
+              outlineY = mouseY;
+            }
+
+            cursorDot.style.left = `${mouseX}px`;
+            cursorDot.style.top = `${mouseY}px`;
+            runCursorLoop();
+          }, { passive: true });
+
+          // Mouseover delegation for interactive feedback
+          document.addEventListener('mouseover', (e) => {
+            const isText = !!e.target.closest('input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]), textarea');
+            if (isText) {
+              cursorDot.style.opacity = '0';
+              cursorOutline.style.opacity = '0';
+              return;
+            }
+
+            cursorDot.style.opacity = '1';
+            cursorOutline.style.opacity = '1';
+
+            const shouldHover = !!e.target.closest('a, button, select, .drop-zone, .file-chip, .btn-copy-vpa, .fee-badge, .stepper-item');
+            if (shouldHover) {
+              document.body.classList.add('cursor-hover');
+            } else {
+              document.body.classList.remove('cursor-hover');
+            }
+          });
+
+          document.addEventListener('mouseleave', () => {
+            cursorDot.style.opacity = '0';
+            cursorOutline.style.opacity = '0';
+          });
+
+          document.addEventListener('mouseenter', () => {
+            cursorDot.style.opacity = '1';
+            cursorOutline.style.opacity = '1';
+          });
+        }
+      }
+
+      // Secret Admin Access: Ctrl+Shift+A / Cmd+Shift+A or double-clicking logo
+      const adminUrl = '../admin/index.html';
+      window.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+          e.preventDefault();
+          window.location.href = adminUrl;
+        }
+      });
+      const navLogo = document.querySelector('.nav-logo');
+      if (navLogo) {
+        navLogo.addEventListener('dblclick', (e) => {
+          e.preventDefault();
+          window.location.href = adminUrl;
+        });
+        let lastTap = 0;
+        navLogo.addEventListener('touchend', (e) => {
+          const now = Date.now();
+          if (now - lastTap < 400 && now - lastTap > 0) {
+            e.preventDefault();
+            window.location.href = adminUrl;
+          }
+          lastTap = now;
+        });
+      }
+
+      // Initialize forms from Supabase
+      await initForms();
+    });
+  </script>
+</body>
+
+</html>

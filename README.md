@@ -22,6 +22,9 @@ NexCell is an entrepreneurship club website for students interested in innovatio
 - Event photo lookback gallery
 - Team directory with member roles and social links
 - Review submission form powered by Formspree
+- Interactive event registration & pitch deck upload portal (`events/apply.html`)
+- Private PostgreSQL database & S3 storage integration via Supabase (`database/schema.sql`, `js/supabaseClient.js`)
+- Drag-and-drop file uploader supporting PDF, DOCX, PNG, JPG with client-side validation
 - Responsive mobile navigation and dropdown menus
 - Scroll reveal animations and active navigation highlighting
 - Smooth anchor scrolling
@@ -30,27 +33,31 @@ NexCell is an entrepreneurship club website for students interested in innovatio
 
 ## Tech Stack
 
-- HTML5
-- CSS3
-- Vanilla JavaScript
-- GitHub Pages
-- Google Fonts:
-  - Inter
-  - Playfair Display
-- Formspree for review form submissions
-
-No framework, package manager, build tool, or bundler is required.
+- HTML5 & CSS3 (Glassmorphism design system)
+- Vanilla JavaScript (Modular ES/UMD services)
+- Supabase (PostgreSQL 15+, S3 Object Storage, Row Level Security)
+- GitHub Pages (Static hosting)
+- Google Fonts: Inter & Playfair Display
+- Formspree for review submissions
 
 ## Project Structure
 
 ```text
 .
 ├── index.html              # Main single-page website
+├── form.html               # Gateway redirect to application form
 ├── style.css               # Responsive layout, theme, animations, and components
 ├── script.js               # Navigation, animations, interactions, and form handling
+├── SUPABASE_SETUP.md       # Admin setup guide for Supabase database & storage
 ├── CNAME                   # Custom GitHub Pages domain: nexcell.club
 ├── robots.txt              # Search-engine crawler rules
 ├── sitemap.xml             # Sitemap for search indexing
+├── database/
+│   └── schema.sql          # PostgreSQL DDL, indexes, RLS, and storage bucket policies
+├── events/
+│   └── apply.html          # Application portal with drag-and-drop file uploader
+├── js/
+│   └── supabaseClient.js   # Client-side Supabase service with graceful demo fallback
 └── images/
     ├── hero_*.jpg/png      # Hero and landing-page visuals
     ├── lookback/           # Event photo gallery assets
